@@ -1,0 +1,22 @@
+﻿@model List<Korisnik>
+
+<h2>Lista Korisnika</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Ime</th>
+        <th>Prezime</th>
+        <th>Email</th>
+        <th>Username</th>
+    </tr>
+    @foreach (var korisnik in Model)
+    {
+        <tr>
+            <td>@korisnik.IDKorisnik</td>
+            <td>@korisnik.Ime</td>
+            <td>@korisnik.Prezime</td>
+            <td>@korisnik.Email</td>
+            <td>@korisnik.Username</td>
+        </tr>
+    }
+</table>

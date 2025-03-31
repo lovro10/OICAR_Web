@@ -1,0 +1,155 @@
+﻿html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    min-height: 100vh;
+}
+
+
+.login-container {
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    animation: slideIn 1s ease-out forwards;
+}
+
+
+@keyframes slideIn {
+    0% {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+h4 {
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+
+form {
+    padding: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+
+.form-group label {
+    color: #fff;
+    font-weight: bold;
+    opacity: 0;
+    animation: fadeInLabel 0.5s ease-out forwards;
+}
+
+@keyframes fadeInLabel {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #fff;
+    background: transparent;
+    color: #fff;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+
+
+    .form-control:hover {
+        transform: scale(1.05);
+        border-color: #764ba2;
+        box-shadow: 0 0 10px #764ba2;
+    }
+
+
+    .form-control:focus {
+        box-shadow: 0 0 10px #764ba2;
+        border-color: #764ba2;
+        outline: none;
+    }
+
+
+.btn-primary {
+    background-color: #ff7eb3;
+    border-radius: 10px;
+    padding: 10px 20px;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+    .btn-primary:hover {
+        background-color: #ff5178;
+        transform: scale(1.05);
+    }
+
+
+.form-group a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-weight: 600;
+}
+
+
+    .form-group a:hover {
+        color: #ff5178;
+    }
+
+a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+
+    a:hover {
+        color: #ff5178;
+    }
+
+#btnLog {
+    margin-top: 10px;
+}
+
+a #kuca {
+    margin-top: 20px;
+}

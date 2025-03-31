@@ -1,0 +1,43 @@
+﻿@model Korisnik
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="login-container">
+    <h1>CARSHARE</h1>
+    <h4>Login</h4>
+
+    <div class="row">
+        <form asp-action="Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PwdHash" class="control-label"></label>
+                <input type="password" asp-for="PwdHash" class="form-control" />
+                <span asp-validation-for="PwdHash" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="hidden"/>
+                <input type="submit" id="btnLog" value="Login" class="btn btn-primary" />
+            </div>
+            <div class="form-group">
+                <a asp-action="Index" id="kuca" asp-controller="Home">Home</a>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/StyleSheet.css" asp-append-version="true" />
+}
+
