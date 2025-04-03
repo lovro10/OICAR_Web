@@ -10,10 +10,10 @@ namespace CARSHARE_WEBAPP.Models
 
         public static string CreateToken(string secureKey, int expiration, string subject = null)
         {
-            // Get secret key bytes
+         
             var tokenKey = Encoding.UTF8.GetBytes(secureKey);
 
-            // Create a token descriptor (represents a token, kind of a "template" for token)
+          
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Expires = DateTime.UtcNow.AddMinutes(expiration),
@@ -31,7 +31,6 @@ namespace CARSHARE_WEBAPP.Models
                 });
             }
 
-            // Create token using that descriptor, serialize it and return it
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var serializedToken = tokenHandler.WriteToken(token);

@@ -4,8 +4,8 @@
     {
         private static List<Korisnik> _korisnici = new List<Korisnik>
     {
-       new Korisnik { IDKorisnik = 1, Ime = "Test", Prezime = "User", Username = "testuser", PwdHash = "hashedpassword", PwdSalt = "salt", UlogaID = 1 },
-       new Korisnik { IDKorisnik = 2, Ime = "Admin", Prezime = "User", Username = "admin", PwdHash = "adminhash", PwdSalt = "salt", UlogaID = 2 }
+       new Korisnik { IDKorisnik = 1, Ime = "Test", Prezime = "User", Username = "testuser", PwdHash = "hashedpassword", PwdSalt = "salt", UlogaID = 1, Email = "Test@mail.com" },
+       new Korisnik { IDKorisnik = 2, Ime = "Admin", Prezime = "User", Username = "admin", PwdHash = "adminhash", PwdSalt = "salt", UlogaID = 2, Email = "Admin@mail.com" }
     };
 
         private static List<Uloga> _uloge = new List<Uloga>

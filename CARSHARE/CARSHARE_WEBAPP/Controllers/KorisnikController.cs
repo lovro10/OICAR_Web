@@ -4,16 +4,42 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using CARSHARE_WEBAPP.ViewModels;
+using CARSHARE_WEBAPP.Services;
 
 namespace CARSHARE_WEBAPP.Controllers
 {
     public class KorisnikController : Controller
     {
+        private readonly KorisnikService _korisnikService;
+        private readonly HttpClient _httpClient;
+  
+
+        public KorisnikController(KorisnikService korisnikService)
+        {
+            _korisnikService = korisnikService;
+        }
+
+        public async Task<IActionResult> GetKorisnici()
+        {
+            var korisnici = await _korisnikService.GetKorisniciAsync();
+            return View(korisnici);
+        }
         [HttpGet]
-        public IActionResult GetKorisnici()
+        public IActionResult GetKorisniciMocked()
         {
             var korisnici = MockDB.GetKorisnici();
-            return View(korisnici);
+         
+            var korisniciVM = korisnici.Select(k => new KorisnikVM
+            {
+                IDKorisnik = k.IDKorisnik,
+                Ime = k.Ime,
+                Prezime = k.Prezime,
+                Email = k.Email,
+                Username = k.Username,
+                Telefon = k.Telefon,         
+            }).ToList();
+
+            return View(korisniciVM);
         }
 
         [HttpGet]
@@ -45,7 +71,7 @@ namespace CARSHARE_WEBAPP.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity)).Wait();
 
-            return RedirectToAction("GetKorisnici", existingUser.UlogaID == 1 ? "Korisnik" : "Home");
+            return RedirectToAction("GetKorisniciMocked", existingUser.UlogaID == 1 ? "Korisnik" : "Home");
         }
         [HttpPost]
         public IActionResult Logout()
@@ -53,6 +79,8 @@ namespace CARSHARE_WEBAPP.Controllers
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).Wait();
             return RedirectToAction("Login", "Korisnik");
         }
+
     }
 }
+
 

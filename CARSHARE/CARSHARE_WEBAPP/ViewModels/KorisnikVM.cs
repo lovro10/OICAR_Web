@@ -15,5 +15,7 @@
         public ImageVM ImageOsobna { get; set; }
         public ImageVM ImageLice { get; set; }
         public DateTime? DeletedAt { get; set; }
+
+       
     }
 }

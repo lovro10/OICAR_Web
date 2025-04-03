@@ -17,5 +17,6 @@
         public int? ImageOsobnaID { get; set; }
         public int? ImageLiceID { get; set; }
         public DateTime? DeletedAt { get; set; }
+        public virtual Uloga? Uloga { get; internal set; }
     }
 }

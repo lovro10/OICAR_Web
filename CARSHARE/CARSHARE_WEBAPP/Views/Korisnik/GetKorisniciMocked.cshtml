@@ -1,29 +1,25 @@
 ﻿@model List<CARSHARE_WEBAPP.ViewModels.KorisnikVM>
 
-<h2>Lista Korisnika</h2>
-<table class="table table-striped">
+<h2>Korisnici</h2>
+<table class="table">
     <thead>
         <tr>
-            <th>ID</th>
+            <th>Username</th>
             <th>Ime</th>
             <th>Prezime</th>
             <th>Email</th>
-            <th>Username</th>
-            <th>Telefon</th>
-            <th>Uloga</th>
+            <th>Datum Rodjenja</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var korisnik in Model)
         {
             <tr>
-                <td>@korisnik.IDKorisnik</td>
+                <td>@korisnik.Username</td>
                 <td>@korisnik.Ime</td>
                 <td>@korisnik.Prezime</td>
                 <td>@korisnik.Email</td>
-                <td>@korisnik.Username</td>
-                <td>@korisnik.Telefon</td>
-                <td>@(korisnik.Uloga?.Naziv ?? "N/A")</td>
+                <td>@korisnik.DatumRodjenja</td>
             </tr>
         }
     </tbody>

@@ -1,3 +1,5 @@
+using CARSHARE_WEBAPP.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -10,6 +12,7 @@ builder.Services.AddAuthentication()
         options.SlidingExpiration = true;
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
     });
+builder.Services.AddHttpClient<KorisnikService>();
 
 var app = builder.Build();
 
