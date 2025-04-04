@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using CARSHARE_WEBAPP.ViewModels;
 using CARSHARE_WEBAPP.Services;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace CARSHARE_WEBAPP.Controllers
 {
@@ -24,23 +26,7 @@ namespace CARSHARE_WEBAPP.Controllers
             var korisnici = await _korisnikService.GetKorisniciAsync();
             return View(korisnici);
         }
-        [HttpGet]
-        public IActionResult GetKorisniciMocked()
-        {
-            var korisnici = MockDB.GetKorisnici();
-         
-            var korisniciVM = korisnici.Select(k => new KorisnikVM
-            {
-                IDKorisnik = k.IDKorisnik,
-                Ime = k.Ime,
-                Prezime = k.Prezime,
-                Email = k.Email,
-                Username = k.Username,
-                Telefon = k.Telefon,         
-            }).ToList();
-
-            return View(korisniciVM);
-        }
+        
 
         [HttpGet]
         public IActionResult Login()
@@ -48,39 +34,98 @@ namespace CARSHARE_WEBAPP.Controllers
             return View(new LoginVM());
         }
 
-        public IActionResult Login(LoginVM loginVM)
+        public async Task<IActionResult> Login(LoginVM loginVM)
         {
-            var existingUser = MockDB.GetKorisnici().FirstOrDefault(x => x.Username == loginVM.UserName && x.PwdHash == loginVM.Password);
+            var korisnici = await _korisnikService.GetKorisniciAsync();
 
-            if (existingUser == null)
+     
+            var user = korisnici.FirstOrDefault(x => x.Username == loginVM.UserName);
+
+            if (user == null)
             {
                 ModelState.AddModelError("", "Incorrect username or password");
-                return View();
+                return View(loginVM);
             }
 
-            var userRole = MockDB.GetUlogas().FirstOrDefault(r => r.IDUloga == existingUser.UlogaID)?.Naziv ?? "USER";
+           
+            byte[] salt = Convert.FromBase64String(user.PwdSalt);
+            using (var hmac = new HMACSHA512(salt))
+            {
+                byte[] computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginVM.Password));
+                string computedHashString = Convert.ToBase64String(computedHash);
+
+                if (computedHashString != user.PwdHash)
+                {
+                    ModelState.AddModelError("", "Incorrect username or password");
+                    return View(loginVM);
+                }
+            }
+
+            var role = user.Uloga?.Naziv ?? "USER";
             var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, loginVM.UserName),
-            new Claim(ClaimTypes.Role, userRole)
-        };
+    {
+        new Claim(ClaimTypes.Name, user.Username),
+        new Claim(ClaimTypes.Role, role)
+    };
 
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
 
-            HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity)).Wait();
 
-            return RedirectToAction("GetKorisniciMocked", existingUser.UlogaID == 1 ? "Korisnik" : "Home");
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            return RedirectToAction("GetKorisnici");
         }
         [HttpPost]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).Wait();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Korisnik");
         }
 
     }
 }
 
+//public IActionResult LoginMocked(LoginVM loginVM)
+//{
+//    var existingUser = MockDB.GetKorisnici().FirstOrDefault(x => x.Username == loginVM.UserName && x.PwdHash == loginVM.Password);
 
+//    if (existingUser == null)
+//    {
+//        ModelState.AddModelError("", "Incorrect username or password");
+//        return View();
+//    }
+
+//    var userRole = MockDB.GetUlogas().FirstOrDefault(r => r.IDUloga == existingUser.UlogaID)?.Naziv ?? "USER";
+//    var claims = new List<Claim>
+//        {
+//            new Claim(ClaimTypes.Name, loginVM.UserName),
+//            new Claim(ClaimTypes.Role, userRole)
+//        };
+
+//    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+//    HttpContext.SignInAsync(
+//        CookieAuthenticationDefaults.AuthenticationScheme,
+//        new ClaimsPrincipal(claimsIdentity)).Wait();
+
+//    return RedirectToAction("GetKorisniciMocked", existingUser.UlogaID == 1 ? "Korisnik" : "Home");
+//}
+
+//[HttpGet]
+//public IActionResult GetKorisniciMocked()
+//{
+//    var korisnici = MockDB.GetKorisnici();
+
+//    var korisniciVM = korisnici.Select(k => new KorisnikVM
+//    {
+//        IDKorisnik = k.IDKorisnik,
+//        Ime = k.Ime,
+//        Prezime = k.Prezime,
+//        Email = k.Email,
+//        Username = k.Username,
+//        Telefon = k.Telefon,
+//    }).ToList();
+
+//    return View(korisniciVM);
+//}

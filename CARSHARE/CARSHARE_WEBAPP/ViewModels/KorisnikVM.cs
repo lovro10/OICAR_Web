@@ -6,6 +6,7 @@
         public string Ime { get; set; }
         public string Prezime { get; set; }
         public DateTime DatumRodjenja { get; set; }
+        public string Password { get; set; }
         public string Email { get; set; }
         public string Username { get; set; }
         public string Telefon { get; set; }
@@ -15,7 +16,7 @@
         public ImageVM ImageOsobna { get; set; }
         public ImageVM ImageLice { get; set; }
         public DateTime? DeletedAt { get; set; }
-
-       
+        public string PwdSalt { get; internal set; }
+        public string PwdHash { get; internal set; }
     }
 }

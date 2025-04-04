@@ -1,0 +1,25 @@
+﻿@model List<CARSHARE_WEBAPP.ViewModels.VoziloVM>
+
+<h2>Vozila</h2>
+<p> 
+    <a asp-action="Create" class="btn btn-outline-primary">Create New</a>
+</p> 
+<table class="table">
+    <thead>
+        <tr>
+            <th>Marka</th>
+            <th>Model</th>
+            <th>Registracija</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vozilo in Model)
+        {
+            <tr>
+                <td>@vozilo.Marka</td>
+                <td>@vozilo.Model</td>
+                <td>@vozilo.Registracija</td>
+            </tr>
+        }
+    </tbody>
+</table>

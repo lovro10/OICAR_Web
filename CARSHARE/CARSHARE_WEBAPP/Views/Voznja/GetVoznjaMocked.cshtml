@@ -1,0 +1,33 @@
+﻿@model List<CARSHARE_WEBAPP.ViewModels.VoznjaVM> 
+
+<h2>Vozila</h2>
+<p> 
+    <a asp-action="Create" class="btn btn-outline-primary">Create New</a>
+</p> 
+<table class="table">
+    <thead>
+        <tr>
+            <th>Vozilo</th>
+            <th>Polazak</th>
+            <th>Dolazak</th> 
+            <th>Troskovi</th>
+            <th>Putnici</th>
+            <th>Status</th> 
+            <th>Lokacija</th> 
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var voznja in Model)
+        { 
+            <tr>
+                <td>@voznja.Voziloid</td>
+                <td>@voznja.DatumIVrijemePolaska</td>
+                <td>@voznja.DatumIVrijemeDolaska</td>
+                <td>@voznja.Troskoviid</td>
+                <td>@voznja.BrojPutnika</td>
+                <td>@voznja.Statusvoznjeid</td>
+                <td>@voznja.Lokacijaid</td>
+            </tr>
+        }
+    </tbody>
+</table>
