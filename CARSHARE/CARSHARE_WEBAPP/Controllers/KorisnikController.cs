@@ -65,6 +65,7 @@ namespace CARSHARE_WEBAPP.Controllers
             var claims = new List<Claim>
     {
         new Claim(ClaimTypes.Name, user.Username),
+        new Claim(ClaimTypes.NameIdentifier, user.IDKorisnik.ToString()),
         new Claim(ClaimTypes.Role, role)
     };
 
@@ -81,6 +82,19 @@ namespace CARSHARE_WEBAPP.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Korisnik");
+        }
+
+        [HttpGet] 
+        public async Task<IActionResult> Details(int id)
+        {
+            var korisnici = await _korisnikService.GetKorisniciAsync();
+            var korisnik = korisnici.FirstOrDefault(x => x.IDKorisnik == id);
+
+            if(korisnik == null)
+            {
+                return NotFound();
+            }
+            return View(korisnik);
         }
 
     }

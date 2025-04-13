@@ -13,6 +13,8 @@ builder.Services.AddAuthentication()
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
     });
 builder.Services.AddHttpClient<KorisnikService>();
+builder.Services.AddHttpClient<VoziloService>();
+builder.Services.AddHttpClient<VoznjaService>();
 
 var app = builder.Build();
 

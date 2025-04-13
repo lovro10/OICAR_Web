@@ -8,8 +8,6 @@
             <th>Ime</th>
             <th>Prezime</th>
             <th>Email</th>
-            <th>Username</th>
-            <th>Telefon</th>
             <th>Uloga</th>
         </tr>
     </thead>
@@ -20,9 +18,7 @@
                 <td>@korisnik.IDKorisnik</td>
                 <td>@korisnik.Ime</td>
                 <td>@korisnik.Prezime</td>
-                <td>@korisnik.Email</td>
-                <td>@korisnik.Username</td>
-                <td>@korisnik.Telefon</td>
+                <td>@korisnik.Email</td>         
                 <td>@(korisnik.Uloga?.Naziv ?? "N/A")</td>
             </tr>
         }
