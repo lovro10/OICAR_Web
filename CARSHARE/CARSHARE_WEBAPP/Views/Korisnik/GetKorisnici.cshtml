@@ -9,6 +9,7 @@
             <th>Prezime</th>
             <th>Email</th>
             <th>Uloga</th>
+            <th>Confirmed?</th>
         </tr>
     </thead>
     <tbody>
@@ -20,6 +21,7 @@
                 <td>@korisnik.Prezime</td>
                 <td>@korisnik.Email</td>         
                 <td>@(korisnik.Uloga?.Naziv ?? "N/A")</td>
+                <td>@(korisnik.IsConfirmed)</td>
             </tr>
         }
     </tbody>

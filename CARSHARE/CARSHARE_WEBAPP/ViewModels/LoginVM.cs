@@ -11,6 +11,6 @@ namespace CARSHARE_WEBAPP.ViewModels
         [StringLength(256, MinimumLength = 8, ErrorMessage = "Password bi trebao biti 8 karaktera dug")]
         public string Password { get; set; }
 
-        public string ReturnUrl { get; set; }
+   
     }
 }

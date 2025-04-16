@@ -6,25 +6,33 @@ using System.Text.Json;
 using static System.Net.WebRequestMethods;
 using AspNetCoreGeneratedDocument;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace CARSHARE_WEBAPP.Services
 {
     public class KorisnikService
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HttpClient _httpClient;
         private string ApiUri = "http://localhost:5194/api/Korisnik";
-        public KorisnikService(HttpClient httpClient)
+        public KorisnikService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
         {
             _httpClient = httpClient;
+            _httpContextAccessor = httpContextAccessor;
         }
+        
 
         public async Task<List<KorisnikVM>> GetKorisniciAsync()
         {
+          
 
             List<Korisnik> korisnici = new List<Korisnik>();
             try
             {
-                korisnici = await _httpClient.GetFromJsonAsync<List<Korisnik>>(ApiUri);
+                var response = await _httpClient.GetStringAsync(ApiUri);
+                korisnici = JsonConvert.DeserializeObject<List<Korisnik>>(response);
             }
             catch (Exception ex)
             {
@@ -43,9 +51,47 @@ namespace CARSHARE_WEBAPP.Services
                 Telefon = k.Telefon,
                 DatumRodjenja = k.DatumRodjenja,
                 IsConfirmed = k.IsConfirmed,
-                DeletedAt = k.DeletedAt
             }).ToList() ?? new List<KorisnikVM>();
         }
 
+      
+        public async Task<HttpResponseMessage> UpdateKorisnikAsync(Korisnik korisnik)
+        {
+
+            return await _httpClient.PutAsJsonAsync(ApiUri + $"/{korisnik.IDKorisnik}", korisnik);
+        }
+        public async Task<KorisnikVM?> GetKorisnikByIdAsync(int id)
+        {
+            try
+            {
+                var korisnik = await _httpClient.GetFromJsonAsync<Korisnik>($"{ApiUri}/{id}");
+
+                if (korisnik == null) return null;
+
+                return new KorisnikVM
+                {
+                    IDKorisnik = korisnik.IDKorisnik,
+                    Ime = korisnik.Ime,
+                    Prezime = korisnik.Prezime,
+                    Email = korisnik.Email,
+                    PwdHash = korisnik.PwdHash,
+                    PwdSalt = korisnik.PwdSalt,
+                    Username = korisnik.Username,
+                    Telefon = korisnik.Telefon,
+                    DatumRodjenja = korisnik.DatumRodjenja,
+                    ImageVozackaID = korisnik.ImageVozackaID,
+                    ImageOsobnaID = korisnik.ImageOsobnaID,
+                    ImageLiceID = korisnik.ImageLiceID,
+                    DeletedAt = korisnik.DeletedAt
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching korisnik by ID: {ex.Message}");
+                return null;
+            }
+        }
+       
     }
-}
+  }
+

@@ -1,11 +1,23 @@
 ﻿@model CARSHARE_WEBAPP.ViewModels.KorisnikVM
 
-<h2>Korisnički Detalji</h2>
+@{
+    ViewData["Title"] = "Korisnik Details";
+}
 
-<div>
-    <strong>Ime:</strong> @Model.Ime <br />
-    <strong>Prezime:</strong> @Model.Prezime <br />
-    <strong>Email:</strong> @Model.Email <br />
-    <strong>Telefon:</strong> @Model.Telefon <br />
-    <strong>Datum rođenja:</strong> @Model.DatumRodjenja.ToShortDateString() <br />
+<h2>Korisnik Details</h2>
+
+<div class="card p-4 mb-4">
+    <dl class="row">
+        <dt class="col-sm-3">Ime</dt>
+        <dd class="col-sm-9">@Model.Ime</dd>
+
+        <dt class="col-sm-3">Prezime</dt>
+        <dd class="col-sm-9">@Model.Prezime</dd>
+
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">@Model.Email</dd>
+        <a href="@Url.Action("Update", "Korisnik", new { id = Model.IDKorisnik })" class="btn btn-primary">
+            Edit User Info
+        </a>
+       
 </div>

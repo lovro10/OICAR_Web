@@ -15,7 +15,7 @@ builder.Services.AddAuthentication()
 builder.Services.AddHttpClient<KorisnikService>();
 builder.Services.AddHttpClient<VoziloService>();
 builder.Services.AddHttpClient<VoznjaService>();
-
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

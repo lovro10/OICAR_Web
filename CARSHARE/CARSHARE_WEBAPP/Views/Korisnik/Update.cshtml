@@ -1,0 +1,50 @@
+﻿@model CARSHARE_WEBAPP.ViewModels.EditKorisnikVM
+
+<h2>Update User</h2>
+
+<form asp-action="Update" method="post">
+    <input type="hidden" asp-for="IDKorisnik" />
+
+    <div class="form-group">
+        <label asp-for="Ime"></label>
+        <input asp-for="Ime" class="form-control" />
+        <span asp-validation-for="Ime" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Prezime"></label>
+        <input asp-for="Prezime" class="form-control" />
+        <span asp-validation-for="Prezime" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Telefon"></label>
+        <input asp-for="Telefon" class="form-control" />
+        <span asp-validation-for="Telefon" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DatumRodjenja"></label>
+        <input asp-for="DatumRodjenja" class="form-control" type="date" />
+        <span asp-validation-for="DatumRodjenja" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Details" asp-route-id="@Model.IDKorisnik" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
