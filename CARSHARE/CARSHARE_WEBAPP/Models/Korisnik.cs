@@ -14,7 +14,7 @@ namespace CARSHARE_WEBAPP.Models
         public string PwdHash { get; set; }
         public string PwdSalt { get; set; }
         public string Telefon { get; set; }
-        public BitArray? IsConfirmed { get; set; }
+        public bool? IsConfirmed { get; set; }
         public int UlogaID { get; set; }
         public int? ImageVozackaID { get; set; }
         public int? ImageOsobnaID { get; set; }

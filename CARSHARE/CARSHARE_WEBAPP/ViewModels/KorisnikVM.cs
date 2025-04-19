@@ -18,7 +18,7 @@ namespace CARSHARE_WEBAPP.ViewModels
         [Required(ErrorMessage = "Username is required")]
         public string Username { get; set; }
         public string Telefon { get; set; }
-        public BitArray? IsConfirmed { get; set; }
+        public bool? IsConfirmed { get; set; }
         public UlogaVM Uloga { get; set; }
         public int? ImageVozackaID { get; set; }
         public int? ImageOsobnaID { get; set; }

@@ -28,5 +28,6 @@ namespace CARSHARE_WEBAPP.Models
 
             return b64Hash;
         }
+
     }
 }

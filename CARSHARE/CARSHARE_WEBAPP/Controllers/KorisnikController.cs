@@ -48,22 +48,17 @@ namespace CARSHARE_WEBAPP.Controllers
                 return View(loginVM);
             }
 
-            // Check password
-            byte[] salt = Convert.FromBase64String(user.PwdSalt);
-            using (var hmac = new HMACSHA512(salt))
+
+            var b64hash = PasswordHashProvider.GetHash(loginVM.Password, user.PwdSalt);
+            if (b64hash != user.PwdHash)
             {
-                byte[] computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginVM.Password));
-                string computedHashString = Convert.ToBase64String(computedHash);
-
-                if (computedHashString != user.PwdHash)
-                {
-                    ModelState.AddModelError("", "Incorrect username or password");
-                    return View(loginVM);
-                }
+                ModelState.AddModelError("", "Invalid username or password");
+                return View();
             }
+           
 
-            // 🔐 Get JWT from API
-            string jwtToken = "";
+
+
             using (var httpClient = new HttpClient())
             {
                 var loginPayload = new
@@ -80,23 +75,24 @@ namespace CARSHARE_WEBAPP.Controllers
                     return View(loginVM);
                 }
 
-                jwtToken = await response.Content.ReadAsStringAsync(); 
+               
+               
             }
 
-            var role = user.Uloga?.Naziv ?? "USER";
+            var role = user.Uloga?.Naziv ?? "ADMIN";
             var claims = new List<Claim>
     {
         new Claim(ClaimTypes.Name, user.Username),
         new Claim(ClaimTypes.NameIdentifier, user.IDKorisnik.ToString()),
         new Claim(ClaimTypes.Role, role),
-        new Claim("AccessToken", jwtToken) 
+  
     };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
+            Console.WriteLine("User logged in successfully");
             return RedirectToAction("GetKorisnici");
         }
 
