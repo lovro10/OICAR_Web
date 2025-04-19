@@ -1,0 +1,22 @@
+﻿@model List<CARSHARE_WEBAPP.ViewModels.ImageVM>
+@{
+    ViewData["Title"] = "Images";
+}
+
+<h2>Images</h2>
+
+@if (Model.Count == 0)
+{
+    <p>No images found.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var image in Model)
+        {
+            <div class="col-md-3 mb-3">
+                <img src="data:image/jpeg;base64,@image.Content" class="img-fluid img-thumbnail" />
+            </div>
+        }
+    </div>
+}

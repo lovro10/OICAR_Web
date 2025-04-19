@@ -5,79 +5,45 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Net.Http.Headers;
+using System.Text.Json;
 
 namespace CARSHARE_WEBAPP.Controllers
 {
     public class VoziloController : Controller
     {
-        private readonly VoziloService _voziloService;  
-        private readonly HttpClient _httpClient; 
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-
-        public VoziloController(VoziloService voziloService)
-        { 
-            _voziloService = voziloService; 
-        } 
-
-        public async Task<IActionResult> GetVozila() 
-        { 
-            var vozila = await _voziloService.GetVozilaAsync(); 
-            return View(vozila);  
-        } 
-
-        [HttpGet] 
-        public IActionResult GetVozilaMocked() 
-        { 
-            var vozila = MockDB.GetVozila();  
-
-            var vozilaVM = vozila.Select(v => new VoziloVM 
-            { 
-                IDVozilo = v.Idvozilo, 
-                Marka = v.Marka, 
-                Model = v.Model, 
-                Registracija = v.Registracija 
-            }).ToList(); 
-
-            return View(vozilaVM);
+        public VoziloController(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        [HttpGet]
-        public IActionResult Login()
+        public async Task<IActionResult> Index()
         {
-            return View(new LoginVM());
-        }
+            var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(token))
+                return RedirectToAction("Index", "Home");
 
-        public IActionResult Login(LoginVM loginVM)
-        {
-            var existingUser = MockDB.GetKorisnici().FirstOrDefault(x => x.Username == loginVM.UserName && x.PwdHash == loginVM.Password);
+            using var client = new HttpClient();
+            client.BaseAddress = new Uri("http://localhost:5194/api/"); 
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            if (existingUser == null)
+            var response = await client.GetAsync("Vozilo/GetAll");
+
+            if (!response.IsSuccessStatusCode)
+                return View("Error");
+
+            var json = await response.Content.ReadAsStringAsync();
+            var vozila = JsonSerializer.Deserialize<List<VoziloVM>>(json, new JsonSerializerOptions
             {
-                ModelState.AddModelError("", "Incorrect username or password");
-                return View();
-            }
+                PropertyNameCaseInsensitive = true
+            });
 
-            var userRole = MockDB.GetUlogas().FirstOrDefault(r => r.IDUloga == existingUser.UlogaID)?.Naziv ?? "USER";
-            var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, loginVM.UserName),
-            new Claim(ClaimTypes.Role, userRole)
-        };
-
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity)).Wait();
-
-            return RedirectToAction("GetKorisniciMocked", existingUser.UlogaID == 1 ? "Korisnik" : "Home");
+            return View(vozila);
         }
-        [HttpPost]
-        public IActionResult Logout()
-        {
-            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).Wait();
-            return RedirectToAction("Login", "Korisnik");
-        }
+
+
 
     }
 }

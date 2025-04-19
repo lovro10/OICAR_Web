@@ -1,23 +1,21 @@
 using CARSHARE_WEBAPP.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddAuthentication()
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Korisnik/Login";
-        options.LogoutPath = "/Korisnik/Logout";
-        options.SlidingExpiration = true;
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-    });
-builder.Services.AddHttpClient<KorisnikService>();
-builder.Services.AddHttpClient<VoziloService>();
-builder.Services.AddHttpClient<VoznjaService>();
-builder.Services.AddHttpContextAccessor();
-var app = builder.Build();
 
+
+
+builder.Services.AddAuthorization();
+builder.Services.AddHttpClient<KorisnikService>();
+builder.Services.AddHttpClient<VoznjaService>();
+builder.Services.AddSession();
+builder.Services.AddHttpContextAccessor();
+
+var app = builder.Build();
+app.UseSession();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

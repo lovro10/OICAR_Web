@@ -1,15 +1,15 @@
-﻿@model List<CARSHARE_WEBAPP.ViewModels.VoziloVM>
+﻿@using CARSHARE_WEBAPP.ViewModels
+@model List<VoziloVM>
 
-<h2>Vozila</h2>
-<p> 
-    <a asp-action="Create" class="btn btn-outline-primary">Create New</a>
-</p> 
+<h2>Popis vozila</h2>
+
 <table class="table">
     <thead>
         <tr>
             <th>Marka</th>
             <th>Model</th>
             <th>Registracija</th>
+            <th>Slika prometne</th>
         </tr>
     </thead>
     <tbody>
@@ -19,7 +19,14 @@
                 <td>@vozilo.Marka</td>
                 <td>@vozilo.Model</td>
                 <td>@vozilo.Registracija</td>
+                <td>
+                    @if (vozilo.ImagePrometna?.Content != null)
+                    {
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(vozilo.ImagePrometna.Content)" width="100" />
+                    }
+                </td>
             </tr>
         }
     </tbody>
 </table>
+

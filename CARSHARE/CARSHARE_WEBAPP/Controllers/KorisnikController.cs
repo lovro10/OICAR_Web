@@ -8,6 +8,10 @@ using CARSHARE_WEBAPP.Services;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CARSHARE_WEBAPP.Controllers
 {
@@ -55,50 +59,42 @@ namespace CARSHARE_WEBAPP.Controllers
                 ModelState.AddModelError("", "Invalid username or password");
                 return View();
             }
-           
 
+            using var client = new HttpClient();
 
-
-            using (var httpClient = new HttpClient())
-            {
+            client.BaseAddress = new Uri("http://localhost:5194/api/Korisnik/Login");
                 var loginPayload = new
                 {
                     Username = loginVM.UserName,
                     Password = loginVM.Password
                 };
 
-                var response = await httpClient.PostAsJsonAsync("https://your-api-url.com/api/Korisnik/Login", loginPayload);
+                var response = await client.PostAsJsonAsync("http://localhost:5194/api/Korisnik/Login", loginPayload);
 
-                if (!response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode)
                 {
-                    ModelState.AddModelError("", "Login to API failed");
-                    return View(loginVM);
-                }
+                    var token = await response.Content.ReadAsStringAsync();
+                HttpContext.Session.SetString("JWToken", token.Replace("\"",""));
+                HttpContext.Session.SetString("Username", loginVM.UserName);
+                HttpContext.Session.SetInt32("UserId", user.IDKorisnik);
 
-               
-               
+         
+                Console.WriteLine("User logged in successfully");
+                return RedirectToAction("GetKorisnici");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Neispravno korisničko ime ili lozinka.");
+                return View();
             }
 
-            var role = user.Uloga?.Naziv ?? "ADMIN";
-            var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.Name, user.Username),
-        new Claim(ClaimTypes.NameIdentifier, user.IDKorisnik.ToString()),
-        new Claim(ClaimTypes.Role, role),
-  
-    };
-
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-            Console.WriteLine("User logged in successfully");
-            return RedirectToAction("GetKorisnici");
+   
         }
 
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
+            HttpContext.Session.Clear();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Korisnik");
         }
@@ -178,6 +174,12 @@ namespace CARSHARE_WEBAPP.Controllers
                 ModelState.AddModelError("", $"An error occurred: {ex.Message}");
                 return View(model);
             }
+        }
+     
+        [HttpGet]
+        public async Task<IActionResult> Images()
+        {
+            return Ok();
         }
 
     }
