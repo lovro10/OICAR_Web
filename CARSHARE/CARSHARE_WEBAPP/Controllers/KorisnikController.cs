@@ -77,8 +77,9 @@ namespace CARSHARE_WEBAPP.Controllers
                 HttpContext.Session.SetString("JWToken", token.Replace("\"",""));
                 HttpContext.Session.SetString("Username", loginVM.UserName);
                 HttpContext.Session.SetInt32("UserId", user.IDKorisnik);
+                HttpContext.Session.SetString("Role", user.Uloga.Naziv);
 
-         
+
                 Console.WriteLine("User logged in successfully");
                 return RedirectToAction("GetKorisnici");
             }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using CARSHARE_WEBAPP.Models;
+using System.Collections;
 using System.ComponentModel.DataAnnotations;
 
 namespace CARSHARE_WEBAPP.ViewModels
@@ -18,8 +19,10 @@ namespace CARSHARE_WEBAPP.ViewModels
         [Required(ErrorMessage = "Username is required")]
         public string Username { get; set; }
         public string Telefon { get; set; }
+        public int? Ulogaid { get; set; }
         public bool? IsConfirmed { get; set; }
-        public UlogaVM Uloga { get; set; }
+        public Uloga Uloga { get; set; }
+       
         public int? ImageVozackaID { get; set; }
         public int? ImageOsobnaID { get; set; }
         public int? ImageLiceID { get; set; }
@@ -27,8 +30,8 @@ namespace CARSHARE_WEBAPP.ViewModels
         public ImageVM? ImageOsobna { get; set; }
         public ImageVM? ImageLice { get; set; }
         public DateTime? DeletedAt { get; set; }
-        public string PwdSalt { get; internal set; }
-        public string PwdHash { get; internal set; }
+        public string PwdSalt { get;  set; }
+        public string PwdHash { get; set; }
 
         public string NewPassword { get; set; }
 

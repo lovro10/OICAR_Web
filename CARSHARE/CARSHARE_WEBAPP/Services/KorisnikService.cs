@@ -22,24 +22,26 @@ namespace CARSHARE_WEBAPP.Services
             _httpClient = httpClient;
             _httpContextAccessor = httpContextAccessor;
         }
-        
+
 
         public async Task<List<KorisnikVM>> GetKorisniciAsync()
         {
-          
 
-            List<Korisnik> korisnici = new List<Korisnik>();
+
+            List<KorisnikVM> korisnici = new List<KorisnikVM>();
             try
             {
                 var response = await _httpClient.GetStringAsync(ApiUri);
-                korisnici = JsonConvert.DeserializeObject<List<Korisnik>>(response);
+                korisnici = JsonConvert.DeserializeObject<List<KorisnikVM>>(response);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching korisnici: {ex.Message}");
             }
+            
 
-            return korisnici?.Select(k => new KorisnikVM
+            return korisnici?               
+                .Select(k => new KorisnikVM
             {
                 IDKorisnik = k.IDKorisnik,
                 Ime = k.Ime,
@@ -51,6 +53,9 @@ namespace CARSHARE_WEBAPP.Services
                 Telefon = k.Telefon,
                 DatumRodjenja = k.DatumRodjenja,
                 IsConfirmed = k.IsConfirmed,
+                Ulogaid = k.Ulogaid,
+                Uloga = k.Uloga
+
             }).ToList() ?? new List<KorisnikVM>();
         }
 
