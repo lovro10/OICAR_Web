@@ -96,7 +96,7 @@ namespace CARSHARE_WEBAPP.Controllers
         public async Task<IActionResult> Logout()
         {
             HttpContext.Session.Clear();
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+             
             return RedirectToAction("Login", "Korisnik");
         }
 
@@ -148,7 +148,7 @@ namespace CARSHARE_WEBAPP.Controllers
 
             try
             {
-                var korisnik = new Korisnik
+                var korisnik = new EditKorisnikVM
                 {
                     IDKorisnik = model.IDKorisnik,
                     Ime = model.Ime,

@@ -60,12 +60,12 @@ namespace CARSHARE_WEBAPP.Services
         }
 
       
-        public async Task<HttpResponseMessage> UpdateKorisnikAsync(Korisnik korisnik)
+        public async Task<HttpResponseMessage> UpdateKorisnikAsync(EditKorisnikVM korisnik)
         {
-
-            return await _httpClient.PutAsJsonAsync(ApiUri + $"/{korisnik.IDKorisnik}", korisnik);
+           
+            return await _httpClient.PutAsJsonAsync<EditKorisnikVM>($"{ApiUri}/{korisnik.IDKorisnik}", korisnik);
         }
-        public async Task<KorisnikVM?> GetKorisnikByIdAsync(int id)
+        public async Task<Korisnik?> GetKorisnikByIdAsync(int id)
         {
             try
             {
@@ -73,7 +73,7 @@ namespace CARSHARE_WEBAPP.Services
 
                 if (korisnik == null) return null;
 
-                return new KorisnikVM
+                return new Korisnik
                 {
                     IDKorisnik = korisnik.IDKorisnik,
                     Ime = korisnik.Ime,

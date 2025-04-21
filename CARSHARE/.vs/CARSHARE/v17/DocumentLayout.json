@@ -11,24 +11,40 @@
       "RelativeMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|solutionrelative:carshare_webapp\\services\\korisnikservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\views\\korisnik\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|solutionrelative:carshare_webapp\\views\\korisnik\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\views\\korisnik\\update.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|solutionrelative:carshare_webapp\\views\\korisnik\\update.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\views\\korisnik\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|solutionrelative:carshare_webapp\\views\\korisnik\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\viewmodels\\korisnikvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|solutionrelative:carshare_webapp\\viewmodels\\korisnikvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\viewmodels\\editkorisnikvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|solutionrelative:carshare_webapp\\viewmodels\\editkorisnikvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\views\\korisnik\\getkorisnici.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|solutionrelative:carshare_webapp\\views\\korisnik\\getkorisnici.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\models\\korisnik.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|solutionrelative:carshare_webapp\\models\\korisnik.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\views\\korisnik\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|solutionrelative:carshare_webapp\\views\\korisnik\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|solutionrelative:carshare_webapp\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|solutionrelative:carshare_webapp\\views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\views\\korisnik\\getkorisnici.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|solutionrelative:carshare_webapp\\views\\korisnik\\getkorisnici.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\viewmodels\\ulogavm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -37,14 +53,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\models\\uloga.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|solutionrelative:carshare_webapp\\models\\uloga.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|solutionrelative:carshare_webapp\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\views\\korisnik\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|solutionrelative:carshare_webapp\\views\\korisnik\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4A49D697-C9A6-497C-A959-FECC67A42E2D}|CARSHARE_WEBAPP\\CARSHARE_WEBAPP.csproj|c:\\users\\korisnik\\onedrive - algebra\\radna povr\u0161ina\\oicar_web\\carshare\\carshare_webapp\\views\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -62,11 +70,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 13,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "Login.cshtml",
               "DocumentMoniker": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\Views\\Korisnik\\Login.cshtml",
               "RelativeDocumentMoniker": "CARSHARE_WEBAPP\\Views\\Korisnik\\Login.cshtml",
@@ -80,7 +88,33 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Update.cshtml",
+              "DocumentMoniker": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\Views\\Korisnik\\Update.cshtml",
+              "RelativeDocumentMoniker": "CARSHARE_WEBAPP\\Views\\Korisnik\\Update.cshtml",
+              "ToolTip": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\Views\\Korisnik\\Update.cshtml",
+              "RelativeToolTip": "CARSHARE_WEBAPP\\Views\\Korisnik\\Update.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-20T20:38:57.562Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 6,
+              "Title": "EditKorisnikVM.cs",
+              "DocumentMoniker": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\ViewModels\\EditKorisnikVM.cs",
+              "RelativeDocumentMoniker": "CARSHARE_WEBAPP\\ViewModels\\EditKorisnikVM.cs",
+              "ToolTip": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\ViewModels\\EditKorisnikVM.cs",
+              "RelativeToolTip": "CARSHARE_WEBAPP\\ViewModels\\EditKorisnikVM.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-20T20:30:51.877Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "GetKorisnici.cshtml",
               "DocumentMoniker": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\Views\\Korisnik\\GetKorisnici.cshtml",
               "RelativeDocumentMoniker": "CARSHARE_WEBAPP\\Views\\Korisnik\\GetKorisnici.cshtml",
@@ -93,7 +127,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 11,
               "Title": "UlogaVM.cs",
               "DocumentMoniker": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\ViewModels\\UlogaVM.cs",
               "RelativeDocumentMoniker": "CARSHARE_WEBAPP\\ViewModels\\UlogaVM.cs",
@@ -101,12 +135,11 @@
               "RelativeToolTip": "CARSHARE_WEBAPP\\ViewModels\\UlogaVM.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-20T19:02:28.222Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-20T19:02:28.222Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 12,
               "Title": "Uloga.cs",
               "DocumentMoniker": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\Models\\Uloga.cs",
               "RelativeDocumentMoniker": "CARSHARE_WEBAPP\\Models\\Uloga.cs",
@@ -114,8 +147,7 @@
               "RelativeToolTip": "CARSHARE_WEBAPP\\Models\\Uloga.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-20T19:02:24.762Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-20T19:02:24.762Z"
             },
             {
               "$type": "Document",
@@ -125,14 +157,14 @@
               "RelativeDocumentMoniker": "CARSHARE_WEBAPP\\Services\\KorisnikService.cs",
               "ToolTip": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\Services\\KorisnikService.cs",
               "RelativeToolTip": "CARSHARE_WEBAPP\\Services\\KorisnikService.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAwDsAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAACcAAAAAAAAAAAAowDcAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-20T18:56:39.839Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "Korisnik.cs",
               "DocumentMoniker": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\Models\\Korisnik.cs",
               "RelativeDocumentMoniker": "CARSHARE_WEBAPP\\Models\\Korisnik.cs",
@@ -145,20 +177,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "KorisnikVM.cs",
               "DocumentMoniker": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\ViewModels\\KorisnikVM.cs",
               "RelativeDocumentMoniker": "CARSHARE_WEBAPP\\ViewModels\\KorisnikVM.cs",
               "ToolTip": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\ViewModels\\KorisnikVM.cs",
               "RelativeToolTip": "CARSHARE_WEBAPP\\ViewModels\\KorisnikVM.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAcwCEAAAAlAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAcwBMAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-20T18:55:00.246Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 10,
               "Title": "_ViewStart.cshtml",
               "DocumentMoniker": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\Views\\_ViewStart.cshtml",
               "RelativeDocumentMoniker": "CARSHARE_WEBAPP\\Views\\_ViewStart.cshtml",
@@ -171,7 +203,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "_ViewImports.cshtml",
               "DocumentMoniker": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\Views\\_ViewImports.cshtml",
               "RelativeDocumentMoniker": "CARSHARE_WEBAPP\\Views\\_ViewImports.cshtml",
@@ -179,12 +211,11 @@
               "RelativeToolTip": "CARSHARE_WEBAPP\\Views\\_ViewImports.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-20T18:49:23.748Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-20T18:49:23.748Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\Program.cs",
               "RelativeDocumentMoniker": "CARSHARE_WEBAPP\\Program.cs",
@@ -192,12 +223,11 @@
               "RelativeToolTip": "CARSHARE_WEBAPP\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-19T20:07:05.352Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-19T20:07:05.352Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 4,
               "Title": "Details.cshtml",
               "DocumentMoniker": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\Views\\Korisnik\\Details.cshtml",
               "RelativeDocumentMoniker": "CARSHARE_WEBAPP\\Views\\Korisnik\\Details.cshtml",
@@ -216,7 +246,7 @@
               "RelativeDocumentMoniker": "CARSHARE_WEBAPP\\Controllers\\KorisnikController.cs",
               "ToolTip": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\Controllers\\KorisnikController.cs",
               "RelativeToolTip": "CARSHARE_WEBAPP\\Controllers\\KorisnikController.cs",
-              "ViewState": "AgIAAAEAAAAAAAAAAAAswBEAAAAwAAAAAAAAAA==",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAjwGIAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-19T20:00:27.255Z",
               "EditorCaption": ""
@@ -229,7 +259,7 @@
               "RelativeDocumentMoniker": "CARSHARE_WEBAPP\\Views\\Shared\\_Layout.cshtml",
               "ToolTip": "C:\\Users\\Korisnik\\OneDrive - Algebra\\Radna povr\u0161ina\\OICAR_Web\\CARSHARE\\CARSHARE_WEBAPP\\Views\\Shared\\_Layout.cshtml",
               "RelativeToolTip": "CARSHARE_WEBAPP\\Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAABgAAAAAAAAAAAAAAAIAAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-04-19T19:54:38.91Z",
               "EditorCaption": ""
