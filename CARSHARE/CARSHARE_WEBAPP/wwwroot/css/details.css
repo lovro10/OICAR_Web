@@ -1,0 +1,74 @@
+﻿/* ID card cream background */
+.id-card {
+    background: #f5f5dc; /* cream */
+    border: 2px solid #000;
+    border-radius: 12px;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.2);
+}
+
+/* Header */
+.id-card-header {
+    border-bottom: 1px solid #000;
+    padding-bottom: 1rem;
+}
+
+.details-photo {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 2px solid #000;
+    border-radius: 50%;
+}
+
+/* Title & ID line */
+.details-title {
+    font-family: 'Permanent Marker', cursive;
+    color: #000;
+    font-size: 1.5rem;
+    margin: 0.5rem 0 0;
+}
+
+.details-id {
+    font-weight: 500;
+    color: #333;
+}
+
+.details-container {
+    display: flex;
+    justify-content: center;
+    padding: 4rem 1rem 2rem;
+}
+
+/* Card: constrain its width */
+.details-card {
+    background: #f5f5dc;
+    color: #000;
+    padding: 2rem;
+    border: 2px solid #000;
+    border-radius: 12px;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 500px;
+}
+
+    /* Definition list */
+    .details-card dt {
+        color: #000;
+        font-weight: 600;
+    }
+
+    .details-card dd {
+        color: #333;
+    }
+
+/* Footer actions */
+.btn-edit {
+    background: #000;
+    color: #f5f5dc;
+}
+
+.btn-back {
+    background: transparent;
+    color: #000;
+    border: 1px solid #000;
+}

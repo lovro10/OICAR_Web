@@ -1,8 +1,139 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+}
+
+<div class="hero">
+    <div class="shape circle"></div>
+    <div class="shape rect"></div>
+    <div class="shape circle small"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content text-center">
+        <h1 class="display-1 mb-3">CARSHARE</h1>
+        <p class="lead mb-4">Share the ride. Embrace the journey.</p>
+        <a asp-action="About" class="btn btn-lg btn-primary px-4 py-2">Learn More</a>
+    </div>
 </div>
+
+<section class="features py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Why Choose CARSHARE?</h2>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card feature-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-people-fill feature-icon"></i>
+                        <h5 class="mt-2">Community</h5>
+                        <p>Connect with drivers and passengers in your area.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card feature-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-clock-history feature-icon"></i>
+                        <h5 class="mt-2">Convenience</h5>
+                        <p>Book rides in seconds, anytime, anywhere.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card feature-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-wallet2 feature-icon"></i>
+                        <h5 class="mt-2">Affordable</h5>
+                        <p>Save money by sharing trips with others.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="cta">
+    <div class="container">
+        <h2>Ready to hit the road?</h2>
+        <p class="mb-4">Sign up today and join thousands of happy riders.</p>
+        <a asp-controller="Korisnik" asp-action="Register" class="btn btn-light btn-lg">
+            Get Started
+        </a>
+    </div>
+</div>
+
+<!-- Animated Stats Counter -->
+<section class="stats py-5">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="stat">
+                    <h3 class="stat-number" data-target="10000">0</h3>
+                    <p>Rides Shared</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="stat">
+                    <h3 class="stat-number" data-target="5000">0</h3>
+                    <p>Happy Users</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="stat">
+                    <h3 class="stat-number" data-target="1200">0</h3>
+                    <p>Drivers Registered</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="how-it-works py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">How It Works</h2>
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-search feature-icon"></i>
+                        <h5 class="mt-3">Search</h5>
+                        <p>Find a ride that fits your schedule and budget.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-calendar-check feature-icon"></i>
+                        <h5 class="mt-3">Book</h5>
+                        <p>Reserve your seat with just a few clicks.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-geo-alt feature-icon"></i>
+                        <h5 class="mt-3">Pickup</h5>
+                        <p>Meet your driver at the pickup location.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-flag feature-icon"></i>
+                        <h5 class="mt-3">Drop‑off</h5>
+                        <p>Arrive safely at your destination.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/home.js"></script>
+}

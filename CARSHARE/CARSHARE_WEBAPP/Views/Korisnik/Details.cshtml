@@ -1,23 +1,47 @@
-﻿@model CARSHARE_WEBAPP.ViewModels.KorisnikVM
+﻿
+@model CARSHARE_WEBAPP.ViewModels.KorisnikVM
 
 @{
     ViewData["Title"] = "Korisnik Details";
 }
 
-<h2>Korisnik Details</h2>
+@section Styles {
+    <link rel="stylesheet" href="~/css/details.css" asp-append-version="true" />
+}
 
-<div class="card p-4 mb-4">
-    <dl class="row">
-        <dt class="col-sm-3">Ime</dt>
-        <dd class="col-sm-9">@Model.Ime</dd>
+<div class="details-container">
+    <div class="details-card id-card">
+        <div class="id-card-header text-center mb-4">
+            <img src="~/images/user-placeholder.png" alt="User Photo" class="details-photo mb-2" />
+            <h2 class="details-title">CARSHARE ID</h2>
+            <p class="details-id">ID: @Model.IDKorisnik</p>
+        </div>
 
-        <dt class="col-sm-3">Prezime</dt>
-        <dd class="col-sm-9">@Model.Prezime</dd>
+        <div class="card-body">
+            <dl class="row mb-4">
+                <dt class="col-sm-4">Ime</dt>
+                <dd class="col-sm-8">@Model.Ime</dd>
 
-        <dt class="col-sm-3">Email</dt>
-        <dd class="col-sm-9">@Model.Email</dd>
-        <a href="@Url.Action("Update", "Korisnik", new { id = Model.IDKorisnik })" class="btn btn-primary">
-            Edit User Info
-        </a>
-       
+                <dt class="col-sm-4">Prezime</dt>
+                <dd class="col-sm-8">@Model.Prezime</dd>
+
+                <dt class="col-sm-4">Email</dt>
+                <dd class="col-sm-8">@Model.Email</dd>
+
+                <dt class="col-sm-4">Telefon</dt>
+                <dd class="col-sm-8">@Model.Telefon</dd>
+
+                <dt class="col-sm-4">Datum Rođenja</dt>
+                <dd class="col-sm-8">@Model.DatumRodjenja.ToString("dd.MM.yyyy")</dd>
+            </dl>
+        </div>
+
+        <div class="card-footer actions text-end">
+            <a asp-action="Update" asp-route-id="@Model.IDKorisnik" class="btn btn-edit me-2">Edit</a>
+            <a asp-action="GetKorisnici" class="btn btn-back">Back</a>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+}

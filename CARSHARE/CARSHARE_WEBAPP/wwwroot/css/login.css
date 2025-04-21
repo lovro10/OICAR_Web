@@ -1,0 +1,78 @@
+﻿/* Full‑page cream background */
+body, html {
+    height: 100%;
+    margin: 0;
+    background: #f5f5dc;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+.login-card {
+    background: #000;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+    .login-card .brand {
+        font-family: 'Permanent Marker', cursive;
+        color: #f5f5dc;
+        margin-bottom: 0.5rem;
+        font-size: 2.5rem;
+    }
+
+    .login-card h4 {
+        color: #f5f5dc;
+    }
+
+.form-label {
+    color: #f5f5dc;
+    font-weight: 500;
+}
+
+.form-control {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid #333;
+    color: #fff;
+}
+
+    .form-control:focus {
+        background: rgba(255,255,255,0.2);
+        box-shadow: none;
+        border-color: #f5f5dc;
+    }
+
+.btn-login {
+    width: 100%;
+    background: #f5f5dc; /* cream button */
+    color: #000;
+    font-weight: 600;
+    border: 1px solid #000;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+    .btn-login:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.4);
+    }
+
+.link-home {
+    display: inline-block;
+    margin-top: 0.5rem;
+    color: #f5f5dc;
+    text-decoration: none;
+}
+
+    .link-home:hover {
+        text-decoration: underline;
+    }

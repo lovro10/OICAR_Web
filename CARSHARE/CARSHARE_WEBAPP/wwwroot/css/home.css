@@ -1,0 +1,172 @@
+﻿.hero-content h1,
+.features h2,
+.cta h2,
+.stats .stat-number,
+.how-it-works h2 {
+    font-family: 'Permanent Marker', cursive;
+}
+
+.hero {
+    position: relative;
+    background: url('/images/car.jpg') center/cover no-repeat;
+    animation: panBackground 30s ease-in-out infinite alternate;
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    animation: fadeInUp 1s ease-out;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+    .hero-content h1,
+    .hero-content p {
+        color: #f5f5dc;
+    }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes panBackground {
+    from {
+        background-position: 0% center;
+    }
+
+    to {
+        background-position: 100% center;
+    }
+}
+
+.shape {
+    position: absolute;
+    background: rgba(255,255,255,0.3);
+    pointer-events: none;
+    will-change: transform;
+}
+
+    .shape.circle {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        top: 20%;
+        left: 10%;
+        animation: float1 6s ease-in-out infinite;
+    }
+
+        .shape.circle.small {
+            width: 60px;
+            height: 60px;
+            top: 70%;
+            left: 80%;
+            animation: float2 8s ease-in-out infinite;
+        }
+
+    .shape.rect {
+        width: 180px;
+        height: 100px;
+        top: 50%;
+        left: 60%;
+        animation: float3 7s ease-in-out infinite;
+    }
+
+@keyframes float1 {
+    0%,100% {
+        transform: translate(0,0);
+    }
+
+    50% {
+        transform: translate(30px,20px);
+    }
+}
+
+@keyframes float2 {
+    0%,100% {
+        transform: translate(0,0);
+    }
+
+    50% {
+        transform: translate(-20px,30px);
+    }
+}
+
+@keyframes float3 {
+    0%,100% {
+        transform: translate(0,0);
+    }
+
+    50% {
+        transform: translate(40px,-25px);
+    }
+}
+
+.features {
+    background: #f5f5dc;
+}
+
+.cta {
+    width: 100%;
+    background: #000;
+    color: #f5f5dc;
+    padding: 3rem 0;
+}
+
+    .cta h2,
+    .cta p {
+        color: #f5f5dc;
+    }
+
+.stats {
+    background: #f5f5dc;
+}
+
+    .stats .stat {
+        margin-bottom: 1.5rem;
+    }
+
+    .stats .stat-number {
+        font-size: 3rem;
+        color: #000;
+    }
+
+    .stats p {
+        color: #333;
+    }
+
+.how-it-works h2 {
+    color: #000;
+}
+
+.how-it-works .card {
+    border: none;
+    transition: transform .3s, box-shadow .3s;
+}
+
+    .how-it-works .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,0.15);
+    }
+
+.how-it-works .feature-icon {
+    font-size: 2.5rem;
+    color: #000;
+}

@@ -1,14 +1,15 @@
 ﻿body {
-    background-image: url('/images/preview.jpg'); 
+    background-image: url('/images/preview.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     image-rendering: optimizeQuality;
 }
+
 table {
     position: relative;
-    z-index: 10; 
-    background-color: white; 
+    z-index: 10;
+    background-color: white;
     font-family: Arial, sans-serif;
     border-collapse: collapse;
     width: 100%;
@@ -18,24 +19,24 @@ table {
 
 th {
     background-color: #4CAF50;
-    color: black; 
+    color: black;
     font-size: 16px;
     text-align: left;
     padding: 10px;
-    border: 1px solid #ddd; 
+    border: 1px solid #ddd;
 }
 
 td {
-    font-family: 'Gravitas One', sans-serif; 
+    font-family: 'Gravitas One', sans-serif;
     border: 1px solid #ddd;
     padding: 8px;
     font-size: 14px;
-    color: blue; 
-    opacity: 0; 
+    color: blue;
+    opacity: 0;
 }
 
 tr:nth-child(even) {
-    background-color: #f2f2f2; 
+    background-color: #f2f2f2;
 }
 
 tr:hover {
@@ -79,5 +80,5 @@ tbody tr td:nth-child(odd) {
 }
 
 tbody tr td:nth-child(even) {
-    animation: slideInRight 0.5s ease-in-out forwards; 
+    animation: slideInRight 0.5s ease-in-out forwards;
 }

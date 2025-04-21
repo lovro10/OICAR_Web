@@ -1,49 +1,61 @@
-﻿@model CARSHARE_WEBAPP.ViewModels.EditKorisnikVM
+﻿    @model CARSHARE_WEBAPP.ViewModels.EditKorisnikVM
 
-<h2>Update User</h2>
+@{
+    ViewData["Title"] = "Ažuriraj korisnika";
+}
 
-<form asp-action="Update" method="post">
-    <input type="hidden" asp-for="IDKorisnik" />
+@section Styles {
+    <link rel="stylesheet" href="~/css/edit_korisnik.css" asp-append-version="true" />
+}
 
-    <div class="form-group">
-        <label asp-for="Ime"></label>
-        <input asp-for="Ime" class="form-control" />
-        <span asp-validation-for="Ime" class="text-danger"></span>
+<div class="edit-container">
+    <div class="edit-card id-card">
+        <div class="id-card-header text-center mb-4">
+            <h2 class="details-title">Ažuriraj korisnika</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Update" method="post">
+                <input type="hidden" asp-for="IDKorisnik" />
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Ime" class="form-label"></label>
+                        <input asp-for="Ime" class="form-control" />
+                        <span asp-validation-for="Ime" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Prezime" class="form-label"></label>
+                        <input asp-for="Prezime" class="form-control" />
+                        <span asp-validation-for="Prezime" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" type="email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Username" class="form-label"></label>
+                        <input asp-for="Username" class="form-control" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Telefon" class="form-label"></label>
+                        <input asp-for="Telefon" class="form-control" />
+                        <span asp-validation-for="Telefon" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="DatumRodjenja" class="form-label"></label>
+                        <input asp-for="DatumRodjenja" type="date" class="form-control" />
+                        <span asp-validation-for="DatumRodjenja" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="card-footer mt-4 text-end">
+                    <button type="submit" class="btn btn-edit me-2">Spremi</button>
+                    <a asp-action="Details" asp-route-id="@Model.IDKorisnik" class="btn btn-back">Odustani</a>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Prezime"></label>
-        <input asp-for="Prezime" class="form-control" />
-        <span asp-validation-for="Prezime" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Username"></label>
-        <input asp-for="Username" class="form-control" />
-        <span asp-validation-for="Username" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Telefon"></label>
-        <input asp-for="Telefon" class="form-control" />
-        <span asp-validation-for="Telefon" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="DatumRodjenja"></label>
-        <input asp-for="DatumRodjenja" class="form-control" type="date" />
-        <span asp-validation-for="DatumRodjenja" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Update</button>
-    <a asp-action="Details" asp-route-id="@Model.IDKorisnik" class="btn btn-secondary">Cancel</a>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
