@@ -11,6 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthorization();
 builder.Services.AddHttpClient<KorisnikService>();
 builder.Services.AddHttpClient<VoznjaService>();
+builder.Services.AddHttpClient<ImageService>();
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
 

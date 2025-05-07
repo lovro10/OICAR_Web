@@ -1,0 +1,94 @@
+﻿@{
+    var username = Context.Session.GetString("Username");
+    var userID = Context.Session.GetInt32("UserId");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CARSHARE_WEBAPP</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CARSHARE_WEBAPP.styles.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?
+    family=Roboto:wght@300;400;500;700&
+    family=Permanent+Marker&display=swap"
+          rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        h1, h2, h3, .hero-content h1, .stats .stat-number, .how-it-works h2 {
+            font-family: 'Permanent Marker', cursive;
+        }
+    </style>
+    @RenderSection("Styles", required: false)
+   
+
+</head>
+<body>
+    <header>
+        @if (!Context.Request.Path.Value.Contains("Login"))
+        {
+            <nav class="navbar navbar-expand-sm navbar-custom px-3">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">CARSHARE</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                        aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        
+                    </ul>
+                        <ul class="navbar-nav">
+                            @if (!string.IsNullOrEmpty(username))
+                            {
+                                <a class="nav-link text-dark" asp-controller="Korisnik" asp-action="Details" asp-route-id="@userID">
+                                    @username
+                                </a>
+                              
+                                <li class="nav-item">
+                                    <form method="post" asp-controller="Korisnik" asp-action="Logout">
+                                        <button type="submit" class="btn btn-link nav-link">Logout</button>
+                                    </form>
+                                </li>
+
+                            }                          
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Korisnik" asp-action="Login">Login</a>
+                                </li>
+                            }
+                        </ul>
+                </div>
+          
+        </nav>
+        }
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - CARSHARE_WEBAPP - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
