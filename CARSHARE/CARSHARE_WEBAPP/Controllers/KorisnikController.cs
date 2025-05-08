@@ -19,14 +19,14 @@ namespace CARSHARE_WEBAPP.Controllers
     {
         private readonly KorisnikService _korisnikService;
         private readonly HttpClient _httpClient;
-        private readonly ImageService _imageService;
+      
 
 
-        public KorisnikController(KorisnikService korisnikService, ImageService imageService)
+        public KorisnikController(KorisnikService korisnikService)
         {
 
             _korisnikService = korisnikService;
-            _imageService = imageService;
+           
         }
 
         public async Task<IActionResult> GetKorisnici()
