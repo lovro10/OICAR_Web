@@ -1,3 +1,20 @@
 ﻿@{
     Layout = "_Layout";
+    var role = Context.Session.GetString("Role");
+
+    if (!string.IsNullOrEmpty(role))
+    {
+        if (role == "ADMIN")
+        {
+            Layout = "_LayoutAdmin";
+        }
+        else if (role == "PASSENGER")
+        {
+            Layout = "_LayoutPassenger";
+        }
+        else if (role == "DRIVER")
+        {
+            Layout = "_LayoutDriver";
+        }
+    }
 }

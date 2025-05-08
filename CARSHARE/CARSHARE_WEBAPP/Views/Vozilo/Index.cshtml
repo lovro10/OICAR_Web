@@ -20,9 +20,9 @@
                 <td>@vozilo.Model</td>
                 <td>@vozilo.Registracija</td>
                 <td>
-                    @if (vozilo.ImagePrometna?.Content != null)
+                    @if (vozilo.ImagePrometna?.Base64Content != null)
                     {
-                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(vozilo.ImagePrometna.Content)" width="100" />
+                       
                     }
                 </td>
             </tr>

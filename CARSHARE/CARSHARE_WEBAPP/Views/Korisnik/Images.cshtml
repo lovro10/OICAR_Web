@@ -15,7 +15,7 @@ else
         @foreach (var image in Model)
         {
             <div class="col-md-3 mb-3">
-                <img src="data:image/jpeg;base64,@image.Content" class="img-fluid img-thumbnail" />
+                <img src="data:image/jpeg;base64,@image.Base64Content" class="img-fluid img-thumbnail" />
             </div>
         }
     </div>

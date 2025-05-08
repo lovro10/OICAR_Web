@@ -19,13 +19,14 @@ namespace CARSHARE_WEBAPP.Controllers
     {
         private readonly KorisnikService _korisnikService;
         private readonly HttpClient _httpClient;
+        private readonly ImageService _imageService;
 
 
-        public KorisnikController(KorisnikService korisnikService)
+        public KorisnikController(KorisnikService korisnikService, ImageService imageService)
         {
 
             _korisnikService = korisnikService;
- 
+            _imageService = imageService;
         }
 
         public async Task<IActionResult> GetKorisnici()
@@ -81,7 +82,7 @@ namespace CARSHARE_WEBAPP.Controllers
 
 
                 Console.WriteLine("User logged in successfully");
-                return RedirectToAction("GetKorisnici");
+                return RedirectToAction("Index","Home");
             }
             else
             {
@@ -110,6 +111,9 @@ namespace CARSHARE_WEBAPP.Controllers
             {
                 return NotFound();
             }
+          
+
+            
             return View(korisnik);
         }
 
