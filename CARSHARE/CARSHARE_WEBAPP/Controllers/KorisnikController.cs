@@ -44,6 +44,7 @@ namespace CARSHARE_WEBAPP.Controllers
 
         public async Task<IActionResult> Login(LoginVM loginVM)
         {
+
             var korisnici = await _korisnikService.GetKorisniciAsync();
 
             var user = korisnici.FirstOrDefault(x => x.Username == loginVM.UserName);
@@ -53,7 +54,6 @@ namespace CARSHARE_WEBAPP.Controllers
                 return View(loginVM);
             }
 
-
             var b64hash = PasswordHashProvider.GetHash(loginVM.Password, user.PwdSalt);
             if (b64hash != user.PwdHash)
             {
@@ -62,27 +62,55 @@ namespace CARSHARE_WEBAPP.Controllers
             }
 
             using var client = new HttpClient();
-
             client.BaseAddress = new Uri("http://localhost:5194/api/Korisnik/Login");
-                var loginPayload = new
+            var loginPayload = new
+            {
+                Username = loginVM.UserName,
+                Password = loginVM.Password
+            };
+
+            var response = await client.PostAsJsonAsync("http://localhost:5194/api/Korisnik/Login", loginPayload);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var token = await response.Content.ReadAsStringAsync();
+                var cleanToken = token.Replace("\"", "");
+
+             
+                Response.Cookies.Append("JWToken", cleanToken, new CookieOptions
                 {
-                    Username = loginVM.UserName,
-                    Password = loginVM.Password
-                };
+                    HttpOnly = true,
+                    Secure = true,
+                    Expires = DateTimeOffset.UtcNow.AddDays(7),
+                    SameSite = SameSiteMode.Strict
+                });
 
-                var response = await client.PostAsJsonAsync("http://localhost:5194/api/Korisnik/Login", loginPayload);
-
-                if (response.IsSuccessStatusCode)
+                Response.Cookies.Append("Username", loginVM.UserName, new CookieOptions
                 {
-                    var token = await response.Content.ReadAsStringAsync();
-                HttpContext.Session.SetString("JWToken", token.Replace("\"",""));
-                HttpContext.Session.SetString("Username", loginVM.UserName);
-                HttpContext.Session.SetInt32("UserId", user.IDKorisnik);
-                HttpContext.Session.SetString("Role", user.Uloga.Naziv);
+                    HttpOnly = true,
+                    Secure = true,
+                    Expires = DateTimeOffset.UtcNow.AddDays(7),
+                    SameSite = SameSiteMode.Strict
+                });
 
+                Response.Cookies.Append("UserId", user.IDKorisnik.ToString(), new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    Expires = DateTimeOffset.UtcNow.AddDays(7),
+                    SameSite = SameSiteMode.Strict
+                });
+
+                Response.Cookies.Append("Role", user.Uloga.Naziv, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    Expires = DateTimeOffset.UtcNow.AddDays(7),
+                    SameSite = SameSiteMode.Strict
+                });
 
                 Console.WriteLine("User logged in successfully");
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
             else
             {
@@ -90,14 +118,19 @@ namespace CARSHARE_WEBAPP.Controllers
                 return View();
             }
 
-   
         }
 
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
             HttpContext.Session.Clear();
-             
+
+        
+            Response.Cookies.Delete("JWToken");
+            Response.Cookies.Delete("Username");
+            Response.Cookies.Delete("UserId");
+            Response.Cookies.Delete("Role");
+
             return RedirectToAction("Login", "Korisnik");
         }
 

@@ -1,5 +1,4 @@
-﻿
-@model CARSHARE_WEBAPP.ViewModels.KorisnikVM
+﻿@model CARSHARE_WEBAPP.ViewModels.KorisnikVM
 
 @{
     ViewData["Title"] = "Korisnik Details";
@@ -7,12 +6,65 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/details.css" asp-append-version="true" />
+    <style>
+        .carousel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+            .carousel img {
+                max-width: 300px;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+
+        .carousel-controls {
+            margin: 0 10px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+       
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            margin: 5% auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
 }
 
 <div class="details-container">
     <div class="details-card id-card">
         <div class="id-card-header text-center mb-4">
-            <img src="~/images/user-placeholder.png" alt="User Photo" class="details-photo mb-2" />
+            <div class="carousel">
+                <span class="carousel-controls" onclick="prevImage()">&#9664;</span>
+                <img id="imageDisplay" src="@Url.Content("~/images/osobna.jpg")" alt="User Image" class="details-photo mb-2" onclick="openModal()" />
+                <span class="carousel-controls" onclick="nextImage()">&#9654;</span>
+            </div>
             <h2 class="details-title">CARSHARE ID</h2>
             <p class="details-id">ID: @Model.IDKorisnik</p>
         </div>
@@ -43,5 +95,50 @@
     </div>
 </div>
 
+
+<div id="imageModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+</div>
+
 @section Scripts {
+    <script>
+        const basePath = '@Url.Content("~/images/")';
+
+    
+        const images = [
+            basePath + "osobna.jpg",
+            basePath + "vozacka.jpg",
+            basePath + "selfie.jpg"
+        ];
+
+        let currentIndex = 0;
+
+        function updateImage() {
+            const imageElement = document.getElementById("imageDisplay");
+            imageElement.src = images[currentIndex];
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % images.length;
+            updateImage();
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updateImage();
+        }
+
+        function openModal() {
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("modalImage");
+            modal.style.display = "block";
+            modalImg.src = images[currentIndex];
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("imageModal");
+            modal.style.display = "none";
+        }
+    </script>
 }
