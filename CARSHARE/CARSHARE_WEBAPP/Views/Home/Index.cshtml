@@ -1,139 +1,148 @@
-﻿@{
-    ViewData["Title"] = "Home";
-}
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarShare - Reimagined</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="~/css/home.css" />
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container container">
+            <div class="nav-logo">CarShare</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#driver-portal">Driver Portal</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="download" class="btn btn-primary">Download Mobile App</a></li>
+            </ul>
+        </div>
+    </nav>
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
-}
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content container">
+            <h1>Drive with Freedom</h1>
+            <p>Join CarShare as a driver &amp; earn on your schedule. Fast onboarding, seamless trips.</p>
+            <a href="#driver-portal" class="btn btn-primary btn-lg">Start Driving</a>
+            <img src="~/images/car.jpg" alt="Car" class="car-image">
+        </div>
+    </section>
 
-<div class="hero">
-    <div class="shape circle"></div>
-    <div class="shape rect"></div>
-    <div class="shape circle small"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content text-center">
-        <h1 class="display-1 mb-3">CARSHARE</h1>
-        <p class="lead mb-4">Share the ride. Embrace the journey.</p>
-        <a asp-action="About" class="btn btn-lg btn-primary px-4 py-2">Learn More</a>
-    </div>
-</div>
-
-<section class="features py-5">
-    <div class="container">
-        <h2 class="text-center mb-4">Why Choose CARSHARE?</h2>
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <div class="card feature-card">
-                    <div class="card-body text-center">
-                        <i class="bi bi-people-fill feature-icon"></i>
-                        <h5 class="mt-2">Community</h5>
-                        <p>Connect with drivers and passengers in your area.</p>
-                    </div>
-                </div>
+    <!-- Features Section -->
+    <section id="features" class="container">
+        <h2 class="section-title text-center">Why Choose CarShare?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🚗</div>
+                <h3>Flexible Scheduling</h3>
+                <p>Drive when you want—no fixed hours, no pressure.</p>
             </div>
-            <div class="col-md-4 mb-3">
-                <div class="card feature-card">
-                    <div class="card-body text-center">
-                        <i class="bi bi-clock-history feature-icon"></i>
-                        <h5 class="mt-2">Convenience</h5>
-                        <p>Book rides in seconds, anytime, anywhere.</p>
-                    </div>
-                </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Competitive Earnings</h3>
+                <p>Transparent rates &amp; bonuses, paid weekly.</p>
             </div>
-            <div class="col-md-4 mb-3">
-                <div class="card feature-card">
-                    <div class="card-body text-center">
-                        <i class="bi bi-wallet2 feature-icon"></i>
-                        <h5 class="mt-2">Affordable</h5>
-                        <p>Save money by sharing trips with others.</p>
-                    </div>
-                </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Secure Payments</h3>
+                <p>Direct deposit with detailed trip breakdowns.</p>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<div class="cta">
-    <div class="container">
-        <h2>Ready to hit the road?</h2>
-        <p class="mb-4">Sign up today and join thousands of happy riders.</p>
-        <a asp-controller="Korisnik" asp-action="Register" class="btn btn-light btn-lg">
-            Get Started
-        </a>
-    </div>
-</div>
+    <!-- Driver Portal Section -->
+    <section id="driver-portal" class="container">
+        <h2 class="section-title text-center">Driver Onboarding</h2>
+        <div class="portal-grid">
+            <!-- Upload ID -->
+            <div class="portal-step">
+                <div class="step-icon">🆔</div>
+                <h3 class="step-title">Upload Your ID</h3>
+                <p class="step-desc">Submit a photo of your driver's license securely.</p>
 
-<!-- Animated Stats Counter -->
-<section class="stats py-5">
-    <div class="container text-center">
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="stat">
-                    <h3 class="stat-number" data-target="10000">0</h3>
-                    <p>Rides Shared</p>
+            </div>
+            <!-- Add Vehicle -->
+            <div class="portal-step">
+                <div class="step-icon">🚘</div>
+                <h3 class="step-title">Add Your Vehicle</h3>
+                <p class="step-desc">Enter your car's details and upload registration.</p>
+
+            </div>
+            <!-- Go Online -->
+            <div class="portal-step">
+                <div class="step-icon">🟢</div>
+                <h3 class="step-title">Go Online</h3>
+                <p class="step-desc">Toggle your availability to start receiving trip requests.</p>
+                <div class="toggle-online">
+
                 </div>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="stat">
-                    <h3 class="stat-number" data-target="5000">0</h3>
-                    <p>Happy Users</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="stat">
-                    <h3 class="stat-number" data-target="1200">0</h3>
-                    <p>Drivers Registered</p>
-                </div>
+            <!-- Manage Trips -->
+            <div class="portal-step">
+                <div class="step-icon">📊</div>
+                <h3 class="step-title">Manage Trips</h3>
+                <p class="step-desc">View and track your upcoming and completed trips.</p>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- How It Works -->
-<section class="how-it-works py-5">
-    <div class="container">
-        <h2 class="text-center mb-4">How It Works</h2>
-        <div class="row">
-            <div class="col-md-3 mb-3">
-                <div class="card h-100 text-center">
-                    <div class="card-body">
-                        <i class="bi bi-search feature-icon"></i>
-                        <h5 class="mt-3">Search</h5>
-                        <p>Find a ride that fits your schedule and budget.</p>
-                    </div>
-                </div>
+    <!-- How It Works -->
+    <section id="how-it-works" class="container">
+        <h2 class="section-title text-center">How It Works</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">1️⃣</div>
+                <h3>Create Account</h3>
+                <p>Sign up quickly using email or social login.</p>
             </div>
-            <div class="col-md-3 mb-3">
-                <div class="card h-100 text-center">
-                    <div class="card-body">
-                        <i class="bi bi-calendar-check feature-icon"></i>
-                        <h5 class="mt-3">Book</h5>
-                        <p>Reserve your seat with just a few clicks.</p>
-                    </div>
-                </div>
+            <div class="feature-card">
+                <div class="feature-icon">2️⃣</div>
+                <h3>Verify & Onboard</h3>
+                <p>Complete ID &amp; vehicle verification.</p>
             </div>
-            <div class="col-md-3 mb-3">
-                <div class="card h-100 text-center">
-                    <div class="card-body">
-                        <i class="bi bi-geo-alt feature-icon"></i>
-                        <h5 class="mt-3">Pickup</h5>
-                        <p>Meet your driver at the pickup location.</p>
-                    </div>
-                </div>
+            <div class="feature-card">
+                <div class="feature-icon">3️⃣</div>
+                <h3>Accept Trips</h3>
+                <p>Go online and choose rides near you.</p>
             </div>
-            <div class="col-md-3 mb-3">
-                <div class="card h-100 text-center">
-                    <div class="card-body">
-                        <i class="bi bi-flag feature-icon"></i>
-                        <h5 class="mt-3">Drop‑off</h5>
-                        <p>Arrive safely at your destination.</p>
-                    </div>
-                </div>
+            <div class="feature-card">
+                <div class="feature-icon">4️⃣</div>
+                <h3>Earn & Track</h3>
+                <p>Get paid, review earnings, unlock bonuses.</p>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-@section Scripts {
-    <script src="~/js/home.js"></script>
-}
+    <!-- Stats -->
+    <section id="stats">
+        <div class="container stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">750+</div>
+                <div class="stat-label">Drivers Onboarded</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">1.5M</div>
+                <div class="stat-label">Trips Completed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">€2M</div>
+                <div class="stat-label">Payouts Processed</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 CarShare. All rights reserved.</p>
+            <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        </div>
+    </footer>
+</body>
+</html>

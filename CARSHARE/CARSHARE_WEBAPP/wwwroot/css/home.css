@@ -1,172 +1,323 @@
-﻿.hero-content h1,
-.features h2,
-.cta h2,
-.stats .stat-number,
-.how-it-works h2 {
-    font-family: 'Permanent Marker', cursive;
+﻿/* ===== Variables ===== */
+:root {
+    --color-cream: #fdfdf5;
+    --color-black: #111111;
+    --color-black-solid: #000000;
+    --transition-fast: 0.3s ease;
+}
+/* ===== Global ===== */
+* {
+    box-sizing: border-box;
 }
 
-.hero {
-    position: relative;
-    background: url('/images/car.jpg') center/cover no-repeat;
-    animation: panBackground 30s ease-in-out infinite alternate;
-    height: 70vh;
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    background: var(--color-cream);
+    color: var(--color-black);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--color-black-solid);
+    margin-bottom: 0.5em;
+}
+
+p {
+    margin-bottom: 1em;
+}
+
+/* ===== Navigation ===== */
+nav {
+    background: var(--color-cream);
+    padding: 1rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-container {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
+}
+
+.nav-logo {
+    font-size: 1.5rem;
+    color: var(--color-black-solid);
+    font-weight: 700;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+}
+
+    .nav-links li a:hover {
+        color: #ccc;
+    }
+
+/* ===== Hero ===== */
+#hero {
+    position: relative;
+    text-align: center;
+    padding: 6rem 1.5rem;
+    background: var(--color-cream);
     overflow: hidden;
 }
 
-.hero-overlay {
+.hero-bg {
     position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #fdfbf5, #f5f5e6, #fdfbf5);
+    background-size: 400% 400%;
+    animation: gradientShift 20s ease-in-out infinite;
+    z-index: 1;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+/* Decorative bars with toy car icons */
+#hero::before, #hero::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 20%;
+    height: 4rem;
+    background-color: var(--color-black-solid);
+    /* Use JPEG toy car image (relative path from CSS file) */
+    background-image: url('../images/car-toy.jpg');
+    background-repeat: repeat-x;
+    background-position: center;
+    background-size: auto 80%;
+    z-index: 2;
+}
+
+#hero::before {
+    left: 0;
+}
+
+#hero::after {
+    right: 0;
 }
 
 .hero-content {
     position: relative;
-    z-index: 1;
-    animation: fadeInUp 1s ease-out;
-    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+    z-index: 3;
 }
 
-    .hero-content h1,
-    .hero-content p {
-        color: #f5f5dc;
-    }
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes panBackground {
-    from {
-        background-position: 0% center;
-    }
-
-    to {
-        background-position: 100% center;
-    }
-}
-
-.shape {
-    position: absolute;
-    background: rgba(255,255,255,0.3);
-    pointer-events: none;
-    will-change: transform;
-}
-
-    .shape.circle {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        top: 20%;
-        left: 10%;
-        animation: float1 6s ease-in-out infinite;
-    }
-
-        .shape.circle.small {
-            width: 60px;
-            height: 60px;
-            top: 70%;
-            left: 80%;
-            animation: float2 8s ease-in-out infinite;
-        }
-
-    .shape.rect {
-        width: 180px;
-        height: 100px;
-        top: 50%;
-        left: 60%;
-        animation: float3 7s ease-in-out infinite;
-    }
-
-@keyframes float1 {
-    0%,100% {
-        transform: translate(0,0);
-    }
-
-    50% {
-        transform: translate(30px,20px);
-    }
-}
-
-@keyframes float2 {
-    0%,100% {
-        transform: translate(0,0);
-    }
-
-    50% {
-        transform: translate(-20px,30px);
-    }
-}
-
-@keyframes float3 {
-    0%,100% {
-        transform: translate(0,0);
-    }
-
-    50% {
-        transform: translate(40px,-25px);
-    }
-}
-
-.features {
-    background: #f5f5dc;
-}
-
-.cta {
-    width: 100%;
-    background: #000;
-    color: #f5f5dc;
-    padding: 3rem 0;
-}
-
-    .cta h2,
-    .cta p {
-        color: #f5f5dc;
-    }
-
-.stats {
-    background: #f5f5dc;
-}
-
-    .stats .stat {
-        margin-bottom: 1.5rem;
-    }
-
-    .stats .stat-number {
+    .hero-content h1 {
         font-size: 3rem;
-        color: #000;
     }
 
-    .stats p {
-        color: #333;
+    .hero-content p {
+        font-size: 1.25rem;
     }
 
-.how-it-works h2 {
-    color: #000;
+.btn {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    padding: 0.75em 1.5em;
+    border-radius: 4px;
+    border: 2px solid var(--color-black-solid);
+    transition: var(--transition-fast);
 }
 
-.how-it-works .card {
-    border: none;
-    transition: transform .3s, box-shadow .3s;
+.btn-primary {
+    background: var(--color-black-solid);
+    color: var(--color-cream);
 }
 
-    .how-it-works .card:hover {
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+/* ===== Features ===== */
+#features {
+    padding: 4rem 1.5rem;
+    background: #fff;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.feature-card {
+    background: var(--color-cream);
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    transition: var(--transition-fast);
+}
+
+    .feature-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 .5rem 1rem rgba(0,0,0,0.15);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     }
 
-.how-it-works .feature-icon {
+/* ===== Driver Portal ===== */
+#driver-portal {
+    padding: 4rem 1.5rem;
+}
+
+.portal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.portal-step {
+    background: var(--color-cream);
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    transition: var(--transition-fast);
+}
+
+    .portal-step:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+
+.step-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-black-solid);
+}
+
+.step-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5em;
+}
+
+.step-desc {
+    font-size: 1rem;
+    color: #333;
+}
+
+.driver-form {
+    text-align: left;
+    margin-top: 1rem;
+}
+
+    .driver-form label {
+        display: block;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+    }
+
+    .driver-form input, .driver-form select {
+        width: 100%;
+        padding: 0.5em;
+        margin-bottom: 1em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+.toggle-online {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+/* ===== Stats ===== */
+#stats {
+    padding: 3rem 1.5rem;
+    background: #fff;
+}
+
+.stats-grid {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-family: 'Montserrat', sans-serif;
     font-size: 2.5rem;
-    color: #000;
+    font-weight: 700;
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: #444;
+}
+
+/* ===== Car Image ===== */
+.car-image {
+    margin: 2rem auto;
+    max-width: 600px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+/* ===== Footer ===== */
+footer {
+    background: var(--color-black);
+    color: var(--color-cream);
+    text-align: center;
+    padding: 2rem 1.5rem;
+}
+
+    footer a {
+        color: #ccc;
+    }
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2.25rem;
+    }
+
+    .hero-content p {
+        font-size: 1.1rem;
+    }
+
+    #hero::before, #hero::after {
+        display: none;
+    }
 }

@@ -1,0 +1,98 @@
+﻿/* ===== Variables ===== */
+:root {
+    --color-cream: #fdfdf5;
+    --color-black: #111111;
+    --color-black-solid: #000000;
+    --transition-fast: 0.3s ease;
+    --radius: 4px;
+}
+
+/* ===== Page Wrapper ===== */
+.voznja-list {
+    background: var(--color-cream);
+    padding: 2rem;
+    margin: 2rem auto;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+    /* ===== Title ===== */
+    .voznja-list .page-title {
+        font-family: 'Gravitas One', cursive;
+        color: var(--color-black-solid);
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 2rem;
+    }
+
+    /* ===== Button ===== */
+    .voznja-list .btn-primary {
+        background: var(--color-black-solid);
+        color: var(--color-cream);
+        border: 2px solid var(--color-black-solid);
+        transition: var(--transition-fast);
+    }
+
+        .voznja-list .btn-primary:hover {
+            background: var(--color-cream);
+            color: var(--color-black-solid);
+        }
+
+/* ===== DataTable Styling ===== */
+#ridesTable {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+    #ridesTable thead {
+        background: var(--color-black-solid);
+    }
+
+        #ridesTable thead th {
+            color: var(--color-cream);
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            text-align: left;
+        }
+
+    #ridesTable tbody tr:nth-child(even) {
+        background: rgba(0,0,0,0.03);
+    }
+
+    #ridesTable tbody td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        color: var(--color-black);
+    }
+
+/* ===== Pagination ===== */
+.dataTables_wrapper .dataTables_paginate {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.dataTables_wrapper .paginate_button {
+    background: var(--color-black-solid);
+    color: var(--color-cream) !important;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.3rem 0.8rem;
+    margin: 0 0.2rem;
+    transition: var(--transition-fast);
+}
+
+    .dataTables_wrapper .paginate_button:hover {
+        background: #333;
+        color: #fff !important;
+    }
+
+    .dataTables_wrapper .paginate_button.current {
+        background: var(--color-black);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+.dataTables_wrapper .dataTables_info {
+    margin-top: 0.5rem;
+    color: var(--color-black);
+    text-align: center;
+}
