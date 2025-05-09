@@ -4,7 +4,7 @@
     ViewData["Title"] = "Lista Korisnika";
 }
 
-<section class="korisnik-list">
+<section class="korisnik-list container">
     <h2 class="page-title">Lista Korisnika</h2>
 
     <table id="usersTable" class="stripe hover" style="width:100%">
@@ -30,8 +30,16 @@
                     <td>@(k.Uloga?.Naziv ?? "N/A")</td>
                     <td>@(k.IsConfirmed ?? false ? "✔️" : "❌")</td>
                     <td>
-                        <button onclick="toggleConfirmation(@k.IDKorisnik, true)" class="btn btn-success">Confirm</button>
-                        <button onclick="toggleConfirmation(@k.IDKorisnik, false)" class="btn btn-danger">Reject</button>
+                        <button type="button"
+                                onclick="toggleConfirmation(@k.IDKorisnik, true)"
+                                class="btn btn-success btn-sm">
+                            Confirm
+                        </button>
+                        <button type="button"
+                                onclick="toggleConfirmation(@k.IDKorisnik, false)"
+                                class="btn btn-danger btn-sm">
+                            Reject
+                        </button>
                     </td>
                 </tr>
             }
@@ -49,19 +57,14 @@
             integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
             crossorigin="anonymous">
     </script>
-    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js">
-    </script>
-
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script>
-        $(document).ready(function () {
+        $(function () {
             $('#usersTable').DataTable({
                 pageLength: 10,
                 lengthChange: false,
                 language: {
-                    paginate: {
-                        previous: '<',
-                        next: '>'
-                    },
+                    paginate: { previous: '<', next: '>' },
                     zeroRecords: "Nema pronađenih korisnika",
                     info: "Prikaz _START_ do _END_ od _TOTAL_ korisnika",
                     infoEmpty: "Prikaz 0 do 0 od 0 korisnika"
@@ -70,34 +73,29 @@
         });
 
         function toggleConfirmation(userId, isConfirmed) {
-            const payload = {
-                Id: userId,
-                IsConfirmed: isConfirmed
-            };
-
-            fetch('http://localhost:5194/api/Korisnik/potvrdi', {
+            fetch('/api/Korisnik/potvrdi', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getCookie("JWToken")}`
+                    'Authorization': 'Bearer ' + getCookie('JWToken')
                 },
-                body: JSON.stringify(payload)
+                body: JSON.stringify({ Id: userId, IsConfirmed: isConfirmed })
             })
-            .then(response => {
-                if (response.ok) {
+                .then(r => {
+                    if (!r.ok) throw new Error(r.statusText);
                     alert(isConfirmed ? 'Korisnik potvrđen!' : 'Korisnik odbijen!');
+                    // reload only the table rows
                     location.reload();
-                } else {
-                    alert('Neuspješna akcija! Provjerite backend logove.');
-                }
-            })
-            .catch(error => console.error('Greška:', error));
+                })
+                .catch(e => {
+                    console.error(e);
+                    alert('Ne radi, provjeri backend logove.');
+                });
         }
 
         function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
+            let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            return match ? match[2] : null;
         }
     </script>
 }

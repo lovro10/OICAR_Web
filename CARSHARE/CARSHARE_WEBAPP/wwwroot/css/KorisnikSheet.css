@@ -6,16 +6,17 @@
     --transition-fast: 0.3s ease;
     --radius: 4px;
 }
-
 /* Page wrapper */
 .korisnik-list {
-    max-width: 1000px;
-    margin: 2rem auto;
-    padding: 0 1rem;
     background: var(--color-cream);
+    /* match your Bootstrap container width */
+    max-width: 1140px; /* or 1200px, whichever you prefer */
+    margin: 3rem auto; /* more space above/below */
+    padding: 2rem; /* padding on all sides */
     border-radius: var(--radius);
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
+
 
 /* Title */
 .page-title {
