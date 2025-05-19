@@ -1,32 +1,71 @@
-﻿@using CARSHARE_WEBAPP.ViewModels
-@model List<VoziloVM>
+﻿@model List<CARSHARE_WEBAPP.ViewModels.VoziloVM>
 
-<h2>Popis vozila</h2>
+@{
+    ViewData["Title"] = "My vehicles";
+}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Marka</th>
-            <th>Model</th>
-            <th>Registracija</th>
-            <th>Slika prometne</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var vozilo in Model)
+<div class="d-flex flex-column min-vh-100">
+    <div>
+        <h2 class="mb-2">My vehicles</h2>
+
+        <div class="mb-4 text-end">
+            <a href="@Url.Action("Create", "Vozilo")" class="btn btn-primary">Add new vehicle</a>
+        </div>
+
+        @if (!string.IsNullOrEmpty(ViewBag.Error as string))
         {
-            <tr>
-                <td>@vozilo.Marka</td>
-                <td>@vozilo.Model</td>
-                <td>@vozilo.Registracija</td>
-                <td>
-                    @if (vozilo.ImagePrometna?.Base64Content != null)
-                    {
-                       
-                    }
-                </td>
-            </tr>
+            <div class="alert alert-danger">@ViewBag.Error</div>
         }
-    </tbody>
-</table>
+        else if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info">There is no vehicle</div>
+        }
+        else
+        {
+            <div style="max-height: 70vh; overflow-y: auto; overflow-x: hidden;">
+                <div class="row g-4">
+                    @foreach (var vozilo in Model)
+                    {
+                        <div class="col-12">
+                            <div class="card flex-row shadow-sm h-100">
+                                <img src="https://cdn.pixabay.com/photo/2012/05/29/00/43/car-49278_960_720.jpg"
+                                     class="card-img-left" alt="Car image"
+                                     style="width: 200px; object-fit: cover; border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
 
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <div>
+                                        <h5 class="card-title">@vozilo.Naziv</h5>
+                                        <p class="card-text mb-1"><strong>Brand:</strong> @vozilo.Marka</p>
+                                        <p class="card-text mb-1"><strong>Model:</strong> @vozilo.Model</p>
+                                        <p class="card-text"><strong>Registration:</strong> @vozilo.Registracija</p>
+                                    </div>
+
+                                    <div class="text-end">
+                                        @if (vozilo.Isconfirmed == false)
+                                        { 
+                                            <a asp-controller="OglasVozilo" asp-action="Create" asp-route-id="@vozilo.Idvozilo" class="btn btn-success btn-sm">
+                                                Create ad
+                                            </a>
+                                        } 
+                                        else if (vozilo.Isconfirmed == true)
+                                        {
+                                            <p class="text-red">Vehicle is pending confirmation</p>
+                                        } 
+                                        else
+                                        { 
+                                            <p class="text-red">Vehicle is pending confirmation</p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="mt-auto pt-4 text-end">
+        <a href="@Url.Action("Create", "Vozilo")" class="btn btn-primary">Add new vehicle</a>
+    </div>
+</div>

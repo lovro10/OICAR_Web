@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace CARSHARE_WEBAPP.Models;
 
-public partial class Lokacija
+public partial class Troskovi
 {
-    public int Idlokacija { get; set; }
+    public int Idtroskovi { get; set; }
 
-    public string Polaziste { get; set; } = null!;
+    public decimal? Cestarina { get; set; }
 
-    public string Odrediste { get; set; } = null!;
+    public decimal? Gorivo { get; set; }
 
     public virtual ICollection<Oglasvoznja> Oglasvoznjas { get; set; } = new List<Oglasvoznja>();
 }

@@ -1,0 +1,47 @@
+﻿@model List<CARSHARE_WEBAPP.ViewModels.OglasVoziloVM>
+
+@{
+    ViewData["Title"] = "Oglasi Vozila";
+}
+
+<h2>Oglasi Vozila</h2>
+
+<div class="row">
+    @foreach (var oglas in Model)
+    {
+        <div class="col-md-12 mb-4">
+            <div class="card d-flex flex-row">
+                <div class="card-img-left" style="width: 250px; height: auto; object-fit: cover;">
+                    <img src="https://cdn.pixabay.com/photo/2012/05/29/00/43/car-49278_960_720.jpg" class="img-fluid" alt="@oglas.Marka @oglas.Model" style="height: 100%; width: 100%; object-fit: cover;">
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title">@oglas.Marka @oglas.Model</h5>
+                    <p class="card-text">
+                        <strong>Registration: </strong>@oglas.Registracija
+                    </p>
+                    <p class="card-text">
+                        <strong>User: </strong>@oglas.Username
+                    </p>
+                    <p class="card-text">
+                        <strong>Start Date: </strong>@oglas.DatumPocetkaRezervacije.ToString("dd.MM.yyyy")
+                    </p>
+                    <p class="card-text">
+                        <strong>End Date: </strong>@oglas.DatumZavrsetkaRezervacije.ToString("dd.MM.yyyy")
+                    </p>
+
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <a asp-action="Details" asp-route-id="@oglas.Idoglasvozilo" class="btn btn-info btn-sm">Detalji</a>
+                            <a asp-action="Edit" asp-route-id="@oglas.Idoglasvozilo" class="btn btn-warning btn-sm">Uredi</a>
+                            <a asp-action="Delete" asp-route-id="@oglas.Idoglasvozilo" class="btn btn-danger btn-sm">Obriši</a>
+                        </div>
+                        <div>
+                            <a asp-action="ReserveVehicle" asp-route-id="@oglas.Idoglasvozilo" class="btn btn-success btn-sm">Reserve</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

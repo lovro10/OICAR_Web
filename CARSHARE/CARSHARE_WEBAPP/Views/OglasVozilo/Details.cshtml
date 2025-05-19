@@ -1,0 +1,39 @@
+﻿@model CARSHARE_WEBAPP.ViewModels.OglasVoziloVM
+
+@{
+    ViewData["Title"] = "Detalji Oglasa Vozila";
+}
+
+<h2 class="mb-4">Detalji Oglasa Vozila</h2>
+
+<div class="card mb-4 shadow-sm">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="https://cdn.pixabay.com/photo/2012/05/29/00/43/car-49278_960_720.jpg"
+                 class="img-fluid rounded-start h-100"
+                 style="object-fit: cover;"
+                 alt="@Model.Marka @Model.Model" />
+        </div>
+
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">@Model.Marka @Model.Model</h5>
+                <p class="card-text"><strong>Registracija:</strong> @Model.Registracija</p>
+                <p class="card-text"><strong>Korisnik:</strong> @Model.Username (@Model.Ime @Model.Prezime)</p>
+                <p class="card-text"><strong>Datum početka:</strong> @Model.DatumPocetkaRezervacije.ToString("dd.MM.yyyy")</p>
+                <p class="card-text"><strong>Datum završetka:</strong> @Model.DatumZavrsetkaRezervacije.ToString("dd.MM.yyyy")</p>
+
+                <div class="d-flex justify-content-between">
+                    <div class="mt-4">
+                        <a asp-action="Index" class="btn btn-secondary">Nazad</a>
+                        <a asp-action="Edit" asp-route-id="@Model.Idoglasvozilo" class="btn btn-warning">Uredi</a>
+                        <a asp-action="Delete" asp-route-id="@Model.Idoglasvozilo" class="btn btn-danger">Obriši</a>
+                    </div>
+                    <div>
+                        <a asp-action="ReserveVehicle" asp-route-id="@Model.Idoglasvozilo" class="btn btn-success btn-sm">Reserve</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

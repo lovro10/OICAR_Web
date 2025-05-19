@@ -1,0 +1,95 @@
+﻿@using Newtonsoft.Json
+@model CARSHARE_WEBAPP.ViewModels.VehicleReservationVM
+
+<h2>Reserve vehicle</h2>
+
+<form asp-action="ReserveVehicle" method="post">
+    <input type="hidden" asp-for="OglasVoziloId" />
+    <input type="hidden" asp-for="DozvoljeniPocetak" />
+    <input type="hidden" asp-for="DozvoljeniKraj" />
+
+    <div class="form-group">
+        <label for="DatumPocetkaRezervacije">Datum početka</label>
+        <input type="date" id="startDate" class="form-control" asp-for="DatumPocetkaRezervacije"
+               min="@Model.DozvoljeniPocetak.ToString("yyyy-MM-dd")"
+               max="@Model.DozvoljeniKraj.ToString("yyyy-MM-dd")" />
+    </div>
+
+    <div class="form-group">
+        <label for="DatumZavrsetkaRezervacije">Datum završetka</label>
+        <input type="date" id="endDate" class="form-control" asp-for="DatumZavrsetkaRezervacije"
+               min="@Model.DozvoljeniPocetak.ToString("yyyy-MM-dd")"
+               max="@Model.DozvoljeniKraj.ToString("yyyy-MM-dd")" />
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Reserve</button>
+    </div>
+</form>
+
+<h4>Reserved Dates:</h4>
+@if (Model.ReservedDates != null && Model.ReservedDates.Any())
+{
+    <ul id="reservedDatesList">
+        @foreach (var date in Model.ReservedDates)
+        {
+            <li>@date.ToString("yyyy-MM-dd")</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No dates are currently reserved for this vehicle.</p>
+}
+
+@section Scripts
+{
+    <script> 
+        document.addEventListener("DOMContentLoaded", function () {
+            var startDatePicker = document.getElementById("startDate");
+            var endDatePicker = document.getElementById("endDate");
+
+            var allowedStart = "@Model.DozvoljeniPocetak.ToString("yyyy-MM-dd")";
+            var allowedEnd = "@Model.DozvoljeniKraj.ToString("yyyy-MM-dd")";
+
+            startDatePicker.value = allowedStart;
+            endDatePicker.value = allowedEnd;
+        });
+    
+        var reservedDates = @Html.Raw(JsonConvert.SerializeObject(Model.ReservedDates))
+        .map(function(date) { return date.split('T')[0]; }); 
+
+        var startDatePicker = document.getElementById("startDate");
+        var endDatePicker = document.getElementById("endDate");
+
+        function isDateRangeReserved(start, end) {
+            var current = new Date(start);
+            var endDate = new Date(end);
+
+            while (current <= endDate) {
+                var formatted = current.toISOString().split('T')[0];
+                if (reservedDates.includes(formatted)) {
+                    return true;
+                }
+                current.setDate(current.getDate() + 1);
+            }
+            return false;
+        }
+
+        function updateDatePickers() {
+            var startDate = new Date(startDatePicker.value);
+            var endDate = new Date(endDatePicker.value);
+
+            if (startDatePicker.value && endDatePicker.value) {
+                if (isDateRangeReserved(startDate, endDate)) {
+                    alert("The selected date range includes already reserved dates.");
+                    startDatePicker.value = "";
+                    endDatePicker.value = "";
+                }
+            }
+        }
+
+        startDatePicker.addEventListener('change', updateDatePickers);
+        endDatePicker.addEventListener('change', updateDatePickers);
+    </script>
+}

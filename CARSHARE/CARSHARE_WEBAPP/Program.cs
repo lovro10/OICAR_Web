@@ -21,7 +21,6 @@ app.UseSession();
 
 app.Use(async (context, next) =>
 {
-
     var token = context.Request.Cookies["JWToken"];
     if (!string.IsNullOrEmpty(token))
     {

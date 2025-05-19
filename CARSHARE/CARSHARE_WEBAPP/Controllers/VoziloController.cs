@@ -1,49 +1,112 @@
 ﻿using CARSHARE_WEBAPP.Models;
-using CARSHARE_WEBAPP.Services;
-using CARSHARE_WEBAPP.ViewModels;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
+using CARSHARE_WEBAPP.ViewModels; 
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using Newtonsoft.Json;
 using System.Net.Http.Headers;
-using System.Text.Json;
+using System.Text;
 
 namespace CARSHARE_WEBAPP.Controllers
 {
     public class VoziloController : Controller
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly HttpClient _client;
 
-        public VoziloController(IHttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
-        }
+        public VoziloController()
+        { 
+            _client = new HttpClient
+            {
+                BaseAddress = new Uri("http://localhost:5194/api/Vozilo/")
+            }; 
+        } 
 
         public async Task<IActionResult> Index()
         {
-            var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
-            if (string.IsNullOrEmpty(token))
-                return RedirectToAction("Index", "Home");
+            var jwtToken = HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(jwtToken))
+                return RedirectToAction("Login", "Account");
 
-            using var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:5194/api/"); 
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+                return RedirectToAction("Login", "Account");
 
-            var response = await client.GetAsync("Vozilo/GetAll");
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
 
-            if (!response.IsSuccessStatusCode)
-                return View("Error");
+            var response = await _client.GetAsync($"GetVehicleByUser?userId={userId}");
+
+            if (!response.IsSuccessStatusCode) 
+            { 
+                ViewBag.Error = "Unable to load vehicles.";
+                return View(new List<VoziloVM>());
+            }
 
             var json = await response.Content.ReadAsStringAsync();
-            var vozila = JsonSerializer.Deserialize<List<VoziloVM>>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
+            var vozila = JsonConvert.DeserializeObject<List<VoziloVM>>(json);
 
             return View(vozila);
         }
 
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> Create(VoziloVM voziloVm)
+        {
+            var jwtToken = HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(jwtToken))
+                return RedirectToAction("Login", "Account");
 
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+                return RedirectToAction("Login", "Account");
+
+            if (voziloVm.FrontImage == null || voziloVm.BackImage == null)
+            {
+                ViewBag.Error = "Both images are required.";
+                return View(voziloVm);
+            }
+
+            string frontBase64 = null!; 
+            string backBase64 = null!;
+            
+            using (var ms = new MemoryStream())
+            {
+                await voziloVm.FrontImage.CopyToAsync(ms);
+                frontBase64 = Convert.ToBase64String(ms.ToArray());
+            }
+
+            using (var ms = new MemoryStream())
+            {
+                await voziloVm.BackImage.CopyToAsync(ms);
+                backBase64 = Convert.ToBase64String(ms.ToArray());
+            }
+
+            var vozilo = new 
+            {
+                Naziv = voziloVm.Naziv,
+                Marka = voziloVm.Marka,
+                Model = voziloVm.Model,
+                Registracija = voziloVm.Registracija,
+                VozacId = userId.Value,
+                FrontImageBase64 = frontBase64,
+                BackImageBase64 = backBase64,
+                FrontImageName = "Front " + voziloVm.Registracija,
+                BackImageName = "Back " + voziloVm.Registracija
+            };
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+            var json = JsonConvert.SerializeObject(vozilo);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync("KreirajVozilo", content);
+
+            if (response.IsSuccessStatusCode)
+                return RedirectToAction("Index");
+
+            ViewBag.Error = "Failed to create vehicle.";
+            return View(voziloVm);
+        }
     }
 }

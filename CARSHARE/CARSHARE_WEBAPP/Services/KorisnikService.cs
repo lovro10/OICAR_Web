@@ -75,19 +75,19 @@ namespace CARSHARE_WEBAPP.Services
 
                 return new Korisnik
                 {
-                    IDKorisnik = korisnik.IDKorisnik,
+                    Idkorisnik = korisnik.Idkorisnik,
                     Ime = korisnik.Ime,
                     Prezime = korisnik.Prezime,
                     Email = korisnik.Email,
-                    PwdHash = korisnik.PwdHash,
-                    PwdSalt = korisnik.PwdSalt,
+                    Pwdhash = korisnik.Pwdhash,
+                    Pwdsalt = korisnik.Pwdsalt,
                     Username = korisnik.Username,
                     Telefon = korisnik.Telefon,
-                    DatumRodjenja = korisnik.DatumRodjenja,
-                    ImageVozackaID = korisnik.ImageVozackaID,
-                    ImageOsobnaID = korisnik.ImageOsobnaID,
-                    ImageLiceID = korisnik.ImageLiceID,
-                    DeletedAt = korisnik.DeletedAt
+                    Datumrodjenja = korisnik.Datumrodjenja,
+                    Imagevozackaid = korisnik.Imagevozackaid,
+                    Imageosobnaid = korisnik.Imageosobnaid,
+                    Imageliceid = korisnik.Imageliceid,
+                    Deletedat = korisnik.Deletedat 
                 };
             }
             catch (Exception ex)
