@@ -2,6 +2,7 @@
 using CARSHARE_WEBAPP.ViewModels; 
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -23,11 +24,11 @@ namespace CARSHARE_WEBAPP.Controllers
         {
             var jwtToken = HttpContext.Session.GetString("JWToken");
             if (string.IsNullOrEmpty(jwtToken))
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Korisnik");
 
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null)
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Korisnik");
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
 
@@ -107,6 +108,43 @@ namespace CARSHARE_WEBAPP.Controllers
 
             ViewBag.Error = "Failed to create vehicle.";
             return View(voziloVm);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var jwtToken = HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(jwtToken))
+                return RedirectToAction("Login", "Korisnik");
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+
+            var response = await _client.GetAsync($"GetVehicleById/{id}");
+            if (!response.IsSuccessStatusCode)
+                return NotFound();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var vozilo = JsonConvert.DeserializeObject<VoziloVM>(json);
+            return View(vozilo);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var jwtToken = HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(jwtToken))
+                return RedirectToAction("Login", "Korisnik");
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+
+            var response = await _client.DeleteAsync($"DeleteVehicle/{id}"); 
+            if (!response.IsSuccessStatusCode)
+            {
+                ViewBag.Error = "Failed to delete vehicle.";
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

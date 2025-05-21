@@ -21,8 +21,6 @@ public partial class Oglasvoznja
 
     public int? Lokacijaid { get; set; }
 
-    public virtual ICollection<Korisnikvozilo> Korisnikvozilos { get; set; } = new List<Korisnikvozilo>();
-
     public virtual ICollection<Korisnikvoznja> Korisnikvoznjas { get; set; } = new List<Korisnikvoznja>();
 
     public virtual Lokacija? Lokacija { get; set; }

@@ -42,7 +42,10 @@
 
                                     <div class="text-end">
                                         @if (vozilo.Isconfirmed == false)
-                                        { 
+                                        {
+                                            <a asp-controller="Vozilo" asp-action="Delete" asp-route-id="@vozilo.Idvozilo" class="btn btn-danger btn-sm">
+                                                Delete 
+                                            </a>
                                             <a asp-controller="OglasVozilo" asp-action="Create" asp-route-id="@vozilo.Idvozilo" class="btn btn-success btn-sm">
                                                 Create ad
                                             </a>

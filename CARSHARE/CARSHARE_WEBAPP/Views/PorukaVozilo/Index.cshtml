@@ -1,0 +1,44 @@
+﻿@model CARSHARE_WEBAPP.ViewModels.PorukaVoziloVM
+
+@{
+    ViewData["Title"] = "Chat";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Chat</h2>
+
+    <div class="border rounded p-3 mb-4" style="height: 400px; overflow-y: scroll; background-color: #f9f9f9;">
+        @if (Model.Messages.Any())
+        {
+            foreach (var msg in Model.Messages)
+            {
+                <div class="mb-3">
+                    <div class="fw-bold">@msg.SenderRole</div>
+                    <div>@msg.Content</div>
+                    <small class="text-muted">@msg.SentAt.ToString("g")</small>
+                </div>
+                <hr />
+            }
+        }
+        else
+        {
+            <p>No messages yet.</p>
+        }
+    </div>
+
+    <form asp-action="SendMessage" method="post">
+        <input type="hidden" asp-for="Korisnikvoziloid" />
+        <input type="hidden" asp-for="PutnikId" />
+        <input type="hidden" asp-for="VozacId" />
+
+        <div class="input-group">
+            <input asp-for="Message" class="form-control" placeholder="Type your message..." />
+            <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+        <span asp-validation-for="Message" class="text-danger"></span>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

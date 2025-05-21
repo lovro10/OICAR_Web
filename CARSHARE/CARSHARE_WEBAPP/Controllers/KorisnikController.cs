@@ -20,11 +20,8 @@ namespace CARSHARE_WEBAPP.Controllers
         private readonly KorisnikService _korisnikService;
         private readonly HttpClient _httpClient;
       
-
-
         public KorisnikController(KorisnikService korisnikService)
         {
-
             _korisnikService = korisnikService;
            
         }
@@ -35,7 +32,6 @@ namespace CARSHARE_WEBAPP.Controllers
             return View(korisnici);
         }
 
-
         [HttpGet]
         public IActionResult Login()
         {
@@ -44,7 +40,6 @@ namespace CARSHARE_WEBAPP.Controllers
 
         public async Task<IActionResult> Login(LoginVM loginVM)
         {
-
             var korisnici = await _korisnikService.GetKorisniciAsync();
 
             var user = korisnici.FirstOrDefault(x => x.Username == loginVM.UserName);
@@ -76,7 +71,6 @@ namespace CARSHARE_WEBAPP.Controllers
                 var token = await response.Content.ReadAsStringAsync();
                 var cleanToken = token.Replace("\"", "");
 
-             
                 Response.Cookies.Append("JWToken", cleanToken, new CookieOptions
                 {
                     HttpOnly = true,
@@ -125,7 +119,6 @@ namespace CARSHARE_WEBAPP.Controllers
         {
             HttpContext.Session.Clear();
 
-        
             Response.Cookies.Delete("JWToken");
             Response.Cookies.Delete("Username");
             Response.Cookies.Delete("UserId");
@@ -145,8 +138,6 @@ namespace CARSHARE_WEBAPP.Controllers
                 return NotFound();
             }
           
-
-            
             return View(korisnik);
         }
 
@@ -222,7 +213,6 @@ namespace CARSHARE_WEBAPP.Controllers
 
     }
 }
-
 
 //public IActionResult LoginMocked(LoginVM loginVM)
 //{

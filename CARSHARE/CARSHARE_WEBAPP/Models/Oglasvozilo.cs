@@ -13,5 +13,7 @@ public partial class Oglasvozilo
 
     public DateTime DatumZavrsetkaRezervacije { get; set; }
 
+    public virtual ICollection<Korisnikvozilo> Korisnikvozilos { get; set; } = new List<Korisnikvozilo>();
+
     public virtual Vozilo? Vozilo { get; set; }
 }
