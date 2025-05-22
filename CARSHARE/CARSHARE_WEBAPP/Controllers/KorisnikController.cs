@@ -1,5 +1,4 @@
-﻿using CARSHARE_WEBAPP.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -12,6 +11,7 @@ using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
+using CARSHARE_WEBAPP.Security;
 
 namespace CARSHARE_WEBAPP.Controllers
 {

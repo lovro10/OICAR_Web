@@ -101,7 +101,7 @@ namespace CARSHARE_WEBAPP.Controllers
             var json = JsonConvert.SerializeObject(vozilo);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _client.PostAsync("KreirajVozilo", content);
+            var response = await _client.PostAsync("CreateVehicle", content);
 
             if (response.IsSuccessStatusCode)
                 return RedirectToAction("Index");

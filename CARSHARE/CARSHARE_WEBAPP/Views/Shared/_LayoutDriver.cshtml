@@ -40,21 +40,21 @@
                             <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-controller="OglasVozilo" asp-action="Index">Car rent</a> 
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Vozilo" asp-action="Index">Vehicle</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="OglasVozilo" asp-action="Index">Oglas vozila</a>
-                        </li> 
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="PorukaVozilo" asp-action="Index">Poruka vozila</a>
+                            <a class="nav-link" asp-controller="OglasVoznja" asp-action="Index">Ride list</a>
                         </li>
                     </ul>
                         <ul class="navbar-nav">
                             @if (!string.IsNullOrEmpty(username))
                             {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="OglasVozilo" asp-action="Index">My advertisments</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Vozilo" asp-action="Index">My vehicles</a> 
+                                </li> 
                                 <a class="nav-link text-dark" asp-controller="Korisnik" asp-action="Details" asp-route-id="@userID">
                                     @username
                                 </a>
@@ -85,11 +85,6 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - CARSHARE_WEBAPP - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

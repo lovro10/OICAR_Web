@@ -1,0 +1,50 @@
+﻿@model List<CARSHARE_WEBAPP.ViewModels.OglasVoznjaVM>
+
+@{
+    ViewData["Title"] = "Ride list";
+}
+
+<h2 class="text-center my-4">Ride list</h2>
+
+<div class="container">
+    <div class="row">
+        @foreach (var oglas in Model)
+        {
+            <div class="col-md-12 mb-4">
+                <div class="card d-flex flex-row shadow-sm">
+                    <div style="width: 250px;">
+                        <img src="https://cdn.pixabay.com/photo/2017/07/04/20/20/train-2472400_960_720.jpg"
+                             class="img-fluid h-100"
+                             alt="Ride image"
+                             style="object-fit: cover;">
+                    </div>
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">@oglas.Polaziste → @oglas.Odrediste</h5>
+                        
+                        <p class="card-text mb-1">
+                            <strong>Driver:</strong> @oglas.Username 
+                        </p> 
+                        <p class="card-text mb-1">
+                            <strong>Departure:</strong> @oglas.DatumIVrijemePolaska.ToString("dd.MM.yyyy HH:mm")
+                        </p>
+                        <p class="card-text mb-1">
+                            <strong>Arrival:</strong> @oglas.DatumIVrijemeDolaska.ToString("dd.MM.yyyy HH:mm")
+                        </p>
+                        <p class="card-text mb-1">
+                            <strong>Available Seats:</strong> @oglas.BrojPutnika
+                        </p>
+                        <p class="card-text mb-1">
+                            <strong>Cost:</strong> @oglas.CijenaPoPutniku.ToString("F2") 
+                        </p> 
+                        
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Details" asp-route-id="@oglas.IdOglasVoznja" class="btn btn-outline-info btn-sm">Details</a>
+                            <a asp-action="ReserveRide" asp-route-id="@oglas.IdOglasVoznja" class="btn btn-outline-success btn-sm">Reserve</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

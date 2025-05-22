@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
 
-namespace CARSHARE_WEBAPP.Models
+namespace CARSHARE_WEBAPP.Security
 {
     public class PasswordHashProvider
     {
         public static string GetSalt()
         {
-            byte[] salt = RandomNumberGenerator.GetBytes(128 / 8); 
+            byte[] salt = RandomNumberGenerator.GetBytes(128 / 8);
             string b64Salt = Convert.ToBase64String(salt);
 
             return b64Salt;

@@ -22,7 +22,7 @@
         }
         else
         {
-            <div style="max-height: 70vh; overflow-y: auto; overflow-x: hidden;">
+            <div style="max-height: 80vh; overflow-y: auto; overflow-x: hidden;">
                 <div class="row g-4">
                     @foreach (var vozilo in Model)
                     {
@@ -41,21 +41,24 @@
                                     </div>
 
                                     <div class="text-end">
-                                        @if (vozilo.Isconfirmed == false)
-                                        {
+                                        @if (vozilo.Isconfirmed == false)  
+                                        { 
                                             <a asp-controller="Vozilo" asp-action="Delete" asp-route-id="@vozilo.Idvozilo" class="btn btn-danger btn-sm">
                                                 Delete 
                                             </a>
                                             <a asp-controller="OglasVozilo" asp-action="Create" asp-route-id="@vozilo.Idvozilo" class="btn btn-success btn-sm">
                                                 Create ad
                                             </a>
+                                            <a asp-controller="OglasVoznja" asp-action="Create" asp-route-id="@vozilo.Idvozilo" class="btn btn-success btn-sm">
+                                                Create ride 
+                                            </a>
                                         } 
-                                        else if (vozilo.Isconfirmed == true)
-                                        {
-                                            <p class="text-red">Vehicle is pending confirmation</p>
-                                        } 
-                                        else
+                                        else if (vozilo.Isconfirmed == true) 
                                         { 
+                                            <p class="text-red">Vehicle is pending confirmation</p>
+                                        }
+                                        else  
+                                        {
                                             <p class="text-red">Vehicle is pending confirmation</p>
                                         }
                                     </div>
@@ -66,9 +69,5 @@
                 </div>
             </div>
         }
-    </div>
-
-    <div class="mt-auto pt-4 text-end">
-        <a href="@Url.Action("Create", "Vozilo")" class="btn btn-primary">Add new vehicle</a>
     </div>
 </div>

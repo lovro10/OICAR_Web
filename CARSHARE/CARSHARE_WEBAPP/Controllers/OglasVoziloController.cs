@@ -20,7 +20,7 @@ namespace CARSHARE_WEBAPP.Controllers
         [HttpGet]
         public async Task<IActionResult> ReserveVehicle(int id)
         {
-            var response = await _httpClient.GetAsync($"OglasVozilo/DetaljiOglasaVoznje/{id}");
+            var response = await _httpClient.GetAsync($"OglasVozilo/DetaljiOglasaVozila/{id}");
             if (!response.IsSuccessStatusCode)
                 return NotFound();
 
@@ -118,7 +118,7 @@ namespace CARSHARE_WEBAPP.Controllers
         {
             Console.WriteLine($"Received Vozilo ID: {id}");
 
-            var response = await _httpClient.GetAsync($"Vozilo/GetById/{id}");
+            var response = await _httpClient.GetAsync($"Vozilo/GetVehicleById/{id}");
 
             Console.WriteLine($"Response status code from GetById: {response.StatusCode}");
 
@@ -206,7 +206,7 @@ namespace CARSHARE_WEBAPP.Controllers
 
         public async Task<IActionResult> Edit(int id)
         { 
-            var response = await _httpClient.GetAsync($"OglasVozilo/GetById/{id}");
+            var response = await _httpClient.GetAsync($"OglasVozilo/GetVehicleById/{id}");
             if (!response.IsSuccessStatusCode)
                 return NotFound();
 

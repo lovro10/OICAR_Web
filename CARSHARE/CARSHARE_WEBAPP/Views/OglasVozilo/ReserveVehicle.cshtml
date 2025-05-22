@@ -1,31 +1,56 @@
 ﻿@using Newtonsoft.Json
 @model CARSHARE_WEBAPP.ViewModels.VehicleReservationVM
 
+@{
+    var reservedDayStrings = Model.ReservedDates
+        .Select(d => d.Date.ToString("yyyy-MM-dd"))
+        .ToHashSet();
+
+    var allDatesReserved = true;
+    for (var date = Model.DozvoljeniPocetak.Date; date <= Model.DozvoljeniKraj.Date; date = date.AddDays(1))
+    {
+        if (!reservedDayStrings.Contains(date.ToString("yyyy-MM-dd")))
+        {
+            allDatesReserved = false;
+            break;
+        }
+    }
+}
+
 <h2>Reserve vehicle</h2>
 
-<form asp-action="ReserveVehicle" method="post">
-    <input type="hidden" asp-for="OglasVoziloId" />
-    <input type="hidden" asp-for="DozvoljeniPocetak" />
-    <input type="hidden" asp-for="DozvoljeniKraj" />
+@if (!allDatesReserved)
+{
+    <form asp-action="ReserveVehicle" method="post">
+        <input type="hidden" asp-for="OglasVoziloId" />
+        <input type="hidden" asp-for="DozvoljeniPocetak" />
+        <input type="hidden" asp-for="DozvoljeniKraj" />
 
-    <div class="form-group">
-        <label for="DatumPocetkaRezervacije">Datum početka</label>
-        <input type="date" id="startDate" class="form-control" asp-for="DatumPocetkaRezervacije"
-               min="@Model.DozvoljeniPocetak.ToString("yyyy-MM-dd")"
-               max="@Model.DozvoljeniKraj.ToString("yyyy-MM-dd")" />
-    </div>
+        <div class="form-group">
+            <label for="DatumPocetkaRezervacije">Datum početka</label>
+            <input type="date" id="startDate" class="form-control" asp-for="DatumPocetkaRezervacije"
+                   min="@Model.DozvoljeniPocetak.ToString("yyyy-MM-dd")"
+                   max="@Model.DozvoljeniKraj.ToString("yyyy-MM-dd")" />
+        </div>
 
-    <div class="form-group">
-        <label for="DatumZavrsetkaRezervacije">Datum završetka</label>
-        <input type="date" id="endDate" class="form-control" asp-for="DatumZavrsetkaRezervacije"
-               min="@Model.DozvoljeniPocetak.ToString("yyyy-MM-dd")"
-               max="@Model.DozvoljeniKraj.ToString("yyyy-MM-dd")" />
-    </div>
+        <div class="form-group">
+            <label for="DatumZavrsetkaRezervacije">Datum završetka</label>
+            <input type="date" id="endDate" class="form-control" asp-for="DatumZavrsetkaRezervacije"
+                   min="@Model.DozvoljeniPocetak.ToString("yyyy-MM-dd")"
+                   max="@Model.DozvoljeniKraj.ToString("yyyy-MM-dd")" />
+        </div>
 
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Reserve</button>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Reserve</button>
+        </div>
+    </form>
+}
+else
+{
+    <div class="alert alert-warning">
+        All dates for this vehicle are fully reserved. Reservation is currently unavailable.
     </div>
-</form>
+}
 
 <h4>Reserved Dates:</h4>
 @if (Model.ReservedDates != null && Model.ReservedDates.Any())
@@ -44,30 +69,49 @@ else
 
 @section Scripts
 {
-    <script> 
+    <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var startDatePicker = document.getElementById("startDate");
-            var endDatePicker = document.getElementById("endDate");
+            const startDatePicker = document.getElementById("startDate");
+            const endDatePicker = document.getElementById("endDate");
 
-            var allowedStart = "@Model.DozvoljeniPocetak.ToString("yyyy-MM-dd")";
-            var allowedEnd = "@Model.DozvoljeniKraj.ToString("yyyy-MM-dd")";
+            const allowedStart = "@Model.DozvoljeniPocetak:yyyy-MM-dd";
+            const allowedEnd = "@Model.DozvoljeniKraj:yyyy-MM-dd";
 
-            startDatePicker.value = allowedStart;
-            endDatePicker.value = allowedEnd;
+            if (startDatePicker) startDatePicker.value = allowedStart;
+            if (endDatePicker) endDatePicker.value = allowedEnd;
         });
-    
-        var reservedDates = @Html.Raw(JsonConvert.SerializeObject(Model.ReservedDates))
-        .map(function(date) { return date.split('T')[0]; }); 
 
-        var startDatePicker = document.getElementById("startDate");
-        var endDatePicker = document.getElementById("endDate");
+        const reservedDates = @Html.Raw(JsonConvert.SerializeObject(Model.ReservedDates))
+            .map(d => d.split('T')[0]); 
+
+        const startDatePicker = document.getElementById("startDate");
+        const endDatePicker = document.getElementById("endDate");
+
+        function isReserved(dateString) {
+            return reservedDates.includes(dateString);
+        }
+
+        function handleBlockedDateSelection(e) {
+            const selectedDate = e.target.value;
+            if (isReserved(selectedDate)) {
+                alert("This date is already reserved. Please choose another date.");
+                e.target.value = "";
+            }
+        }
+
+        if (startDatePicker) {
+            startDatePicker.addEventListener("input", handleBlockedDateSelection);
+        }
+        if (endDatePicker) {
+            endDatePicker.addEventListener("input", handleBlockedDateSelection);
+        }
 
         function isDateRangeReserved(start, end) {
-            var current = new Date(start);
-            var endDate = new Date(end);
+            let current = new Date(start);
+            const endDate = new Date(end);
 
             while (current <= endDate) {
-                var formatted = current.toISOString().split('T')[0];
+                const formatted = current.toISOString().split("T")[0];
                 if (reservedDates.includes(formatted)) {
                     return true;
                 }
@@ -77,8 +121,8 @@ else
         }
 
         function updateDatePickers() {
-            var startDate = new Date(startDatePicker.value);
-            var endDate = new Date(endDatePicker.value);
+            const startDate = new Date(startDatePicker.value);
+            const endDate = new Date(endDatePicker.value);
 
             if (startDatePicker.value && endDatePicker.value) {
                 if (isDateRangeReserved(startDate, endDate)) {
@@ -89,7 +133,9 @@ else
             }
         }
 
-        startDatePicker.addEventListener('change', updateDatePickers);
-        endDatePicker.addEventListener('change', updateDatePickers);
+        if (startDatePicker && endDatePicker) {
+            startDatePicker.addEventListener("change", updateDatePickers);
+            endDatePicker.addEventListener("change", updateDatePickers);
+        }
     </script>
 }
