@@ -86,6 +86,25 @@ namespace CARSHARE_WEBAPP.Controllers
             }
         }
 
+        public async Task<IActionResult> IndexUser() 
+        {
+            var jwtToken = HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(jwtToken))
+                return RedirectToAction("Login", "Account");
+
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+                return RedirectToAction("Login", "Account");
+
+            var response = await _httpClient.GetAsync($"OglasVozilo/GetAllByUser?userId={userId}");
+            if (!response.IsSuccessStatusCode)
+                return View(new List<OglasVoziloVM>());
+
+            var json = await response.Content.ReadAsStringAsync();
+            var list = JsonConvert.DeserializeObject<List<OglasVoziloVM>>(json);
+            return View(list);
+        }
+
         public async Task<IActionResult> Index()
         {
             var response = await _httpClient.GetAsync("OglasVozilo/GetAll");
@@ -234,13 +253,38 @@ namespace CARSHARE_WEBAPP.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var response = await _httpClient.GetAsync($"OglasVozilo/GetById/{id}");
+            var jwtToken = HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(jwtToken))
+                return RedirectToAction("Login", "Korisnik");
+
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+            
+            var response = await _httpClient.GetAsync($"OglasVozilo/GetOglasVoziloById/{id}");
             if (!response.IsSuccessStatusCode)
                 return NotFound();
 
             var json = await response.Content.ReadAsStringAsync();
             var dto = JsonConvert.DeserializeObject<OglasVoziloVM>(json);
             return View(dto);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var jwtToken = HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(jwtToken))
+                return RedirectToAction("Login", "Korisnik");
+
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+
+            var response = await _httpClient.DeleteAsync($"ObrisiOglasVozilo/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                ViewBag.Error = "Failed to delete vehicle.";
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("IndexUser");
         }
     }
 }

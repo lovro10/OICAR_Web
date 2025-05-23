@@ -49,8 +49,11 @@
                         <ul class="navbar-nav">
                             @if (!string.IsNullOrEmpty(username))
                             {
+                                <li class="nav-item"> 
+                                    <a class="nav-link" asp-controller="OglasVoznja" asp-action="IndexUser">My rides create ad</a>
+                                </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="OglasVozilo" asp-action="Index">My advertisments</a>
+                                    <a class="nav-link" asp-controller="OglasVozilo" asp-action="IndexUser">My car rent ad</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Vozilo" asp-action="Index">My vehicles</a> 

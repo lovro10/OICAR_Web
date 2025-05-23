@@ -1,0 +1,41 @@
+﻿@model List<CARSHARE_WEBAPP.ViewModels.OglasVoziloVM>
+
+@{
+    ViewData["Title"] = "Car rent";
+}
+
+<h2>Car rent</h2>
+
+<div class="row">
+    @foreach (var oglas in Model)
+    {
+        <div class="col-md-12 mb-4">
+            <div class="card d-flex flex-row">
+                <div class="card-img-left" style="width: 250px; height: auto; object-fit: cover;">
+                    <img src="https://cdn.pixabay.com/photo/2012/05/29/00/43/car-49278_960_720.jpg" class="img-fluid" alt="@oglas.Marka @oglas.Model" style="height: 100%; width: 100%; object-fit: cover;">
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title">@oglas.Marka @oglas.Model</h5>
+                    <p class="card-text">
+                        <strong>Registration: </strong>@oglas.Registracija
+                    </p>
+                    <p class="card-text">
+                        <strong>User: </strong>@oglas.Username
+                    </p>
+                    <p class="card-text">
+                        <strong>Start Date: </strong>@oglas.DatumPocetkaRezervacije.ToString("dd.MM.yyyy")
+                    </p>
+                    <p class="card-text">
+                        <strong>End Date: </strong>@oglas.DatumZavrsetkaRezervacije.ToString("dd.MM.yyyy")
+                    </p>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Delete" asp-route-id="@oglas.Idoglasvozilo" class="btn btn-danger btn-sm">Delete</a>
+                        <a asp-action="Update" asp-route-id="@oglas.Idoglasvozilo" class="btn btn-success btn-sm">Update</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

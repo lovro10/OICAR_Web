@@ -16,21 +16,21 @@ namespace CARSHARE_WEBAPP.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int korisnikVoznjaId, int? putnikId, int? vozacId)
-        {
+        public async Task<IActionResult> Index(int korisnikVoznjaId, int? korisnikId)
+        { 
             var response = await _httpClient.GetAsync($"Poruka/GetMessagesForRide?korisnikVoznjaId={korisnikVoznjaId}");
 
-            var messages = new List<PorukaGetVM>(); 
+            var messages = new List<PorukaVoznjaGetVM>(); 
             if (response.IsSuccessStatusCode) 
             { 
-                messages = await response.Content.ReadFromJsonAsync<List<PorukaGetVM>>();
+                messages = await response.Content.ReadFromJsonAsync<List<PorukaVoznjaGetVM>>();
             } 
 
-            var vm = new PorukaVM 
+            var vm = new PorukaVoznjaSendVM 
             {
                 Korisnikvoznjaid = korisnikVoznjaId,
-                PutnikId = putnikId,
-                VozacId = vozacId,
+                PutnikId = null,
+                VozacId = korisnikId,
                 Messages = messages! 
             };
 
@@ -38,25 +38,52 @@ namespace CARSHARE_WEBAPP.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendMessage(PorukaVM porukaVM) 
-        { 
+        public async Task<IActionResult> SendMessage(PorukaVoznjaSendVM porukaVM)
+        {
             if (string.IsNullOrWhiteSpace(porukaVM.Message))
             {
                 ModelState.AddModelError("", "Message cannot be empty.");
                 return RedirectToAction("Index", new
                 {
-                    korisnikVoznjaId = porukaVM.Korisnikvoznjaid,
-                    putnikId = porukaVM.PutnikId,
-                    vozacId = porukaVM.VozacId
+                    KorisnikVoznjaId = porukaVM.Korisnikvoznjaid,
+                    PutnikId = porukaVM.PutnikId,
+                    VozacId = porukaVM.VozacId
                 });
+            }
+
+            var userIdClaim = User.FindFirst("sub");
+            var roleClaim = User.FindFirst("role");
+
+            if (userIdClaim == null || roleClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+            string role = roleClaim.Value.ToUpper();
+
+            int? putnikId = null;
+            int? vozacId = null;
+
+            if (role == "DRIVER")
+            {
+                vozacId = userId;
+            }
+            else if (role == "PASSENGER")
+            {
+                putnikId = userId;
+            }
+            else
+            {
+                return BadRequest("User role is not valid for sending messages.");
             }
 
             var sendPayload = new
             {
-                korisnikVoznjaId = porukaVM.Korisnikvoznjaid,
-                content = porukaVM.Message,
-                putnikId = porukaVM.PutnikId,
-                vozacId = porukaVM.VozacId
+                KorisnikVoznjaId = porukaVM.Korisnikvoznjaid,
+                Content = porukaVM.Message,
+                PutnikId = putnikId,
+                VozacId = vozacId
             };
 
             var response = await _httpClient.PostAsJsonAsync("Poruka/SendMessageForRide", sendPayload);
@@ -68,9 +95,9 @@ namespace CARSHARE_WEBAPP.Controllers
 
             return RedirectToAction("Index", new
             {
-                korisnikVoznjaId = porukaVM.Korisnikvoznjaid,
-                putnikId = porukaVM.PutnikId,
-                vozacId = porukaVM.VozacId
+                KorisnikVoznjaId = porukaVM.Korisnikvoznjaid,
+                PutnikId = putnikId,
+                VozacId = vozacId
             });
         }
     }

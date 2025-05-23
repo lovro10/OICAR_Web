@@ -1,0 +1,51 @@
+﻿@model CARSHARE_WEBAPP.ViewModels.PorukaVoznjaSendVM 
+
+@{
+    ViewData["Title"] = "Poruke za vožnju";
+}
+
+<h2>Poruke za vožnju #@Model.Korisnikvoznjaid</h2>
+
+<div>
+    <h4>Poruke</h4>
+    <div style="border: 1px solid #ccc; padding: 10px; max-height: 400px; overflow-y: scroll;">
+        @if (Model.Messages != null && Model.Messages.Any())
+        {
+            foreach (var msg in Model.Messages)
+            {
+                <div style="margin-bottom: 10px;">
+                    <strong>@msg.SenderName:</strong> @msg.Content
+                </div>
+            }
+        }
+        else
+        {
+            <p>Nema poruka za ovu vožnju.</p>
+        }
+    </div>
+</div>
+
+<hr />
+
+<div>
+    <h4>Pošalji novu poruku</h4>
+    <form asp-action="SendMessage" method="post">
+        <input type="hidden" asp-for="Korisnikvoznjaid" />
+        <input type="hidden" asp-for="PutnikId" />
+        <input type="hidden" asp-for="VozacId" />
+
+        <div class="form-group">
+            <label for="Message">Poruka</label>
+            <textarea class="form-control" asp-for="Message" rows="3"></textarea>
+            <span asp-validation-for="Message" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-2">Pošalji</button>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

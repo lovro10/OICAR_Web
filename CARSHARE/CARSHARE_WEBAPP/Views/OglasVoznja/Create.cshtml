@@ -17,15 +17,27 @@
                value="@Model.Marka @Model.Model - @Model.Registracija" readonly />
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label asp-for="Polaziste"></label>
-        <input asp-for="Polaziste" class="form-control" />
+        <select asp-for="Polaziste" class="form-control">
+            <option value="">-- Select a city --</option>
+            @foreach (var city in ViewBag.Cities as List<string>)
+            {
+                <option value="@city">@city</option>
+            }
+        </select>
         <span asp-validation-for="Polaziste" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label asp-for="Odrediste"></label>
-        <input asp-for="Odrediste" class="form-control" />
+        <select asp-for="Odrediste" class="form-control">
+            <option value="">-- Select a city --</option>
+            @foreach (var city in ViewBag.Cities as List<string>)
+            {
+                <option value="@city">@city</option>
+            }
+        </select>
         <span asp-validation-for="Odrediste" class="text-danger"></span>
     </div>
 
@@ -67,3 +79,31 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
+
+<script>
+    async function loadCities() {
+        try {
+            const response = await fetch("https://localhost:5194/api/CitySearch");
+            const cities = await response.json();
+
+            const polaziste = document.getElementById("PolazisteDropdown");
+            const odrediste = document.getElementById("OdredisteDropdown");
+
+            cities.forEach(city => {
+                const option1 = document.createElement("option");
+                option1.value = city;
+                option1.text = city;
+
+                const option2 = option1.cloneNode(true);
+
+                polaziste.appendChild(option1);
+                odrediste.appendChild(option2);
+            });
+
+        } catch (error) {
+            console.error("Error loading cities:", error);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadCities);
+</script>
