@@ -1,6 +1,6 @@
 ﻿@model List<CARSHARE_WEBAPP.ViewModels.ImageVM>
 @{
-    ViewData["Title"] = "Images";
+    ViewData["Title"] = "Slike korisnika";
 }
 
 @section Styles {
@@ -11,24 +11,20 @@
             --item-bg:   #0d0d0d;
             --overlay:   rgba(0, 0, 0, 0.8);
         }
-
         body {
             background: var(--bg-color);
             color:      var(--cream);
             padding-bottom: 5rem;
         }
-
         h2 {
             text-align: center;
             margin-top: 1.5rem;
             font-size: 2rem;
         }
-
         .gallery-container {
             background-color: var(--cream);
             padding: 2rem 1rem;
         }
-
         .gallery {
             display:               grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -36,7 +32,6 @@
             max-width:             1200px;
             margin:                0 auto;
         }
-
         .gallery-item {
             position:      relative;
             overflow:      hidden;
@@ -45,7 +40,6 @@
             border-radius: 8px;
             cursor:        pointer;
         }
-
         .gallery-item img {
             width:      100%;
             height:     auto;
@@ -57,7 +51,6 @@
             transform: scale(1.05);
             filter:    brightness(1.1);
         }
-
         .no-images {
             text-align: center;
             font-size: 1.2rem;
@@ -121,12 +114,12 @@
     </style>
 }
 
-<h2>Images</h2>
+<h2>@ViewData["Title"]</h2>
 
 <div class="gallery-container">
     @if (!Model.Any())
     {
-        <p class="no-images">No images found.</p>
+        <p class="no-images">Nema slika.</p>
     }
     else
     {
@@ -135,7 +128,8 @@
             {
                 <div class="gallery-item">
                     <img src="data:image/jpeg;base64,@img.Base64Content"
-                         alt="@img.Name" />
+                         alt="@img.Name"
+                         data-name="@img.Name" />
                 </div>
             }
         </div>
@@ -152,31 +146,28 @@
 </div>
 
 <footer class="site-footer">
-    © 2025 – CARSHARE_WEBAPP – <a href="/Privacy">Privacy</a>
+    © 2025 – CARSHARE_WEBAPP – <a asp-controller="Home" asp-action="Privacy">Privacy</a>
 </footer>
 
 @section Scripts {
     <script>
-        document.querySelectorAll('.gallery-item img').forEach(img => {
-            img.addEventListener('click', () => {
-                const lb = document.getElementById('lightbox');
-                document.getElementById('lightbox-img').src = img.src;
-                document.getElementById('lightbox-caption').textContent = img.alt;
-                lb.classList.add('active');
-            });
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.gallery-item img')
+                .forEach(img => img.addEventListener('click', () => {
+                    const lb = document.getElementById('lightbox');
+                    document.getElementById('lightbox-img').src = img.src;
+                    document.getElementById('lightbox-caption').textContent = img.dataset.name;
+                    lb.classList.add('active');
+                }));
+            document.querySelector('.lightbox-close')
+                .addEventListener('click', () =>
+                    document.getElementById('lightbox').classList.remove('active')
+                );
+            document.getElementById('lightbox')
+                .addEventListener('click', e => {
+                    if (e.target === e.currentTarget)
+                        e.currentTarget.classList.remove('active');
+                });
         });
-
-        document.querySelector('.lightbox-close')
-            .addEventListener('click', () => {
-                document.getElementById('lightbox')
-                    .classList.remove('active');
-            });
-
-        document.getElementById('lightbox')
-            .addEventListener('click', e => {
-                if (e.target === e.currentTarget) {
-                    e.currentTarget.classList.remove('active');
-                }
-            });
     </script>
 }

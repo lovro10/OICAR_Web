@@ -20,6 +20,7 @@ public partial class Vozilo
     public bool? Isconfirmed { get; set; }
 
     public string? Naziv { get; set; }
+    public IFormFile? PrometnaFile { get; set; }
 
     public virtual Image? Imageprometna { get; set; }
 
@@ -28,4 +29,6 @@ public partial class Vozilo
     public virtual ICollection<Oglasvoznja> Oglasvoznjas { get; set; } = new List<Oglasvoznja>();
 
     public virtual Korisnik? Vozac { get; set; }
+
+
 }
