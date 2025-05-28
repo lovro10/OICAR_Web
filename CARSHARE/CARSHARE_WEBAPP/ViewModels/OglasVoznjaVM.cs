@@ -59,7 +59,7 @@ namespace CARSHARE_WEBAPP.ViewModels
         public bool IsUserInRide { get; set; } 
 
         [JsonIgnore] 
-        public int KorisnikVoznjaId { get; set; } 
+        public int? KorisnikVoznjaId { get; set; } 
     }
 }
  

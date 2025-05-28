@@ -1,0 +1,26 @@
+﻿@using CARSHARE_WEBAPP.ViewModels
+@model VoziloVM
+
+<h2>Detalji vozila</h2>
+<dl>
+    <dt>Marka</dt>
+    <dd>@Model.Marka</dd>
+    <dt>Model</dt>
+    <dd>@Model.Model</dd>
+    <dt>Registracija</dt>
+    <dd>@Model.Registracija</dd>
+</dl>
+
+<h5>Prometna dozvola</h5>
+@if (Model.Imageprometna?.Content?.Length > 0)
+{
+    var b64 = Convert.ToBase64String(Model.Imageprometna.Content);
+    <img src="data:image/png;base64,@b64"
+         alt="Prometna dozvola"
+         class="img-fluid rounded border"
+         style="max-width:100%; height:auto;" />
+}
+else
+{
+    <p class="text-muted">Nema spremljene slike prometne dozvole.</p>
+}

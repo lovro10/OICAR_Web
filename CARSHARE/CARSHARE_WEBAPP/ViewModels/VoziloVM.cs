@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-
+using CARSHARE_WEBAPP.Models;
 namespace CARSHARE_WEBAPP.ViewModels 
 {
     public class VoziloVM 
@@ -22,5 +22,15 @@ namespace CARSHARE_WEBAPP.ViewModels
         public IFormFile? FrontImage { get; set; }
 
         public IFormFile? BackImage { get; set; }
+        public string? Username { get; set; }
+        public string? ImagePrometnaBase64 { get; set; }
+        public ImageVM? Imageprometna { get; set; }
+        public string? Prometna { get; set; }
+        public IFormFile? PrometnaFile { get; set; }
+        public int IDVozilo { get; set; }
+
+
+
+
     }
 }

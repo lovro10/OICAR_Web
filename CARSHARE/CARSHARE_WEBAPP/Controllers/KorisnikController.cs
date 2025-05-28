@@ -204,11 +204,13 @@ namespace CARSHARE_WEBAPP.Controllers
                 return View(model);
             }
         }
-     
+
         [HttpGet]
         public async Task<IActionResult> Images()
         {
-            return Ok();
+            var jwt = Request.Cookies["JWToken"];
+            var images = await _korisnikService.GetImagesAsync(jwt);
+            return View(images);
         }
 
     }

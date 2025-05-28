@@ -24,4 +24,8 @@ public partial class Image
     public virtual ICollection<Korisnikimage> Korisnikimages { get; set; } = new List<Korisnikimage>();
 
     public virtual ICollection<Vozilo> Vozilos { get; set; } = new List<Vozilo>();
+    public string Base64Content { get; set; }
+    public int IDImage { get; set; }
+
+
 }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CARSHARE_WEBAPP.Services
 {
@@ -96,7 +97,28 @@ namespace CARSHARE_WEBAPP.Services
                 return null;
             }
         }
-       
+        public async Task<List<ImageVM>> GetImagesAsync(string jwtToken = null)
+        {
+            if (!string.IsNullOrEmpty(jwtToken))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization
+                  = new AuthenticationHeaderValue("Bearer", jwtToken);
+            }
+            _httpClient.DefaultRequestHeaders.Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var response = await _httpClient.GetAsync("http://localhost:5194/api/Image");
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var images = JsonSerializer.Deserialize<List<ImageVM>>(
+                json,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+            );
+
+            return images ?? new List<ImageVM>();
+        }
+
     }
   }
 
