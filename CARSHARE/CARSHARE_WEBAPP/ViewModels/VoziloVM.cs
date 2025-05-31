@@ -27,7 +27,6 @@ namespace CARSHARE_WEBAPP.ViewModels
         public ImageVM? Imageprometna { get; set; }
         public string? Prometna { get; set; }
         public IFormFile? PrometnaFile { get; set; }
-        public int IDVozilo { get; set; }
 
 
 
