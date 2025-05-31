@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace CARSHARE_WEBAPP.Models;
 
@@ -25,6 +26,8 @@ public partial class Image
 
     public virtual ICollection<Vozilo> Vozilos { get; set; } = new List<Vozilo>();
     public string Base64Content { get; set; }
+
+    [JsonIgnore]
     public int IDImage { get; set; }
 
 

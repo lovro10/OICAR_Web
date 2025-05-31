@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using System.Net;
+using Newtonsoft.Json.Linq;
 
 
 namespace CARSHARE_WEBAPP.Controllers
@@ -19,7 +20,7 @@ namespace CARSHARE_WEBAPP.Controllers
         private readonly ILogger<VoziloController> _logger;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
-
+        
         public VoziloController(IHttpContextAccessor httpContextAccessor, ILogger<VoziloController> logger)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -33,9 +34,8 @@ namespace CARSHARE_WEBAPP.Controllers
             if (string.IsNullOrEmpty(token))
                 return RedirectToAction("Index", "Home");
 
-            using var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:5194/api/");
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            // ── USE CreateClient() INSTEAD ──
+            using var client = CreateClient();
 
             var response = await client.GetAsync("Vozilo/GetAll");
             if (!response.IsSuccessStatusCode)
@@ -103,7 +103,7 @@ namespace CARSHARE_WEBAPP.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, VoziloVM vm)
         {
-            if (id != vm.IDVozilo)
+            if (id != vm.Idvozilo)
                 return BadRequest();
 
             if (!ModelState.IsValid)
@@ -172,7 +172,7 @@ namespace CARSHARE_WEBAPP.Controllers
             return Convert.ToBase64String(ms.ToArray());
         }
 
-        private HttpClient CreateClient()
+        protected virtual HttpClient CreateClient()
         {
             var token = _httpContextAccessor.HttpContext!.Session.GetString("JWToken");
             if (string.IsNullOrEmpty(token))
