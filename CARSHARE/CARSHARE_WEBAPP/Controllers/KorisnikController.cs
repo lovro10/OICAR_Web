@@ -124,7 +124,7 @@ namespace CARSHARE_WEBAPP.Controllers
             Response.Cookies.Delete("UserId");
             Response.Cookies.Delete("Role");
 
-            return RedirectToAction("Login", "Korisnik");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]

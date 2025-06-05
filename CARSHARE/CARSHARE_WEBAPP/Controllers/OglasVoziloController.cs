@@ -86,6 +86,18 @@ namespace CARSHARE_WEBAPP.Controllers
             }
         }
 
+        private async Task<List<string>> GetCarBrands() 
+        { 
+            var carResponse = await _httpClient.GetAsync("CarBrand");
+            if (carResponse.IsSuccessStatusCode)
+            { 
+                var carJson = await carResponse.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<string>>(carJson);
+            } 
+
+            return new List<string>();
+        } 
+
         public async Task<IActionResult> IndexUser() 
         {
             var jwtToken = HttpContext.Session.GetString("JWToken");

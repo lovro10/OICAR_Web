@@ -134,7 +134,7 @@
             @foreach (var img in Model)
             {
                 <div class="gallery-item">
-                    <img src="data:image/jpeg;base64,@img.Base64Content"
+                    <img src="data:image/jpeg;base64,@img.ContentBase64"
                          alt="@img.Name" />
                 </div>
             }

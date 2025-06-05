@@ -1,240 +1,195 @@
 ﻿using CARSHARE_WEBAPP.Models;
 using CARSHARE_WEBAPP.Services;
 using CARSHARE_WEBAPP.ViewModels;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using Newtonsoft.Json;
+using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text.Json;
-using System.Diagnostics;
-using Microsoft.Extensions.Logging;
-using System.Net;
-
+using System.Text;
 
 namespace CARSHARE_WEBAPP.Controllers
 {
     public class VoziloController : Controller
     {
-        private readonly ILogger<VoziloController> _logger;
+        private readonly HttpClient _client;
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public VoziloController(IHttpContextAccessor httpContextAccessor, ILogger<VoziloController> logger)
+        public VoziloController()
         {
-            _httpContextAccessor = httpContextAccessor;
-            _logger = logger;
-
+            _client = new HttpClient
+            {
+                BaseAddress = new Uri("http://localhost:5194/api/Vozilo/")
+            };
         }
 
         public async Task<IActionResult> Index()
         {
-            var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
-            if (string.IsNullOrEmpty(token))
-                return RedirectToAction("Index", "Home");
+            var jwtToken = HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(jwtToken))
+                return RedirectToAction("Login", "Korisnik");
 
-            using var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:5194/api/");
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+                return RedirectToAction("Login", "Korisnik");
 
-            var response = await client.GetAsync("Vozilo/GetAll");
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+
+            var response = await _client.GetAsync($"GetVehicleByUser?userId={userId}");
+
             if (!response.IsSuccessStatusCode)
             {
-                var body = await response.Content.ReadAsStringAsync();
-                return ShowError(body, response.StatusCode);
+                ViewBag.Error = "Unable to load vehicles.";
+                return View(new List<VoziloVM>());
             }
 
-
             var json = await response.Content.ReadAsStringAsync();
-            var vozila = JsonSerializer.Deserialize<List<VoziloVM>>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
+            var vozila = JsonConvert.DeserializeObject<List<VoziloVM>>(json);
 
             return View(vozila);
         }
 
-
-        public IActionResult Create() => View(new Vozilo());
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Vozilo vm)
+        [HttpGet]
+        public IActionResult Create()
         {
+            return View();
+        }
 
-            if (!ModelState.IsValid) return View(vm);
+        [HttpPost]
+        public async Task<IActionResult> Create(VoziloVM voziloVm)
+        {
+            var jwtToken = HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(jwtToken))
+                return RedirectToAction("Login", "Account");
 
-            var dto = new
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+                return RedirectToAction("Login", "Account");
+
+            if (voziloVm.FrontImage == null || voziloVm.BackImage == null)
             {
-                Marka = vm.Marka,
-                Model = vm.Model,
-                Registracija = vm.Registracija,
-                Prometna = await FileToBase64Async(vm.PrometnaFile)
+                ViewBag.Error = "Both images are required.";
+                return View(voziloVm);
+            }
+
+            string frontBase64 = null!;
+            string backBase64 = null!;
+
+            using (var ms = new MemoryStream())
+            {
+                await voziloVm.FrontImage.CopyToAsync(ms);
+                frontBase64 = Convert.ToBase64String(ms.ToArray());
+            }
+
+            using (var ms = new MemoryStream())
+            {
+                await voziloVm.BackImage.CopyToAsync(ms);
+                backBase64 = Convert.ToBase64String(ms.ToArray());
+            }
+
+            var vozilo = new
+            {
+                Naziv = voziloVm.Naziv,
+                Marka = voziloVm.Marka,
+                Model = voziloVm.Model,
+                Registracija = voziloVm.Registracija,
+                VozacId = userId.Value,
+                FrontImageBase64 = frontBase64,
+                BackImageBase64 = backBase64,
+                FrontImageName = "Prednja prometna " + voziloVm.Registracija,
+                BackImageName = "Zadnja prometna " + voziloVm.Registracija
             };
 
-            using var client = CreateClient();
-            var resp = await client.PostAsJsonAsync("Vozilo/KreirajVozilo", dto);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+            var json = JsonConvert.SerializeObject(vozilo);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            if (!resp.IsSuccessStatusCode)
-            {
-                ModelState.AddModelError("", "Greška pri spremanju vozila.");
-                return View(vm);
-            }
-            return RedirectToAction(nameof(Index));
+            var response = await _client.PostAsync("CreateVehicle", content);
+
+            if (response.IsSuccessStatusCode)
+                return RedirectToAction("Index");
+
+            ViewBag.Error = "Failed to create vehicle.";
+            return View(voziloVm);
         }
-
-        // ======== EDIT ========
-        public async Task<IActionResult> Edit(int id)
+        [HttpGet]
+        public async Task<IActionResult> DetailsAdmin()
         {
-            using var client = CreateClient();
-            var resp = await client.GetAsync($"Vozilo/Details/{id}");
-            if (!resp.IsSuccessStatusCode)
-                return ShowError(await resp.Content.ReadAsStringAsync(), resp.StatusCode);
+            var response = await _client.GetAsync("GetVehicles");
 
-            var json = await resp.Content.ReadAsStringAsync();
-            var vm = JsonSerializer.Deserialize<VoziloVM>(json,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-            if (vm == null)
-                return NotFound();
-
-            return View(vm);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, VoziloVM vm)
-        {
-            if (id != vm.IDVozilo)
-                return BadRequest();
-
-            if (!ModelState.IsValid)
-                return View(vm);
-
-            var dto = new
+            if (!response.IsSuccessStatusCode)
             {
-                Marka = vm.Marka,
-                Model = vm.Model,
-                Registracija = vm.Registracija,
-                Prometna = await FileToBase64Async(vm.PrometnaFile)
-            };
-
-            using var client = CreateClient();
-            var resp = await client.PutAsJsonAsync($"Vozilo/UpdateVozilo/{id}", dto);
-
-            if (!resp.IsSuccessStatusCode)
-            {
-                var body = await resp.Content.ReadAsStringAsync();
-                ModelState.AddModelError("", $"API greška ({(int)resp.StatusCode}): {body}");
-                return View(vm);
+                ModelState.AddModelError("", "Failed to load vehicles.");
+                return View(new List<VoziloVM>());
             }
 
-            return RedirectToAction(nameof(Index));
+            var jsonData = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine("=== JSON received from API ===");
+            Console.WriteLine(jsonData);
+            Console.WriteLine("==============================");
+
+            var vozila = JsonConvert.DeserializeObject<List<VoziloVM>>(jsonData);
+
+            return View(vozila);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        { 
+            var response = await _client.GetAsync($"GetVehicleDetails?id={id}");
 
-        // ======== DELETE ========
-        public async Task<IActionResult> Delete(int id)
-        {
-            using var client = CreateClient();
-            var resp = await client.GetAsync($"Vozilo/Delete/{id}");
-            if (!resp.IsSuccessStatusCode)
-            {
-                var body = await resp.Content.ReadAsStringAsync();
-                return ShowError(body, resp.StatusCode);
+            if (!response.IsSuccessStatusCode)
+            { 
+                ViewBag.Error = "Failed to load vehicle details.";
+                return View(); 
             }
 
-            var json = await resp.Content.ReadAsStringAsync();
-            var vozilo = JsonSerializer.Deserialize<CARSHARE_WEBAPP.Models.Vozilo>(json,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var json = await response.Content.ReadAsStringAsync();
+            var vozilo = JsonConvert.DeserializeObject<VoziloVM>(json);
+
+            if (vozilo == null)
+            {
+                ViewBag.Error = "Vehicle details not found.";
+                return View();
+            }
 
             return View(vozilo);
         }
 
-        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
         {
-            using var client = CreateClient();
-            var resp = await client.DeleteAsync($"Vozilo/Delete/{id}");
-            if (!resp.IsSuccessStatusCode)
-            {
-                var body = await resp.Content.ReadAsStringAsync();
-                return ShowError(body, resp.StatusCode);
-            }
+            var jwtToken = HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(jwtToken))
+                return RedirectToAction("Login", "Korisnik");
 
-            return RedirectToAction(nameof(Index));
-        }
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
 
-        private static async Task<string?> FileToBase64Async(IFormFile? file)
-        {
-            if (file == null || file.Length == 0) return null;
-
-            await using var ms = new MemoryStream();
-            await file.CopyToAsync(ms);
-            return Convert.ToBase64String(ms.ToArray());
-        }
-
-        private HttpClient CreateClient()
-        {
-            var token = _httpContextAccessor.HttpContext!.Session.GetString("JWToken");
-            if (string.IsNullOrEmpty(token))
-                throw new InvalidOperationException("Korisnik nije prijavljen – JWT nedostaje.");
-
-            var c = new HttpClient
-            {
-                BaseAddress = new Uri("http://localhost:5194/api/")
-            };
-            c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            return c;
-        }
-
-        public async Task<IActionResult> Details(int id)
-        {
-            using var client = CreateClient();
-            var resp = await client.GetAsync($"Vozilo/GetById/{id}");
-            if (!resp.IsSuccessStatusCode)
-                return ShowError(await resp.Content.ReadAsStringAsync(), resp.StatusCode);
-
-            var json = await resp.Content.ReadAsStringAsync();
-
-            var vm = JsonSerializer.Deserialize<VoziloVM>(json,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            if (vm == null)
+            var response = await _client.GetAsync($"GetVehicleById/{id}");
+            if (!response.IsSuccessStatusCode)
                 return NotFound();
 
-            return View(vm);
+            var json = await response.Content.ReadAsStringAsync();
+            var vozilo = JsonConvert.DeserializeObject<VoziloVM>(json);
+            return View(vozilo);
         }
 
-
-
-
-        private async Task<HttpResponseMessage> CallApiAsync(
-    Func<HttpClient, Task<HttpResponseMessage>> invoker,
-    string description)
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            using var client = CreateClient();
-            var resp = await invoker(client);
+            var jwtToken = HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(jwtToken))
+                return RedirectToAction("Login", "Korisnik");
 
-            var body = await resp.Content.ReadAsStringAsync();
-            _logger.LogInformation(
-                "API {Desc}: {Method} {Url} -> {Status}\n{Body}",
-                description,
-                resp.RequestMessage!.Method,
-                resp.RequestMessage.RequestUri,
-                (int)resp.StatusCode,
-                body);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
 
-            return resp;
-        }
-
-        private ViewResult ShowError(string? apiBody = null, HttpStatusCode? status = null)
-        {
-            if (status != null)
-                _logger.LogError("API error {Status}: {Body}", (int)status, apiBody);
-
-            return View("Error", new ErrorViewModel
+            var response = await _client.DeleteAsync($"DeleteVehicle/{id}");
+            if (!response.IsSuccessStatusCode)
             {
-                RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier ?? Guid.NewGuid().ToString()
-            });
-        }
+                ViewBag.Error = "Failed to delete vehicle.";
+                return RedirectToAction("Index");
+            }
 
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -24,7 +24,6 @@ namespace CARSHARE_WEBAPP.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-
         public async Task<List<KorisnikVM>> GetKorisniciAsync()
         {
 
@@ -60,12 +59,12 @@ namespace CARSHARE_WEBAPP.Services
             }).ToList() ?? new List<KorisnikVM>();
         }
 
-      
         public async Task<HttpResponseMessage> UpdateKorisnikAsync(EditKorisnikVM korisnik)
         {
            
             return await _httpClient.PutAsJsonAsync<EditKorisnikVM>($"{ApiUri}/{korisnik.IDKorisnik}", korisnik);
         }
+
         public async Task<Korisnik?> GetKorisnikByIdAsync(int id)
         {
             try

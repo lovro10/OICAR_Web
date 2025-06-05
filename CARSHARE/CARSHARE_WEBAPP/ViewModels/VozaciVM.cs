@@ -1,6 +1,6 @@
 ﻿namespace CARSHARE_WEBAPP.ViewModels
 {
-    public class ChatVM
+    public class VozaciVM
     {
     }
 }
