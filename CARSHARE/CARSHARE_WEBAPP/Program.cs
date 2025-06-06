@@ -1,4 +1,5 @@
 using CARSHARE_WEBAPP.Services;
+using CARSHARE_WEBAPP.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-
+builder.Services.AddScoped<IKorisnikService, KorisnikService>();
 builder.Services.AddAuthorization();
 builder.Services.AddHttpClient<KorisnikService>();
 builder.Services.AddHttpClient<ImageService>();    
@@ -52,3 +53,4 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+public partial class Program { }

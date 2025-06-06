@@ -10,10 +10,11 @@ using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using JsonSerializer = System.Text.Json.JsonSerializer;
+using JsonException = System.Text.Json.JsonException;
 
 namespace CARSHARE_WEBAPP.Services
 {
-    public class KorisnikService
+    public class KorisnikService : Interfaces.IKorisnikService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HttpClient _httpClient;
@@ -67,32 +68,61 @@ namespace CARSHARE_WEBAPP.Services
 
         public async Task<Korisnik?> GetKorisnikByIdAsync(int id)
         {
+            var response = await _httpClient.GetAsync($"api/korisnici/{id}");
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var jsonString = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrWhiteSpace(jsonString))
+                return null;
+
             try
             {
-                var korisnik = await _httpClient.GetFromJsonAsync<Korisnik>($"{ApiUri}/{id}");
+                using var doc = JsonDocument.Parse(jsonString);
+                var root = doc.RootElement;
 
-                if (korisnik == null) return null;
+                if (root.ValueKind != JsonValueKind.Object)
+                    return null;
 
-                return new Korisnik
+
+
+                int idKor = root.GetProperty("Idkorisnik").GetInt32();
+                string ime = root.GetProperty("Ime").GetString()!;
+                string prezime = root.GetProperty("Prezime").GetString()!;
+                string email = root.GetProperty("Email").GetString()!;
+                string pwdHash = root.GetProperty("Pwdhash").GetString()!;
+                string pwdSalt = root.GetProperty("Pwdsalt").GetString()!;
+                string username = root.GetProperty("Username").GetString()!;
+                string telefon = root.GetProperty("Telefon").GetString()!;
+                string datumStr = root.GetProperty("Datumrodjenja").GetString()!; // e.g. "1995-07-07"
+
+                var datum = DateOnly.ParseExact(datumStr, "yyyy-MM-dd");
+
+                var korisnik = new Korisnik
                 {
-                    Idkorisnik = korisnik.Idkorisnik,
-                    Ime = korisnik.Ime,
-                    Prezime = korisnik.Prezime,
-                    Email = korisnik.Email,
-                    Pwdhash = korisnik.Pwdhash,
-                    Pwdsalt = korisnik.Pwdsalt,
-                    Username = korisnik.Username,
-                    Telefon = korisnik.Telefon,
-                    Datumrodjenja = korisnik.Datumrodjenja,
-                    Imagevozackaid = korisnik.Imagevozackaid,
-                    Imageosobnaid = korisnik.Imageosobnaid,
-                    Imageliceid = korisnik.Imageliceid,
-                    Deletedat = korisnik.Deletedat 
+                    Idkorisnik = idKor,
+                    Ime = ime,
+                    Prezime = prezime,
+                    Email = email,
+                    Pwdhash = pwdHash,
+                    Pwdsalt = pwdSalt,
+                    Username = username,
+                    Telefon = telefon,
+                    Datumrodjenja = datum,
                 };
+
+                return korisnik;
             }
-            catch (Exception ex)
+            catch (KeyNotFoundException)
             {
-                Console.WriteLine($"Error fetching korisnik by ID: {ex.Message}");
+                return null;
+            }
+            catch (FormatException)
+            {
+                return null;
+            }
+            catch (JsonException)
+            {
                 return null;
             }
         }
