@@ -95,16 +95,18 @@ public class OglasVoznjaController : Controller
 
         var model = new JoinRideVM
         {
-            Username = oglas.Username ?? "",
-            Ime = oglas.Ime ?? "",
-            Prezime = oglas.Prezime ?? "",
-            Marka = oglas.Marka ?? "",
-            Model = oglas.Model ?? "",
-            Registracija = oglas.Registracija ?? "",
-            Polaziste = oglas.Polaziste ?? "",
-            Odrediste = oglas.Odrediste ?? ""
+            OglasVoznjaId = oglas.IdOglasVoznja,
+            Username = oglas.Username,
+            Ime = oglas.Ime,
+            Prezime = oglas.Prezime,
+            Marka = oglas.Marka,
+            Model = oglas.Model,
+            Registracija = oglas.Registracija,
+            Polaziste = oglas.Polaziste,
+            Odrediste = oglas.Odrediste
         };
 
+        Console.WriteLine($"JoinRide GET: OglasVoznjaId={model.OglasVoznjaId}");
         return View(model);
     }
 
@@ -120,7 +122,7 @@ public class OglasVoznjaController : Controller
             }
             return View(joinRideVM);
         }
-
+        Console.WriteLine($"HttpClient base address: {_httpClient.BaseAddress}");
         var userId = HttpContext.Session.GetInt32("UserId");
 
         if (userId == null)
@@ -130,12 +132,14 @@ public class OglasVoznjaController : Controller
         }
 
         joinRideVM.KorisnikId = userId.Value;
+        
 
         var json = JsonConvert.SerializeObject(joinRideVM);
         Console.WriteLine("Sending POST request to API:");
         Console.WriteLine($"Data: {json}");
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");
+        
 
         var response = await _httpClient.PostAsync("KorisnikVoznja/JoinRide", content);
 

@@ -35,3 +35,17 @@
         d='M4 7h22M4 15h22M4 23h22'/>\
     </svg>");
     }
+@media (max-width: 768px) {
+    .navbar-custom .nav-link {
+        margin-right: 0;
+        padding: 0.5rem 1rem;
+        text-align: center;
+    }
+
+    .navbar-custom .navbar-collapse {
+        background-color: #f5f5dc; 
+        border-top: 1px solid #ccc;
+        margin-top: 0.5rem;
+        border-radius: 0.25rem;
+    }
+}
