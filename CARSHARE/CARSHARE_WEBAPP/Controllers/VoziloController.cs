@@ -5,12 +5,22 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Diagnostics;
+using Microsoft.Extensions.Logging;
+using System.Net;
+using Newtonsoft.Json.Linq;
 using System.Text;
 
 namespace CARSHARE_WEBAPP.Controllers
 {
     public class VoziloController : Controller
     {
+        private readonly ILogger<VoziloController> _logger;
+
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        
+        public VoziloController(IHttpContextAccessor httpContextAccessor, ILogger<VoziloController> logger)
         private readonly HttpClient _client;
 
         public VoziloController()
@@ -27,6 +37,7 @@ namespace CARSHARE_WEBAPP.Controllers
             if (string.IsNullOrEmpty(jwtToken))
                 return RedirectToAction("Login", "Korisnik");
 
+            using var client = CreateClient();
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null)
                 return RedirectToAction("Login", "Korisnik");
@@ -79,6 +90,24 @@ namespace CARSHARE_WEBAPP.Controllers
                 frontBase64 = Convert.ToBase64String(ms.ToArray());
             }
 
+            var json = await resp.Content.ReadAsStringAsync();
+            var vm = JsonSerializer.Deserialize<VoziloVM>(json,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            if (vm == null)
+                return NotFound();
+
+            return View(vm);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, VoziloVM vm)
+        {
+            if (id != vm.Idvozilo)
+                return BadRequest();
+
+            if (!ModelState.IsValid)
+                return View(vm);
             using (var ms = new MemoryStream())
             {
                 await voziloVm.BackImage.CopyToAsync(ms);
@@ -143,6 +172,11 @@ namespace CARSHARE_WEBAPP.Controllers
                 return View(); 
             }
 
+        protected virtual HttpClient CreateClient()
+        {
+            var token = _httpContextAccessor.HttpContext!.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(token))
+                throw new InvalidOperationException("Korisnik nije prijavljen – JWT nedostaje.");
             var json = await response.Content.ReadAsStringAsync();
             var vozilo = JsonConvert.DeserializeObject<VoziloVM>(json);
 
