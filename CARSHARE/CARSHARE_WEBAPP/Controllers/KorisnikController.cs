@@ -23,13 +23,57 @@ namespace CARSHARE_WEBAPP.Controllers
         public KorisnikController(KorisnikService korisnikService)
         {
             _korisnikService = korisnikService;
-           
-        }
+            _httpClient = new HttpClient
+            {
+                BaseAddress = new Uri("http://localhost:5194/api/Korisnik/") 
+            }; 
+        } 
 
         public async Task<IActionResult> GetKorisnici()
-        {
+        { 
             var korisnici = await _korisnikService.GetKorisniciAsync();
             return View(korisnici);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmationPageDetails(int id) 
+        {
+            var response = await _httpClient.GetAsync($"Details?id={id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                ModelState.AddModelError("", "Failed to load user details.");
+                return View();
+            }
+
+            var jsonData = await response.Content.ReadAsStringAsync();
+
+            var korisnikVM = JsonConvert.DeserializeObject<KorisnikVM>(jsonData);
+
+            return View(korisnikVM);
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> ClearUserData(int id)
+        {
+            var response = await _httpClient.PutAsync($"Clear/{id}", null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                TempData["Message"] = message;
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                TempData["Error"] = $"User with ID {id} was not found.";
+            }
+            else
+            {
+                TempData["Error"] = $"Failed to clear user data with ID {id}.";
+            }
+
+            var korisnici = await _korisnikService.GetKorisniciAsync();
+            return RedirectToAction("GetKorisnici", "Korisnik");
         }
 
         [HttpGet]
@@ -53,6 +97,7 @@ namespace CARSHARE_WEBAPP.Controllers
             if (b64hash != user.PwdHash)
             {
                 ModelState.AddModelError("", "Invalid username or password");
+
                 return View();
             }
 
@@ -127,18 +172,21 @@ namespace CARSHARE_WEBAPP.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var korisnici = await _korisnikService.GetKorisniciAsync();
-            var korisnik = korisnici.FirstOrDefault(x => x.IDKorisnik == id);
+            var response = await _httpClient.GetAsync($"Details?id={id}");
 
-            if (korisnik == null)
+            if (!response.IsSuccessStatusCode)
             {
-                return NotFound();
+                ModelState.AddModelError("", "Failed to load user details.");
+                return View();
             }
-          
-            return View(korisnik);
+
+            var jsonData = await response.Content.ReadAsStringAsync();
+
+            var korisnikVM = JsonConvert.DeserializeObject<KorisnikVM>(jsonData);
+
+            return View(korisnikVM);
         }
 
         [HttpGet]

@@ -10,9 +10,13 @@
     <table id="usersTable" class="stripe hover" style="width:100%">
         <thead>
             <tr>
+                <th>Broj</th>
+                <th>Korisnicko ime</th>
                 <th>Ime</th>
                 <th>Prezime</th>
                 <th>Email</th>
+                <th>Telefon</th>
+                <th>Datum rodenja</th>
                 <th>Uloga</th>
                 <th>Confirmed?</th>
                 <th>Akcija</th>
@@ -22,14 +26,24 @@
             @foreach (var k in Model)
             {
                 <tr>
+                    <th>@k.IDKorisnik</th>
+                    <td>@k.Username</td>
                     <td>@k.Ime</td>
                     <td>@k.Prezime</td>
                     <td>@k.Email</td>
+                    <td>@k.Telefon</td>
+                    <td>@k.DatumRodjenja</td>
                     <td>@(k.Uloga?.Naziv ?? "N/A")</td>
                     <td>@(k.IsConfirmed ?? false ? "✔️" : "❌")</td>
                     <td>
                         <button onclick="toggleConfirmation(@k.IDKorisnik, true)" class="btn btn-success">Confirm</button>
                         <button onclick="toggleConfirmation(@k.IDKorisnik, false)" class="btn btn-danger">Reject</button>
+                        <a asp-controller="Korisnik" asp-action="Details" asp-route-id="@k.IDKorisnik" class="btn btn-info">
+                            Details
+                        </a>
+                        <a asp-controller="Korisnik" asp-action="ConfirmationPageDetails" asp-route-id="@k.IDKorisnik" class="btn btn-danger">
+                            Clear  
+                        </a>
                     </td>
                 </tr>
             }
@@ -38,7 +52,6 @@
 </section>
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/KorisnikSheet.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
 }
 

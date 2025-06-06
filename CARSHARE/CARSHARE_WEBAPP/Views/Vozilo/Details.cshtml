@@ -8,23 +8,37 @@
 }
 else
 {
-    <p>Make: @Model.Marka</p>
-    <p>Model: @Model.Model</p>
-    <p>Registration: @Model.Registracija</p>
+    <p><strong>Make:</strong> @Model.Marka</p>
+    <p><strong>Model:</strong> @Model.Model</p>
+    <p><strong>Registration:</strong> @Model.Registracija</p>
 
     @if (Model.Vozac != null)
     {
-        <p>Driver: @Model.Vozac.Ime @Model.Vozac.Prezime</p>
+        <p><strong>Driver:</strong> @Model.Vozac.Ime @Model.Vozac.Prezime</p>
 
-        if (Model.Vozac.Images != null)
+        @if (Model.Vozac.Images != null && Model.Vozac.Images.Any())
         {
-            foreach (var img in Model.Vozac.Images)
-            {
-                if (!string.IsNullOrEmpty(img.ContentBase64))
-                {
-                    <img src="data:image/jpeg;base64,@img.ContentBase64" alt="@img.Name" style="max-width:200px;" />
+            <h4>Driver Images</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                @{
+                    var count = 1;
                 }
-            }
+                @foreach (var img in Model.Vozac.Images)
+                {
+                    if (!string.IsNullOrEmpty(img.ContentBase64))
+                    {
+                        <div style="text-align: center;">
+                            <p><strong>Picture @count</strong></p>
+                            <img src="data:image/jpeg;base64,@img.ContentBase64"
+                                 alt="@img.Name"
+                                 style="max-width: 200px; max-height: 200px; cursor: zoom-in; transition: transform 0.3s;"
+                                 onmouseover="this.style.transform='scale(1.5)'"
+                                 onmouseout="this.style.transform='scale(1)'" />
+                        </div>
+                        count++;
+                    }
+                }
+            </div>
         }
     }
 }

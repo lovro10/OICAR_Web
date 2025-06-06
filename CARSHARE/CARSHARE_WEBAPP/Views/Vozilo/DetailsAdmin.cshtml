@@ -10,6 +10,7 @@
     <table id="vehiclesTable" class="stripe hover" style="width:100%">
         <thead>
             <tr>
+                <th>Broj</th>
                 <th>Username</th>
                 <th>Ime Prezime</th>
                 <th>Naziv</th>
@@ -23,7 +24,8 @@
         <tbody>
             @foreach (var vozilo in Model)
             { 
-                <tr> 
+                <tr>
+                    <td>@vozilo.Idvozilo</td>
                     <td>@vozilo.Username</td>
                     <td>@vozilo.Ime @vozilo.Prezime</td>
                     <td>@vozilo.Naziv</td>
@@ -45,7 +47,6 @@
 </section>
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/VoziloSheet" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
 }
 

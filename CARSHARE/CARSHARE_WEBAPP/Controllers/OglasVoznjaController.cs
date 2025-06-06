@@ -68,39 +68,42 @@ public class OglasVoznjaController : Controller
         return new List<string>();
     }
 
-    public async Task<IActionResult> JoinRide(int id) 
-    { 
+    public async Task<IActionResult> JoinRide(int id)
+    {
         Console.WriteLine($"Received Oglas ID: {id}");
 
-        var response = await _httpClient.GetAsync($"OglasVoznja/GetById/{id}"); 
-        Console.WriteLine($"Response status code from GetById: {response.StatusCode}");
+        var response = await _httpClient.GetAsync($"OglasVoznja/GetDataForAd?id={id}");
+        Console.WriteLine($"Response status code from GetDataForAd: {response.StatusCode}");
 
-        if (!response.IsSuccessStatusCode) 
-        { 
+        if (!response.IsSuccessStatusCode)
+        {
             Console.WriteLine("Ad not found.");
             return NotFound("Ad not found.");
-        } 
+        }
 
         var json = await response.Content.ReadAsStringAsync();
-        var oglas = JsonConvert.DeserializeObject<Oglasvoznja>(json);
+        Console.WriteLine("Raw JSON response from backend:");
+        Console.WriteLine(json);
 
-        if (oglas == null) 
-        { 
-            Console.WriteLine("Vehicle or Driver data not found.");
-            return NotFound("Vehicle or Driver data not found.");
-        } 
+        var oglas = JsonConvert.DeserializeObject<OglasVoznjaVM>(json);
 
-        var model = new JoinRideVM 
-        {  
-            Username = oglas.Vozilo.Vozac.Username,
-            Ime = oglas.Vozilo.Vozac.Ime, 
-            Prezime = oglas.Vozilo.Vozac.Prezime,
-            Marka = oglas.Vozilo.Marka,
-            Model = oglas.Vozilo.Model,
-            Registracija = oglas.Vozilo.Registracija,  
-            Polaziste = oglas.Lokacija.Polaziste, 
-            Odrediste = oglas.Lokacija.Odrediste 
-        }; 
+        if (oglas == null)
+        {
+            Console.WriteLine("Failed to deserialize the response.");
+            return NotFound("Invalid data received from backend.");
+        }
+
+        var model = new JoinRideVM
+        {
+            Username = oglas.Username ?? "",
+            Ime = oglas.Ime ?? "",
+            Prezime = oglas.Prezime ?? "",
+            Marka = oglas.Marka ?? "",
+            Model = oglas.Model ?? "",
+            Registracija = oglas.Registracija ?? "",
+            Polaziste = oglas.Polaziste ?? "",
+            Odrediste = oglas.Odrediste ?? ""
+        };
 
         return View(model);
     }
@@ -134,7 +137,7 @@ public class OglasVoznjaController : Controller
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.PostAsync("OglasVoznja/JoinRide", content);
+        var response = await _httpClient.PostAsync("KorisnikVoznja/JoinRide", content);
 
         Console.WriteLine($"Response status code from API: {response.StatusCode}");
         var responseContent = await response.Content.ReadAsStringAsync();

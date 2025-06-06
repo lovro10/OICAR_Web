@@ -1,0 +1,11 @@
+﻿@model CARSHARE_WEBAPP.ViewModels.KorisnikVM
+
+<h2>Confirm Clear User Data</h2>
+
+<p>Are you sure you want to clear all data for user: <strong>@Model.Ime @Model.Prezime</strong>?</p>
+
+<form asp-action="ClearUserData" method="post">
+    <input type="hidden" name="id" value="@Model.IDKorisnik" />
+    <button type="submit" class="btn btn-danger">Yes, Clear Data</button>
+    <a asp-action="Clear" class="btn btn-secondary">Cancel</a>
+</form>

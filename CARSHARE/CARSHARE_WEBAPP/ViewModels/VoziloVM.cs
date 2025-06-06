@@ -14,15 +14,15 @@ namespace CARSHARE_WEBAPP.ViewModels
 
         public string? Registracija { get; set; }
 
-        public int VozacId { get; set; }
+        public int? VozacId { get; set; }
 
-        [JsonIgnore]
+        [JsonIgnore] 
         public bool? Isconfirmed { get; set; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        [JsonIgnore]
         public string? Ime { get; set; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        [JsonIgnore]
         public string? Prezime { get; set; }
         
         public IFormFile? FrontImage { get; set; }
@@ -41,6 +41,6 @@ namespace CARSHARE_WEBAPP.ViewModels
         
         public int IDVozilo { get; set; }
 
-        public VozacVM Vozac { get; set; }
+        public VozacVM? Vozac { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model CARSHARE_WEBAPP.ViewModels.KorisnikVM 
+﻿@model CARSHARE_WEBAPP.ViewModels.KorisnikVM
 
 <h2>@Model.Ime @Model.Prezime</h2>
 <p>Username: @Model.Username</p>
@@ -14,33 +14,33 @@
         <img src="data:image/jpeg;base64,@img.ContentBase64" alt="@img.Name"
              style="max-width: 200px; max-height: 200px; cursor: zoom-in; transition: transform 0.3s;"
              onmouseover="this.style.transform='scale(1.5)'"
-             onmouseout="this.style.transform='scale(1)'" /> 
-    } 
-} 
+             onmouseout="this.style.transform='scale(1)'" />
+    }
+}
 else
-{ 
+{
     <p>Nema slika osobne iskaznice</p>
-} 
+}
 
 <h3>Vozacka dozvola</h3>
 @if (Model.ImagesType2 != null && Model.ImagesType2.Any())
-{ 
+{
     foreach (var img in Model.ImagesType2)
     {
         <img src="data:image/jpeg;base64,@img.ContentBase64" alt="@img.Name"
              style="max-width: 200px; max-height: 200px; cursor: zoom-in; transition: transform 0.3s;"
              onmouseover="this.style.transform='scale(1.5)'"
-             onmouseout="this.style.transform='scale(1)'" /> 
-    } 
-} 
+             onmouseout="this.style.transform='scale(1)'" />
+    }
+}
 else
-{ 
+{
     <p>Nema slika vozacke dozvole</p>
-} 
+}
 
 <h3>Selfie</h3>
 @if (Model.ImagesType3 != null && Model.ImagesType3.Any())
-{ 
+{
     foreach (var img in Model.ImagesType3)
     {
         <img src="data:image/jpeg;base64,@img.ContentBase64" alt="@img.Name"
@@ -53,3 +53,26 @@ else
 {
     <p>Nema nikakve slike selfie</p>
 }
+
+<hr />
+
+@if (TempData["Message"] != null)
+{
+    <div style="color:green; margin-bottom: 1em;">
+        @TempData["Message"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div style="color:red; margin-bottom: 1em;">
+        @TempData["Error"]
+    </div>
+}
+
+<form method="post" asp-action="ClearUserData" asp-controller="Korisnik">
+    <input type="hidden" name="id" value="@Model.IDKorisnik" />
+    <button type="submit"
+            onclick="return confirm('Da li ste sigurni da želite obrisati sve podatke korisnika?');">
+        Clear 
+    </button>
+</form>

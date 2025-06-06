@@ -35,7 +35,7 @@ namespace CARSHARE_WEBAPP.ViewModels
         public int LokacijaId { get; set; }
 
         [JsonIgnore]
-        public int StatusVoznjeId { get; set; }
+        public int? StatusVoznjeId { get; set; }
 
         [JsonIgnore]
         public string? Username { get; set; }

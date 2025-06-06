@@ -81,7 +81,13 @@
     <form asp-action="Create" enctype="multipart/form-data" novalidate>
         <div class="mb-3">
             <label asp-for="Marka" class="form-label"></label>
-            <input asp-for="Marka" class="form-control" placeholder="Unesite marku" />
+            <select asp-for="Marka" class="form-control">
+                <option value="">-- Select a city --</option>
+                @foreach (var car in ViewBag.Cars as List<string>)
+                { 
+                    <option value="@car">@car</option>
+                }
+            </select>
             <span asp-validation-for="Marka" class="text-danger"></span>
         </div>
         <div class="mb-3">

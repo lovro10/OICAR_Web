@@ -35,6 +35,10 @@ namespace CARSHARE_WEBAPP.ViewModels
 
         public string NewPassword { get; set; }
 
-        public string ConfirmPassword { get; set; } 
+        public string ConfirmPassword { get; set; }
+
+        public List<ImageVM> ImagesType1 { get; set; } = new();
+        public List<ImageVM> ImagesType2 { get; set; } = new();
+        public List<ImageVM> ImagesType3 { get; set; } = new();
     }
 }
