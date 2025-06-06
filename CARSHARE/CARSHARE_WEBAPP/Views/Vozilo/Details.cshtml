@@ -1,26 +1,30 @@
-﻿@using CARSHARE_WEBAPP.ViewModels
-@model VoziloVM
+﻿@model CARSHARE_WEBAPP.ViewModels.VoziloVM
 
-<h2>Detalji vozila</h2>
-<dl>
-    <dt>Marka</dt>
-    <dd>@Model.Marka</dd>
-    <dt>Model</dt>
-    <dd>@Model.Model</dd>
-    <dt>Registracija</dt>
-    <dd>@Model.Registracija</dd>
-</dl>
+<h2>Vehicle Details</h2>
 
-<h5>Prometna dozvola</h5>
-@if (Model.Imageprometna?.Content?.Length > 0)
+@if (Model == null)
 {
-    var b64 = Convert.ToBase64String(Model.Imageprometna.Content);
-    <img src="data:image/png;base64,@b64"
-         alt="Prometna dozvola"
-         class="img-fluid rounded border"
-         style="max-width:100%; height:auto;" />
+    <p>Vehicle data not available.</p>
 }
 else
 {
-    <p class="text-muted">Nema spremljene slike prometne dozvole.</p>
+    <p>Make: @Model.Marka</p>
+    <p>Model: @Model.Model</p>
+    <p>Registration: @Model.Registracija</p>
+
+    @if (Model.Vozac != null)
+    {
+        <p>Driver: @Model.Vozac.Ime @Model.Vozac.Prezime</p>
+
+        if (Model.Vozac.Images != null)
+        {
+            foreach (var img in Model.Vozac.Images)
+            {
+                if (!string.IsNullOrEmpty(img.ContentBase64))
+                {
+                    <img src="data:image/jpeg;base64,@img.ContentBase64" alt="@img.Name" style="max-width:200px;" />
+                }
+            }
+        }
+    }
 }

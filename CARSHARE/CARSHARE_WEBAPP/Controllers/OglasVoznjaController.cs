@@ -68,6 +68,89 @@ public class OglasVoznjaController : Controller
         return new List<string>();
     }
 
+    public async Task<IActionResult> JoinRide(int id) 
+    { 
+        Console.WriteLine($"Received Oglas ID: {id}");
+
+        var response = await _httpClient.GetAsync($"OglasVoznja/GetById/{id}"); 
+        Console.WriteLine($"Response status code from GetById: {response.StatusCode}");
+
+        if (!response.IsSuccessStatusCode) 
+        { 
+            Console.WriteLine("Ad not found.");
+            return NotFound("Ad not found.");
+        } 
+
+        var json = await response.Content.ReadAsStringAsync();
+        var oglas = JsonConvert.DeserializeObject<Oglasvoznja>(json);
+
+        if (oglas == null) 
+        { 
+            Console.WriteLine("Vehicle or Driver data not found.");
+            return NotFound("Vehicle or Driver data not found.");
+        } 
+
+        var model = new JoinRideVM 
+        {  
+            Username = oglas.Vozilo.Vozac.Username,
+            Ime = oglas.Vozilo.Vozac.Ime, 
+            Prezime = oglas.Vozilo.Vozac.Prezime,
+            Marka = oglas.Vozilo.Marka,
+            Model = oglas.Vozilo.Model,
+            Registracija = oglas.Vozilo.Registracija,  
+            Polaziste = oglas.Lokacija.Polaziste, 
+            Odrediste = oglas.Lokacija.Odrediste 
+        }; 
+
+        return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> JoinRide(JoinRideVM joinRideVM) 
+    { 
+        if (!ModelState.IsValid)
+        {
+            Console.WriteLine("Model state is invalid.");
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine($"ModelState error: {error.ErrorMessage}");
+            }
+            return View(joinRideVM);
+        } 
+
+        var userId = HttpContext.Session.GetInt32("UserId");
+
+        if (userId == null)
+        {
+            ModelState.AddModelError("", "User must be logged in to create a ride.");
+            return View(joinRideVM);
+        }
+
+        joinRideVM.KorisnikId = userId.Value;
+
+        var json = JsonConvert.SerializeObject(joinRideVM); 
+        Console.WriteLine("Sending POST request to API:"); 
+        Console.WriteLine($"Data: {json}"); 
+
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await _httpClient.PostAsync("OglasVoznja/JoinRide", content);
+
+        Console.WriteLine($"Response status code from API: {response.StatusCode}");
+        var responseContent = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"Response from API: {responseContent}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Ride advertisement successfully created.");
+            return RedirectToAction("Index");
+        }
+
+        Console.WriteLine("Error while creating the ride advertisement.");
+        ModelState.AddModelError("", "Error while creating the ride advertisement.");
+        return View(joinRideVM);
+    }
+
     private async Task<bool> IsUserInRide(int userId, int oglasVoznjaId)
     {
         var response = await _httpClient.GetAsync($"KorisnikVoznja/UserJoinedRide?userId={userId}&oglasVoznjaId={oglasVoznjaId}");

@@ -58,7 +58,7 @@
     <tbody>
         @foreach (var vozilo in Model)
         {
-            var imgSrc = vozilo.Imageprometna?.Base64Content is string b
+            var imgSrc = vozilo.Imageprometna?.ContentBase64 is string b
             ? $"data:image/png;base64,{b}"
             : null;
             <tr>

@@ -11,11 +11,7 @@ builder.Services.AddScoped<IKorisnikService, KorisnikService>();
 builder.Services.AddAuthorization();
 builder.Services.AddHttpClient<KorisnikService>();
 builder.Services.AddHttpClient<ImageService>();    
-builder.Services.AddHttpClient<VoznjaService>();
-builder.Services.AddHttpClient<VoziloService>(client =>
-{
-    client.BaseAddress = new Uri("http://localhost:5194/api/Vozilo/");
-});
+
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
 
