@@ -18,13 +18,13 @@
                              alt="Ride image"
                              style="object-fit: cover;">
                     </div>
-                    
+
                     <div class="card-body">
                         <h5 class="card-title">@oglas.Polaziste → @oglas.Odrediste</h5>
-                        
+
                         <p class="card-text mb-1">
-                            <strong>Driver:</strong> @oglas.Username 
-                        </p> 
+                            <strong>Driver:</strong> @oglas.Username
+                        </p>
                         <p class="card-text mb-1">
                             <strong>Departure:</strong> @oglas.DatumIVrijemePolaska.ToString("dd.MM.yyyy HH:mm")
                         </p>
@@ -35,9 +35,9 @@
                             <strong>Available Seats:</strong> @oglas.BrojPutnika
                         </p>
                         <p class="card-text mb-1">
-                            <strong>Cost:</strong> @oglas.CijenaPoPutniku?.ToString("0.00")  
-                        </p> 
-                        
+                            <strong>Cost:</strong> @oglas.CijenaPoPutniku?.ToString("0.00")
+                        </p>
+
                         <div class="d-flex justify-content-end gap-2">
                             <a asp-action="Details" asp-route-id="@oglas.IdOglasVoznja" class="btn btn-outline-info btn-sm">Details</a>
                             <a asp-action="JoinRide" asp-route-id="@oglas.IdOglasVoznja" class="btn btn-outline-success btn-sm">Reserve</a>

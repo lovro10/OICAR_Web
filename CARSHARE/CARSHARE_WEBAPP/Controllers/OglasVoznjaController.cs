@@ -9,13 +9,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 public class OglasVoznjaController : Controller
-{ 
+{
     private readonly HttpClient _httpClient;
 
     public OglasVoznjaController(IHttpClientFactory clientFactory)
     {
         _httpClient = clientFactory.CreateClient();
-        _httpClient.BaseAddress = new Uri("http://localhost:5194/api/"); 
+        _httpClient.BaseAddress = new Uri("http://localhost:5194/api/");
     }
 
     public async Task<IActionResult> Index()
@@ -109,8 +109,8 @@ public class OglasVoznjaController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> JoinRide(JoinRideVM joinRideVM) 
-    { 
+    public async Task<IActionResult> JoinRide(JoinRideVM joinRideVM)
+    {
         if (!ModelState.IsValid)
         {
             Console.WriteLine("Model state is invalid.");
@@ -119,7 +119,7 @@ public class OglasVoznjaController : Controller
                 Console.WriteLine($"ModelState error: {error.ErrorMessage}");
             }
             return View(joinRideVM);
-        } 
+        }
 
         var userId = HttpContext.Session.GetInt32("UserId");
 
@@ -131,9 +131,9 @@ public class OglasVoznjaController : Controller
 
         joinRideVM.KorisnikId = userId.Value;
 
-        var json = JsonConvert.SerializeObject(joinRideVM); 
-        Console.WriteLine("Sending POST request to API:"); 
-        Console.WriteLine($"Data: {json}"); 
+        var json = JsonConvert.SerializeObject(joinRideVM);
+        Console.WriteLine("Sending POST request to API:");
+        Console.WriteLine($"Data: {json}");
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 

@@ -12,20 +12,21 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
 using CARSHARE_WEBAPP.Security;
-using CARSHARE_WEBAPP.Services.Interfaces;
-
 
 namespace CARSHARE_WEBAPP.Controllers
 {
     public class KorisnikController : Controller
     {
-        private readonly IKorisnikService _korisnikService;
+        private readonly KorisnikService _korisnikService;
         private readonly HttpClient _httpClient;
-      
-        public KorisnikController(IKorisnikService korisnikService)
+
+        public KorisnikController(KorisnikService korisnikService)
         {
             _korisnikService = korisnikService;
-           
+            _httpClient = new HttpClient
+            {
+                BaseAddress = new Uri("http://localhost:5194/api/Korisnik/")
+            };
         }
 
         public async Task<IActionResult> GetKorisnici()
@@ -35,7 +36,7 @@ namespace CARSHARE_WEBAPP.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ConfirmationPageDetails(int id) 
+        public async Task<IActionResult> ConfirmationPageDetails(int id)
         {
             var response = await _httpClient.GetAsync($"Details?id={id}");
 
@@ -51,7 +52,7 @@ namespace CARSHARE_WEBAPP.Controllers
 
             return View(korisnikVM);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> ClearUserData(int id)
         {
@@ -212,7 +213,7 @@ namespace CARSHARE_WEBAPP.Controllers
 
             return View(updateVM);
         }
-       
+
         [HttpPost]
         public async Task<IActionResult> Update(EditKorisnikVM model)
         {
@@ -232,7 +233,7 @@ namespace CARSHARE_WEBAPP.Controllers
                     Telefon = model.Telefon,
                     DatumRodjenja = model.DatumRodjenja,
                     Username = model.Username
-                 
+
                 };
 
                 var response = await _korisnikService.UpdateKorisnikAsync(korisnik);
@@ -263,3 +264,46 @@ namespace CARSHARE_WEBAPP.Controllers
     }
 }
 
+//public IActionResult LoginMocked(LoginVM loginVM)
+//{
+//    var existingUser = MockDB.GetKorisnici().FirstOrDefault(x => x.Username == loginVM.UserName && x.PwdHash == loginVM.Password);
+
+//    if (existingUser == null)
+//    {
+//        ModelState.AddModelError("", "Incorrect username or password");
+//        return View();
+//    }
+
+//    var userRole = MockDB.GetUlogas().FirstOrDefault(r => r.IDUloga == existingUser.UlogaID)?.Naziv ?? "USER";
+//    var claims = new List<Claim>
+//        {
+//            new Claim(ClaimTypes.Name, loginVM.UserName),
+//            new Claim(ClaimTypes.Role, userRole)
+//        };
+
+//    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+//    HttpContext.SignInAsync(
+//        CookieAuthenticationDefaults.AuthenticationScheme,
+//        new ClaimsPrincipal(claimsIdentity)).Wait();
+
+//    return RedirectToAction("GetKorisniciMocked", existingUser.UlogaID == 1 ? "Korisnik" : "Home");
+//}
+
+//[HttpGet]
+//public IActionResult GetKorisniciMocked()
+//{
+//    var korisnici = MockDB.GetKorisnici();
+
+//    var korisniciVM = korisnici.Select(k => new KorisnikVM
+//    {
+//        IDKorisnik = k.IDKorisnik,
+//        Ime = k.Ime,
+//        Prezime = k.Prezime,
+//        Email = k.Email,
+//        Username = k.Username,
+//        Telefon = k.Telefon,
+//    }).ToList();
+
+//    return View(korisniciVM);
+//}

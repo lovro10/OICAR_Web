@@ -1,117 +1,52 @@
-﻿@model CARSHARE_WEBAPP.Models.Vozilo
+﻿@model CARSHARE_WEBAPP.ViewModels.VoziloVM
+
 @{
-    ViewData["Title"] = "Novo vozilo";
+    ViewData["Title"] = "Create Vehicle";
 }
 
-@section Styles {
-    <style>
-        :root {
-            --cream: #f5f5dc;
-            --black: #000000;
-        }
+<h2>Kreiraj novo vozilo</h2>
 
-        .form-card {
-            background: var(--cream);
-            color: var(--black);
-            border: 2px solid var(--black);
-            border-radius: 8px;
-            padding: 2rem;
-            max-width: 600px;
-            margin: 3rem auto;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Naziv"></label>
+        <input asp-for="Naziv" class="form-control" />
+        <span asp-validation-for="Naziv" class="text-danger"></span>
+    </div>
 
-            .form-card h2 {
-                text-align: center;
-                margin-bottom: 1.5rem;
-            }
+    <div class="form-group">
+        <label asp-for="Marka"></label>
+        <input asp-for="Marka" class="form-control" />
+        <span asp-validation-for="Marka" class="text-danger"></span>
+    </div>
 
-        .form-label {
-            font-weight: bold;
-            color: var(--black);
-        }
+    <div class="form-group">
+        <label asp-for="Model"></label>
+        <input asp-for="Model" class="form-control" />
+        <span asp-validation-for="Model" class="text-danger"></span>
+    </div>
 
-        .form-control,
-        input[type="file"] {
-            background: var(--cream);
-            color: var(--black);
-            border: 1px solid var(--black);
-            border-radius: 4px;
-        }
+    <div class="form-group">
+        <label asp-for="Registracija"></label>
+        <input asp-for="Registracija" class="form-control" />
+        <span asp-validation-for="Registracija" class="text-danger"></span>
+    </div>
 
-            .form-control::placeholder {
-                color: rgba(0,0,0,0.5);
-            }
+    <div class="form-group">
+        <label for="FrontImage">Upload Front Image</label>
+        <input type="file" name="FrontImage" class="form-control" accept="image/*" />
+        <span asp-validation-for="FrontImage" class="text-danger"></span>
+    </div>
 
-        .text-danger {
-            color: #e74c3c;
-        }
+    <div class="form-group">
+        <label for="BackImage">Upload Back Image</label>
+        <input type="file" name="BackImage" class="form-control" accept="image/*" />
+        <span asp-validation-for="BackImage" class="text-danger"></span>
+    </div>
 
-        .btn-cream {
-            background: var(--black);
-            color: var(--cream);
-            border: none;
-            padding: 0.5rem 1.5rem;
-            border-radius: 4px;
-            transition: background 0.2s ease;
-        }
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
 
-            .btn-cream:hover {
-                background: #333;
-            }
-
-        .btn-outline-black {
-            background: transparent;
-            color: var(--black);
-            border: 1px solid var(--black);
-            padding: 0.5rem 1.5rem;
-            border-radius: 4px;
-            transition: background 0.2s, color 0.2s;
-        }
-
-            .btn-outline-black:hover {
-                background: var(--black);
-                color: var(--cream);
-            }
-    </style>
-}
-
-<div class="form-card">
-    <h2>@ViewData["Title"]</h2>
-    <form asp-action="Create" enctype="multipart/form-data" novalidate>
-        <div class="mb-3">
-            <label asp-for="Marka" class="form-label"></label>
-            <select asp-for="Marka" class="form-control">
-                <option value="">-- Select a city --</option>
-                @foreach (var car in ViewBag.Cars as List<string>)
-                { 
-                    <option value="@car">@car</option>
-                }
-            </select>
-            <span asp-validation-for="Marka" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Model" class="form-label"></label>
-            <input asp-for="Model" class="form-control" placeholder="Unesite model" />
-            <span asp-validation-for="Model" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Registracija" class="form-label"></label>
-            <input asp-for="Registracija" class="form-control" placeholder="Unesite registraciju" />
-            <span asp-validation-for="Registracija" class="text-danger"></span>
-        </div>
-        <div class="mb-4">
-            <label asp-for="Imageprometna" class="form-label">Prometna dozvola (slika)</label>
-            <input asp-for="Imageprometna" type="file" accept="image/*" class="form-control" />
-            <span asp-validation-for="Imageprometna" class="text-danger"></span>
-        </div>
-        <div class="d-flex justify-content-between">
-            <button type="submit" class="btn-cream">Spremi</button>
-            <a asp-action="Index" class="btn-outline-black">Natrag</a>
-        </div>
-    </form>
-</div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger mt-3">@ViewBag.Error</div>
 }

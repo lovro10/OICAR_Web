@@ -73,10 +73,10 @@ namespace CARSHARE_WEBAPP.Controllers
 
             var response = await _httpClient.PostAsync("OglasVozilo/CreateReservation", content);
 
-            if (response.IsSuccessStatusCode) 
-            { 
+            if (response.IsSuccessStatusCode)
+            {
                 TempData["Success"] = "Reservation was successfully made";
-                return RedirectToAction("Index"); 
+                return RedirectToAction("Index");
             }
             else
             {
@@ -86,19 +86,19 @@ namespace CARSHARE_WEBAPP.Controllers
             }
         }
 
-        private async Task<List<string>> GetCarBrands() 
-        { 
+        private async Task<List<string>> GetCarBrands()
+        {
             var carResponse = await _httpClient.GetAsync("CarBrand");
             if (carResponse.IsSuccessStatusCode)
-            { 
+            {
                 var carJson = await carResponse.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<List<string>>(carJson);
-            } 
+            }
 
             return new List<string>();
-        } 
+        }
 
-        public async Task<IActionResult> IndexUser() 
+        public async Task<IActionResult> IndexUser()
         {
             var jwtToken = HttpContext.Session.GetString("JWToken");
             if (string.IsNullOrEmpty(jwtToken))
@@ -128,11 +128,11 @@ namespace CARSHARE_WEBAPP.Controllers
             return View(list);
         }
 
-        public async Task<IActionResult> Details(int id) 
+        public async Task<IActionResult> Details(int id)
         {
             var token = HttpContext.Session.GetString("JWToken");
             if (string.IsNullOrEmpty(token))
-                return RedirectToAction("Login", "Account"); 
+                return RedirectToAction("Login", "Account");
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -172,14 +172,14 @@ namespace CARSHARE_WEBAPP.Controllers
 
             var model = new OglasVoziloVM
             {
-                VoziloId = vozilo.Idvozilo,  
-                Username = vozilo.Vozac.Username, 
-                Ime = vozilo.Vozac.Ime, 
-                Prezime = vozilo.Vozac.Prezime, 
-                Marka = vozilo.Marka, 
-                Model = vozilo.Model, 
+                VoziloId = vozilo.Idvozilo,
+                Username = vozilo.Vozac.Username,
+                Ime = vozilo.Vozac.Ime,
+                Prezime = vozilo.Vozac.Prezime,
+                Marka = vozilo.Marka,
+                Model = vozilo.Model,
                 Registracija = vozilo.Registracija
-            }; 
+            };
 
             return View(model);
         }
@@ -199,18 +199,18 @@ namespace CARSHARE_WEBAPP.Controllers
                 {
                     Console.WriteLine($"ModelState error: {error.ErrorMessage}");
                 }
-                return View(oglasVoziloVM); 
+                return View(oglasVoziloVM);
             }
 
             var normalizedStart = oglasVoziloVM.DatumPocetkaRezervacije.Date.AddHours(12);
             var normalizedEnd = oglasVoziloVM.DatumZavrsetkaRezervacije.Date.AddHours(12);
 
             var oglas = new Oglasvozilo
-            { 
-                Voziloid = oglasVoziloVM.VoziloId, 
-                DatumPocetkaRezervacije = normalizedStart, 
-                DatumZavrsetkaRezervacije = normalizedEnd  
-            }; 
+            {
+                Voziloid = oglasVoziloVM.VoziloId,
+                DatumPocetkaRezervacije = normalizedStart,
+                DatumZavrsetkaRezervacije = normalizedEnd
+            };
 
             var json = JsonConvert.SerializeObject(oglas);
             Console.WriteLine("Sending POST request to API:");
@@ -227,16 +227,16 @@ namespace CARSHARE_WEBAPP.Controllers
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Advertisement successfully created.");
-                return RedirectToAction("Index"); 
-            } 
+                return RedirectToAction("Index");
+            }
 
             Console.WriteLine("Error while creating the advertisement.");
             ModelState.AddModelError("", "Error while creating the advertisement.");
-            return View(oglasVoziloVM); 
-        } 
+            return View(oglasVoziloVM);
+        }
 
         public async Task<IActionResult> Edit(int id)
-        { 
+        {
             var response = await _httpClient.GetAsync($"OglasVozilo/GetVehicleById/{id}");
             if (!response.IsSuccessStatusCode)
                 return NotFound();
@@ -270,7 +270,7 @@ namespace CARSHARE_WEBAPP.Controllers
                 return RedirectToAction("Login", "Korisnik");
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
-            
+
             var response = await _httpClient.GetAsync($"OglasVozilo/GetOglasVoziloById/{id}");
             if (!response.IsSuccessStatusCode)
                 return NotFound();

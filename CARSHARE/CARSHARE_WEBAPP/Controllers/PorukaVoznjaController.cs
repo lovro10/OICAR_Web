@@ -17,21 +17,21 @@ namespace CARSHARE_WEBAPP.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Index(int korisnikVoznjaId, int? korisnikId)
-        { 
+        {
             var response = await _httpClient.GetAsync($"Poruka/GetMessagesForRide?korisnikVoznjaId={korisnikVoznjaId}");
 
-            var messages = new List<PorukaVoznjaGetVM>(); 
-            if (response.IsSuccessStatusCode) 
-            { 
+            var messages = new List<PorukaVoznjaGetVM>();
+            if (response.IsSuccessStatusCode)
+            {
                 messages = await response.Content.ReadFromJsonAsync<List<PorukaVoznjaGetVM>>();
-            } 
+            }
 
-            var vm = new PorukaVoznjaSendVM 
+            var vm = new PorukaVoznjaSendVM
             {
                 Korisnikvoznjaid = korisnikVoznjaId,
                 PutnikId = null,
                 VozacId = korisnikId,
-                Messages = messages! 
+                Messages = messages!
             };
 
             return View(vm);

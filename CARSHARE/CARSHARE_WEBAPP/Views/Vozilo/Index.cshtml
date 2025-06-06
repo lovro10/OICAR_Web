@@ -1,91 +1,73 @@
-﻿@using CARSHARE_WEBAPP.ViewModels
-@model List<VoziloVM>
+﻿@model List<CARSHARE_WEBAPP.ViewModels.VoziloVM>
 
 @{
-    ViewData["Title"] = "Popis vozila";
+    ViewData["Title"] = "My vehicles";
 }
 
-@section Styles {
-    <style>
-        :root {
-            --cream: #f5f5dc;
-            --black: #000000;
-        }
+<div class="d-flex flex-column min-vh-100">
+    <div>
+        <h2 class="mb-2">My vehicles</h2>
 
-        .table-custom {
-            background-color: var(--cream) !important;
-        }
+        <div class="mb-4 text-end">
+            <a href="@Url.Action("Create", "Vozilo")" class="btn btn-primary">Add new vehicle</a>
+        </div>
 
-            .table-custom th,
-            .table-custom td {
-                background-color: var(--cream) !important;
-                color: var(--black) !important;
-                border-color: var(--black) !important;
-            }
-
-            .table-custom thead th {
-                border-bottom: 2px solid var(--black) !important;
-            }
-
-            .table-custom tbody tr:hover {
-                background-color: #e8e2c7 !important;
-            }
-
-            .table-custom .btn {
-                font-weight: bold;
-            }
-    </style>
-}
-
-<h2 class="mb-4">@ViewData["Title"]</h2>
-
-@if (TempData["ApiError"] != null)
-{
-    <div class="alert alert-danger">@TempData["ApiError"]</div>
-}
-
-<a asp-action="Create" class="btn btn-cream mb-3">Novo vozilo</a>
-
-<table class="table table-custom">
-    <thead>
-        <tr>
-            <th>Marka</th>
-            <th>Model</th>
-            <th>Registracija</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var vozilo in Model)
+        @if (!string.IsNullOrEmpty(ViewBag.Error as string))
         {
-            var imgSrc = vozilo.Imageprometna?.ContentBase64 is string b
-            ? $"data:image/png;base64,{b}"
-            : null;
-            <tr>
-                <td>@vozilo.Marka</td>
-                <td>@vozilo.Model</td>
-                <td>@vozilo.Registracija</td>
-                <td>
-                    @if (imgSrc != null)
-                    {
-                        <img src="@imgSrc" width="80" class="img-thumbnail" />
-                    }
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@vozilo.Idvozilo"
-                       class="btn btn-cream-outline btn-sm me-1">
-                        Detalji
-                    </a>
-                    <a asp-action="Edit" asp-route-id="@vozilo.Idvozilo"
-                       class="btn btn-cream-outline btn-sm me-1">
-                        Uredi
-                    </a>
-                    <a asp-action="Delete" asp-route-id="@vozilo.Idvozilo"
-                       class="btn btn-cream-outline btn-sm">
-                        Obriši
-                    </a>
-                </td>
-            </tr>
+            <div class="alert alert-danger">@ViewBag.Error</div>
         }
-    </tbody>
-</table>
+        else if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info">There is no vehicle</div>
+        }
+        else
+        {
+            <div style="max-height: 80vh; overflow-y: auto; overflow-x: hidden;">
+                <div class="row g-4">
+                    @foreach (var vozilo in Model)
+                    {
+                        <div class="col-12">
+                            <div class="card flex-row shadow-sm h-100">
+                                <img src="https://cdn.pixabay.com/photo/2012/05/29/00/43/car-49278_960_720.jpg"
+                                     class="card-img-left" alt="Car image"
+                                     style="width: 200px; object-fit: cover; border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
+
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <div>
+                                        <h5 class="card-title">@vozilo.Naziv</h5>
+                                        <p class="card-text mb-1"><strong>Brand:</strong> @vozilo.Marka</p>
+                                        <p class="card-text mb-1"><strong>Model:</strong> @vozilo.Model</p>
+                                        <p class="card-text"><strong>Registration:</strong> @vozilo.Registracija</p>
+                                    </div>
+
+                                    <div class="text-end">
+                                        @if (vozilo.Isconfirmed == false)
+                                        {
+                                            <a asp-controller="Vozilo" asp-action="Delete" asp-route-id="@vozilo.Idvozilo" class="btn btn-danger btn-sm">
+                                                Delete
+                                            </a>
+                                            <a asp-controller="OglasVozilo" asp-action="Create" asp-route-id="@vozilo.Idvozilo" class="btn btn-success btn-sm">
+                                                Create ad
+                                            </a>
+                                            <a asp-controller="OglasVoznja" asp-action="Create" asp-route-id="@vozilo.Idvozilo" class="btn btn-success btn-sm">
+                                                Create ride
+                                            </a>
+                                        }
+                                        else if (vozilo.Isconfirmed == true)
+                                        {
+                                            <p class="text-red">Vehicle is pending confirmation</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-red">Vehicle is pending confirmation</p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

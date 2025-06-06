@@ -82,7 +82,7 @@ else
         });
 
         const reservedDates = @Html.Raw(JsonConvert.SerializeObject(Model.ReservedDates))
-            .map(d => d.split('T')[0]); 
+            .map(d => d.split('T')[0]);
 
         const startDatePicker = document.getElementById("startDate");
         const endDatePicker = document.getElementById("endDate");

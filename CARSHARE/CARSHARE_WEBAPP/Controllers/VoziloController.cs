@@ -5,25 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text.Json;
-using System.Diagnostics;
-using Microsoft.Extensions.Logging;
-using System.Net;
-using Newtonsoft.Json.Linq;
 using System.Text;
 
 namespace CARSHARE_WEBAPP.Controllers
 {
     public class VoziloController : Controller
     {
-        private readonly ILogger<VoziloController> _logger;
-
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        
-        public VoziloController(IHttpContextAccessor httpContextAccessor, ILogger<VoziloController> logger)
         private readonly HttpClient _client;
 
-        public VoziloController()
+        public VoziloController(IHttpContextAccessor httpContextAccessor)
         {
             _client = new HttpClient
             {
@@ -37,7 +27,6 @@ namespace CARSHARE_WEBAPP.Controllers
             if (string.IsNullOrEmpty(jwtToken))
                 return RedirectToAction("Login", "Korisnik");
 
-            using var client = CreateClient();
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null)
                 return RedirectToAction("Login", "Korisnik");
@@ -59,10 +48,10 @@ namespace CARSHARE_WEBAPP.Controllers
         }
 
         private async Task<List<string>> GetCarsAsync()
-        { 
+        {
             var carResponse = await _client.GetAsync("CarBrand");
             if (carResponse.IsSuccessStatusCode)
-            { 
+            {
                 var carJson = await carResponse.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<List<string>>(carJson);
             }
@@ -104,24 +93,6 @@ namespace CARSHARE_WEBAPP.Controllers
                 frontBase64 = Convert.ToBase64String(ms.ToArray());
             }
 
-            var json = await resp.Content.ReadAsStringAsync();
-            var vm = JsonSerializer.Deserialize<VoziloVM>(json,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-            if (vm == null)
-                return NotFound();
-
-            return View(vm);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, VoziloVM vm)
-        {
-            if (id != vm.Idvozilo)
-                return BadRequest();
-
-            if (!ModelState.IsValid)
-                return View(vm);
             using (var ms = new MemoryStream())
             {
                 await voziloVm.BackImage.CopyToAsync(ms);
@@ -147,23 +118,23 @@ namespace CARSHARE_WEBAPP.Controllers
 
             var response = await _client.PostAsync("Vozilo/CreateVehicle", content);
 
-            if (response.IsSuccessStatusCode) 
+            if (response.IsSuccessStatusCode)
                 return RedirectToAction("Index");
 
             ViewBag.Error = "Failed to create vehicle.";
-            return View(voziloVm); 
-        } 
+            return View(voziloVm);
+        }
 
         [HttpGet]
         public async Task<IActionResult> DetailsAdmin()
-        { 
+        {
             var response = await _client.GetAsync("Vozilo/GetVehicles");
 
-            if (!response.IsSuccessStatusCode) 
-            { 
+            if (!response.IsSuccessStatusCode)
+            {
                 ModelState.AddModelError("", "Failed to load vehicles.");
                 return View(new List<VoziloVM>());
-            } 
+            }
 
             var jsonData = await response.Content.ReadAsStringAsync();
 
@@ -172,28 +143,23 @@ namespace CARSHARE_WEBAPP.Controllers
             Console.WriteLine("==============================");
 
             var vozila = JsonConvert.DeserializeObject<List<VoziloVM>>(jsonData)
-                            ?.OrderByDescending(v => v.Idvozilo) 
-                            .ToList(); 
+                            ?.OrderByDescending(v => v.Idvozilo)
+                            .ToList();
 
-            return View(vozila); 
-        } 
+            return View(vozila);
+        }
 
         [HttpGet]
         public async Task<IActionResult> Details(int id)
-        { 
+        {
             var response = await _client.GetAsync($"Vozilo/Details?id={id}");
 
             if (!response.IsSuccessStatusCode)
-            { 
+            {
                 ViewBag.Error = "Failed to load vehicle details.";
-                return View(); 
+                return View();
             }
 
-        protected virtual HttpClient CreateClient()
-        {
-            var token = _httpContextAccessor.HttpContext!.Session.GetString("JWToken");
-            if (string.IsNullOrEmpty(token))
-                throw new InvalidOperationException("Korisnik nije prijavljen – JWT nedostaje.");
             var json = await response.Content.ReadAsStringAsync();
             var vozilo = JsonConvert.DeserializeObject<VoziloVM>(json);
 
@@ -216,17 +182,17 @@ namespace CARSHARE_WEBAPP.Controllers
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
 
             var response = await _client.GetAsync($"Vozilo/GetVehicleById/{id}");
-            if (!response.IsSuccessStatusCode) 
-                return NotFound(); 
+            if (!response.IsSuccessStatusCode)
+                return NotFound();
 
             var json = await response.Content.ReadAsStringAsync();
             var vozilo = JsonConvert.DeserializeObject<VoziloVM>(json);
-            return View(vozilo); 
-        } 
+            return View(vozilo);
+        }
 
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
-        { 
+        {
             var jwtToken = HttpContext.Session.GetString("JWToken");
             if (string.IsNullOrEmpty(jwtToken))
                 return RedirectToAction("Login", "Korisnik");

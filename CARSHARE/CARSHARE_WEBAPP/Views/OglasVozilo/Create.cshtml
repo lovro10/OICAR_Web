@@ -2,15 +2,15 @@
 
 <h2 class="mb-4">Create advertisement</h2>
 
-<form method="post"> 
-    <div class="form-group mb-3"> 
+<form method="post">
+    <div class="form-group mb-3">
         <label for="Ime" class="form-label">Username:</label>
         <input type="text" class="form-control" value="@Model.Username" readonly />
     </div>
     <div class="form-group mb-3">
         <label for="Marka" class="form-label">Car brand:</label>
         <input type="text" class="form-control" value="@Model.Marka" readonly />
-    </div> 
+    </div>
 
     <div class="form-group mb-3">
         <label for="Model" class="form-label">Car model:</label>
@@ -26,7 +26,7 @@
         <label for="DatumPocetkaRezervacije" class="form-label">Start date of reservation:</label>
         <input asp-for="DatumPocetkaRezervacije" class="form-control" type="date" />
         <span asp-validation-for="DatumPocetkaRezervacije" class="text-danger"></span>
-    </div> 
+    </div>
 
     <div class="form-group mb-3">
         <label for="DatumZavrsetkaRezervacije" class="form-label">End date of reservation</label>

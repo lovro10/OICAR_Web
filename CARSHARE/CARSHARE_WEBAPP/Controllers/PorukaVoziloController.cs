@@ -16,31 +16,31 @@ namespace CARSHARE_WEBAPP.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Index(int korisnikVoziloId, int? putnikId, int? vozacId)
-        { 
-            var response = await _httpClient.GetAsync($"Poruka/GetMessagesForRide?korisnikVoziloId={korisnikVoziloId}"); 
-            
-            var messages = new List<PorukaGetVM>(); 
-            if (response.IsSuccessStatusCode) 
-            { 
+        {
+            var response = await _httpClient.GetAsync($"Poruka/GetMessagesForRide?korisnikVoziloId={korisnikVoziloId}");
+
+            var messages = new List<PorukaGetVM>();
+            if (response.IsSuccessStatusCode)
+            {
                 messages = await response.Content.ReadFromJsonAsync<List<PorukaGetVM>>();
             }
 
-            var porukaVM = new PorukaVoziloVM  
-            { 
+            var porukaVM = new PorukaVoziloVM
+            {
                 Korisnikvoziloid = korisnikVoziloId,
-                PutnikId = putnikId, 
-                VozacId = vozacId, 
-                Messages = messages 
-            }; 
+                PutnikId = putnikId,
+                VozacId = vozacId,
+                Messages = messages
+            };
 
-            return View(porukaVM); 
-        } 
+            return View(porukaVM);
+        }
 
-        [HttpPost] 
-        public async Task<IActionResult> SendMessage(PorukaVoziloVM porukaVoziloVM) 
-        { 
+        [HttpPost]
+        public async Task<IActionResult> SendMessage(PorukaVoziloVM porukaVoziloVM)
+        {
             if (string.IsNullOrWhiteSpace(porukaVoziloVM.Message))
-            { 
+            {
                 ModelState.AddModelError("", "Message cannot be empty.");
                 return RedirectToAction("Index", new
                 {
