@@ -87,3 +87,25 @@
     margin-top: 0.5rem;
     text-align: center;
 }
+@media (max-width: 768px) {
+    #usersTable th,
+    #usersTable td {
+        font-size: 0.75rem;
+        padding: 0.5rem;
+    }
+
+        #usersTable td button,
+        #usersTable td a.btn {
+            padding: 0.25rem 0.4rem;
+            font-size: 0.7rem;
+            margin: 0.1rem 0;
+        }
+
+    .dataTables_wrapper .dataTables_paginate {
+        font-size: 0.75rem;
+    }
+
+    .page-title {
+        font-size: 1.25rem;
+    }
+}

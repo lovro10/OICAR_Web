@@ -153,3 +153,20 @@ a {
 a #kuca {
     margin-top: 20px;
 }
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .login-container {
+        padding: 15px;
+    }
+
+    form {
+        padding: 15px;
+    }
+
+    .btn-primary {
+        padding: 10px;
+    }
+}
