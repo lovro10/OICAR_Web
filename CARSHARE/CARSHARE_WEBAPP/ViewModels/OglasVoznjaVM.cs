@@ -29,6 +29,9 @@ namespace CARSHARE_WEBAPP.ViewModels
         public decimal? CijenaPoPutniku { get; set; }
 
         [JsonIgnore]
+        public string? PopunjenoMjesta { get; set; }
+        
+        [JsonIgnore]
         public int TroskoviId { get; set; }
 
         [JsonIgnore]
@@ -36,6 +39,9 @@ namespace CARSHARE_WEBAPP.ViewModels
 
         [JsonIgnore]
         public int? StatusVoznjeId { get; set; }
+
+        [JsonIgnore]
+        public string? StatusVoznjeNaziv { get; set; }
 
         [JsonIgnore]
         public string? Username { get; set; }

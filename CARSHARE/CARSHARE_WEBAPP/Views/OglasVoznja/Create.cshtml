@@ -1,84 +1,111 @@
 ﻿@model CARSHARE_WEBAPP.ViewModels.OglasVoznjaVM
 
-<h2 class="mb-4">Create ride</h2>
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 25px 30px;
+        background-color: #f5f7fa;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
 
-<form method="post">
-    <div class="form-group mb-3">
-        <label for="Driver" class="form-label">Driver:</label>
-        <input type="text" class="form-control"
-               id="Driver"
-               value="@Model.Ime @Model.Prezime - @Model.Username" readonly />
-    </div>
+    h2 {
+        text-align: center;
+        color: #333;
+    }
 
-    <div class="form-group mb-3">
-        <label for="Car" class="form-label">Car:</label>
-        <input type="text" class="form-control"
-               id="Car"
-               value="@Model.Marka @Model.Model - @Model.Registracija" readonly />
-    </div>
+    .form-group label {
+        font-weight: 600;
+        color: #444;
+    }
 
-    <div class="form-group mb-3">
-        <label asp-for="Polaziste"></label>
-        <select asp-for="Polaziste" class="form-control">
-            <option value="">-- Select a city --</option>
-            @foreach (var city in ViewBag.Cities as List<string>)
-            {
-                <option value="@city">@city</option>
-            }
-        </select>
-        <span asp-validation-for="Polaziste" class="text-danger"></span>
-    </div>
+    .btn-primary {
+        min-width: 120px;
+        padding: 8px 20px;
+    }
+</style>
 
-    <div class="form-group mb-3">
-        <label asp-for="Odrediste"></label>
-        <select asp-for="Odrediste" class="form-control">
-            <option value="">-- Select a city --</option>
-            @foreach (var city in ViewBag.Cities as List<string>)
-            {
-                <option value="@city">@city</option>
-            }
-        </select>
-        <span asp-validation-for="Odrediste" class="text-danger"></span>
-    </div>
+<div class="form-container">
+    <h2 class="mb-4">Create ride</h2>
 
-    <div class="form-group mb-3">
-        <label for="DatumIVrijemePolaska" class="form-label">Start of the ride:</label>
-        <input asp-for="DatumIVrijemePolaska" class="form-control" type="datetime-local"
-               value="@Model.DatumIVrijemePolaska.ToString("yyyy-MM-ddTHH:mm")" />
-        <span asp-validation-for="DatumIVrijemePolaska" class="text-danger"></span>
-    </div>
+    <form method="post">
+        <div class="form-group mb-3">
+            <label for="Driver" class="form-label">Driver:</label>
+            <input type="text" class="form-control"
+                   id="Driver"
+                   value="@Model.Ime @Model.Prezime - @Model.Username" readonly />
+        </div>
 
-    <div class="form-group mb-3">
-        <label for="DatumIVrijemeDolaska" class="form-label">End of the ride:</label>
-        <input asp-for="DatumIVrijemeDolaska" class="form-control" type="datetime-local"
-               value="@Model.DatumIVrijemeDolaska.ToString("yyyy-MM-ddTHH:mm")" />
-        <span asp-validation-for="DatumIVrijemeDolaska" class="text-danger"></span>
-    </div>
+        <div class="form-group mb-3">
+            <label for="Car" class="form-label">Car:</label>
+            <input type="text" class="form-control"
+                   id="Car"
+                   value="@Model.Marka @Model.Model - @Model.Registracija" readonly />
+        </div>
 
-    <div class="form-group">
-        <label asp-for="BrojPutnika"></label>
-        <input asp-for="BrojPutnika" type="number" min="1" class="form-control" />
-        <span asp-validation-for="BrojPutnika" class="text-danger"></span>
-    </div>
+        <div class="form-group mb-3">
+            <label asp-for="Polaziste"></label>
+            <select asp-for="Polaziste" class="form-control">
+                <option value="">-- Select a city --</option>
+                @foreach (var city in ViewBag.Cities as List<string>)
+                {
+                    <option value="@city">@city</option>
+                }
+            </select>
+            <span asp-validation-for="Polaziste" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Cestarina"></label>
-        <input asp-for="Cestarina" type="number" step="0.01" min="0" class="form-control" />
-        <span asp-validation-for="Cestarina" class="text-danger"></span>
-    </div>
+        <div class="form-group mb-3">
+            <label asp-for="Odrediste"></label>
+            <select asp-for="Odrediste" class="form-control">
+                <option value="">-- Select a city --</option>
+                @foreach (var city in ViewBag.Cities as List<string>)
+                {
+                    <option value="@city">@city</option>
+                }
+            </select>
+            <span asp-validation-for="Odrediste" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Gorivo"></label>
-        <input asp-for="Gorivo" type="number" step="0.01" min="0" class="form-control" />
-        <span asp-validation-for="Gorivo" class="text-danger"></span>
-    </div>
+        <div class="form-group mb-3">
+            <label for="DatumIVrijemePolaska" class="form-label">Start of the ride:</label>
+            <input asp-for="DatumIVrijemePolaska" class="form-control" type="datetime-local"
+                   value="@Model.DatumIVrijemePolaska.ToString("yyyy-MM-ddTHH:mm")" />
+            <span asp-validation-for="DatumIVrijemePolaska" class="text-danger"></span>
+        </div>
 
-    <input type="hidden" asp-for="VoziloId" />
+        <div class="form-group mb-3">
+            <label for="DatumIVrijemeDolaska" class="form-label">End of the ride:</label>
+            <input asp-for="DatumIVrijemeDolaska" class="form-control" type="datetime-local"
+                   value="@Model.DatumIVrijemeDolaska.ToString("yyyy-MM-ddTHH:mm")" />
+            <span asp-validation-for="DatumIVrijemeDolaska" class="text-danger"></span>
+        </div>
 
-    <div class="mt-3 text-center">
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-</form>
+        <div class="form-group">
+            <label asp-for="BrojPutnika"></label>
+            <input asp-for="BrojPutnika" type="number" min="1" class="form-control" />
+            <span asp-validation-for="BrojPutnika" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Cestarina"></label>
+            <input asp-for="Cestarina" type="number" step="0.01" min="0" class="form-control" />
+            <span asp-validation-for="Cestarina" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Gorivo"></label>
+            <input asp-for="Gorivo" type="number" step="0.01" min="0" class="form-control" />
+            <span asp-validation-for="Gorivo" class="text-danger"></span>
+        </div>
+
+        <input type="hidden" asp-for="VoziloId" />
+
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+    </form>
+</div>
 
 <script>
     async function loadCities() {

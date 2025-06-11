@@ -8,6 +8,5 @@ namespace CARSHARE_WEBAPP.ViewModels
         public string Ime { get; set; }
         public string Prezime { get; set; }
         public string Username { get; set; }
-        public List<ImageVM> Images { get; set; }
     }
 }

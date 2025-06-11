@@ -138,10 +138,6 @@ namespace CARSHARE_WEBAPP.Controllers
 
             var jsonData = await response.Content.ReadAsStringAsync();
 
-            Console.WriteLine("=== JSON received from API ===");
-            Console.WriteLine(jsonData);
-            Console.WriteLine("==============================");
-
             var vozila = JsonConvert.DeserializeObject<List<VoziloVM>>(jsonData)
                             ?.OrderByDescending(v => v.Idvozilo)
                             .ToList();
@@ -152,7 +148,7 @@ namespace CARSHARE_WEBAPP.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var response = await _client.GetAsync($"Vozilo/Details?id={id}");
+            var response = await _client.GetAsync($"Vozilo/DetailsVehicle?id={id}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -161,15 +157,20 @@ namespace CARSHARE_WEBAPP.Controllers
             }
 
             var json = await response.Content.ReadAsStringAsync();
-            var vozilo = JsonConvert.DeserializeObject<VoziloVM>(json);
 
-            if (vozilo == null)
+            Console.WriteLine("=== JSON received from API ===");
+            Console.WriteLine(json);
+            Console.WriteLine("==============================");
+
+            var model = JsonConvert.DeserializeObject<VoziloDetailsVM>(json);
+
+            if (model == null || model.Vozilo == null)
             {
                 ViewBag.Error = "Vehicle details not found.";
                 return View();
             }
 
-            return View(vozilo);
+            return View(model);
         }
 
         [HttpGet]

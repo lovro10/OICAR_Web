@@ -47,7 +47,59 @@ public class OglasVoznjaController : Controller
         {
             var tasks = list.Select(async oglas =>
             {
-                oglas.IsUserInRide = await IsUserInRide(userId.Value, oglas.IdOglasVoznja);
+                var kvResponse = await _httpClient.GetAsync(
+                    $"KorisnikVoznja/GetByUserAndRide?userId={userId.Value}&oglasVoznjaId={oglas.IdOglasVoznja}");
+
+                if (kvResponse.IsSuccessStatusCode)
+                {
+                    var korisnikVoznjaVm = await kvResponse.Content.ReadFromJsonAsync<KorisnikVoznjaVM>();
+                    oglas.KorisnikVoznjaId = korisnikVoznjaVm?.IdKorisnikVoznja;
+                }
+                else
+                {
+                    oglas.KorisnikVoznjaId = null;
+                }
+            });
+
+            await Task.WhenAll(tasks);
+        }
+
+        return View(list);
+    }
+
+    public async Task<IActionResult> IndexJoin()
+    {
+        int? userId = HttpContext.Session.GetInt32("UserId");
+        if (userId == null)
+        { 
+            return RedirectToAction("Login", "Auth"); 
+        }   
+
+        var response = await _httpClient.GetAsync($"OglasVoznja/GetJoinedRides?userId={userId}");
+        if (!response.IsSuccessStatusCode)
+        { 
+            return View(new List<OglasVoznjaVM>()); 
+        }    
+
+        var json = await response.Content.ReadAsStringAsync();
+        var list = JsonConvert.DeserializeObject<List<OglasVoznjaVM>>(json);
+
+        if (userId.HasValue)
+        {
+            var tasks = list.Select(async oglas =>
+            {
+                var kvResponse = await _httpClient.GetAsync(
+                    $"KorisnikVoznja/GetByUserAndRide?userId={userId.Value}&oglasVoznjaId={oglas.IdOglasVoznja}");
+
+                if (kvResponse.IsSuccessStatusCode)
+                {
+                    var korisnikVoznjaVm = await kvResponse.Content.ReadFromJsonAsync<KorisnikVoznjaVM>();
+                    oglas.KorisnikVoznjaId = korisnikVoznjaVm?.IdKorisnikVoznja;
+                }
+                else
+                {
+                    oglas.KorisnikVoznjaId = null;
+                }
             });
 
             await Task.WhenAll(tasks);
@@ -95,6 +147,7 @@ public class OglasVoznjaController : Controller
 
         var model = new JoinRideVM
         {
+            OglasVoznjaId = oglas.IdOglasVoznja, 
             Username = oglas.Username ?? "",
             Ime = oglas.Ime ?? "",
             Prezime = oglas.Prezime ?? "",
@@ -178,24 +231,26 @@ public class OglasVoznjaController : Controller
         }
 
         var json = await response.Content.ReadAsStringAsync();
-        var vozilo = JsonConvert.DeserializeObject<Vozilo>(json);
+        var vozilo = JsonConvert.DeserializeObject<VoziloVM>(json);
 
-        if (vozilo == null || vozilo.Vozac == null)
-        {
+        Console.WriteLine($"{json}");
+
+        if (vozilo == null)
+        { 
             Console.WriteLine("Vehicle or Driver data not found.");
             return NotFound("Vehicle or Driver data not found.");
-        }
+        } 
 
-        Console.WriteLine($"Retrieved Vehicle: {vozilo.Marka} {vozilo.Model} with Driver: {vozilo.Vozac.Ime} {vozilo.Vozac.Prezime}");
+        Console.WriteLine($"Retrieved Vehicle: {vozilo.Marka} {vozilo.Model} with Driver: {vozilo.Ime} {vozilo.Prezime}");
 
         ViewBag.Cities = await GetCitiesAsync();
 
         var model = new OglasVoznjaVM
         {
             VoziloId = vozilo.Idvozilo,
-            Username = vozilo.Vozac.Username,
-            Ime = vozilo.Vozac.Ime,
-            Prezime = vozilo.Vozac.Prezime,
+            Username = vozilo.Username,
+            Ime = vozilo.Ime,
+            Prezime = vozilo.Prezime,
             Marka = vozilo.Marka,
             Model = vozilo.Model,
             Registracija = vozilo.Registracija

@@ -8,20 +8,21 @@ namespace CARSHARE_WEBAPP.ViewModels
     {
         public int IDKorisnik { get; set; }
         [Required(ErrorMessage = "First Name is required")]
-        public string Ime { get; set; }
+        public string? Ime { get; set; }
         [Required(ErrorMessage = "Last Name is required")]
-        public string Prezime { get; set; }
+        public string? Prezime { get; set; }
 
         public DateOnly DatumRodjenja { get; set; }
         public string Password { get; set; }
         [Required(ErrorMessage = "Email is required")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [Required(ErrorMessage = "Username is required")]
-        public string Username { get; set; }
-        public string Telefon { get; set; }
+        public string? Username { get; set; }
+        public string? Telefon { get; set; }
         public int? Ulogaid { get; set; }
+        public string? UlogaNaziv { get; set; }
         public bool? IsConfirmed { get; set; }
-        public Uloga Uloga { get; set; }
+        public Uloga? Uloga { get; set; }
        
         public int? ImageVozackaID { get; set; }
         public int? ImageOsobnaID { get; set; }

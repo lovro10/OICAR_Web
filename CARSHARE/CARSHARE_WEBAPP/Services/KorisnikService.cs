@@ -27,8 +27,6 @@ namespace CARSHARE_WEBAPP.Services
 
         public async Task<List<KorisnikVM>> GetKorisniciAsync()
         {
-
-
             List<KorisnikVM> korisnici = new List<KorisnikVM>();
             try
             {
@@ -40,7 +38,6 @@ namespace CARSHARE_WEBAPP.Services
                 Console.WriteLine($"Error fetching korisnici: {ex.Message}");
             }
             
-
             return korisnici?               
                 .Select(k => new KorisnikVM
             {

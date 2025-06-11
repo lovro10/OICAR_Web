@@ -1,4 +1,4 @@
-﻿@{
+﻿@{ 
     var username = Context.Session.GetString("Username");
     var userID = Context.Session.GetInt32("UserId");
 }
@@ -40,31 +40,40 @@
                             <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Korisnik" asp-action="GetKorisnici">Korisnici</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Vozilo" asp-action="DetailsAdmin">Vozila</a>
+                            <a class="nav-link" asp-controller="OglasVoznja" asp-action="Index">Ride list</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="OglasVozilo" asp-action="Index">Car rent</a> 
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="OglasVoznja" asp-action="Index">Ride list</a>
+                            <a class="nav-link" asp-controller="Korisnik" asp-action="GetKorisnici">Korisnici</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Korisnik" asp-action="GetKorisniciForClear">Clear</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Vozilo" asp-action="DetailsAdmin">Vozila</a>
                         </li>
                     </ul>
                         <ul class="navbar-nav">
                             @if (!string.IsNullOrEmpty(username))
                             {
                                 <li class="nav-item"> 
-                                    <a class="nav-link" asp-controller="OglasVoznja" asp-action="IndexUser">My rides create ad</a>
+                                    <a class="nav-link" asp-controller="OglasVoznja" asp-action="IndexUser">My rides</a>  
+                                </li>
+                                <li class="nav-item"> 
+                                    <a class="nav-link" asp-controller="OglasVoznja" asp-action="IndexJoin">Joined rides</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="OglasVozilo" asp-action="IndexUser">My car rent ad</a>
+                                    <a class="nav-link" asp-controller="OglasVozilo" asp-action="IndexUser">My rents</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="OglasVozilo" asp-action="IndexRent">Rented cars</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Vozilo" asp-action="Index">My vehicles</a> 
                                 </li> 
-                                <a class="nav-link text-dark" asp-controller="Korisnik" asp-action="Details" asp-route-id="@userID">
+                                <a class="nav-link text-dark" asp-controller="Korisnik" asp-action="Profile" asp-route-id="@userID">
                                     @username
                                 </a>
                               

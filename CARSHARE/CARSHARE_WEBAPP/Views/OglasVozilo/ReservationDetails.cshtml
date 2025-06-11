@@ -1,0 +1,33 @@
+﻿@model CARSHARE_WEBAPP.ViewModels.VehicleReservationVM 
+
+@{
+    ViewData["Title"] = "Vehicle Details & Reservations";
+}
+
+<h2>Vehicle Details</h2>
+
+<div>
+    <p><strong>Vehicle ID:</strong> @Model.OglasVoziloId</p>
+    <p><strong>Allowed Reservation Start:</strong> @Model.DozvoljeniPocetak.ToString("yyyy-MM-dd")</p>
+    <p><strong>Allowed Reservation End:</strong> @Model.DozvoljeniKraj.ToString("yyyy-MM-dd")</p>
+</div>
+
+<h3>Your Reserved Dates</h3>
+
+@if (Model.ReservedDates != null && Model.ReservedDates.Count > 0)
+{
+    <ul>
+        @foreach (var date in Model.ReservedDates)
+        {
+            <li>@date.ToString("yyyy-MM-dd")</li>
+        }
+    </ul>
+}
+else
+{
+    <p>You have no reservations for this vehicle.</p>
+}
+
+<hr />
+
+<a asp-action="ReserveVehicle" asp-route-id="@Model.OglasVoziloId">Make a New Reservation</a>

@@ -36,11 +36,12 @@
                     <td>@(k.Uloga?.Naziv ?? "N/A")</td>
                     <td>@(k.IsConfirmed ?? false ? "✔️" : "❌")</td>
                     <td>
-                        <button onclick="toggleConfirmation(@k.IDKorisnik, true)" class="btn btn-success mt-2">Confirm</button>
-                        <button onclick="toggleConfirmation(@k.IDKorisnik, false)" class="btn btn-danger mt-2">Reject</button>
                         <a asp-controller="Korisnik" asp-action="Details" asp-route-id="@k.IDKorisnik" class="btn btn-info mt-2">
-                            Details 
-                        </a> 
+                            Details
+                        </a>
+                        <a asp-controller="Korisnik" asp-action="ConfirmationPageDetails" asp-route-id="@k.IDKorisnik" class="btn btn-danger mt-2">
+                            Clear
+                        </a>
                     </td>
                 </tr>
             }

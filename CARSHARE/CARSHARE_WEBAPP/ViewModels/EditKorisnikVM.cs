@@ -12,12 +12,6 @@ namespace CARSHARE_WEBAPP.ViewModels
 
         public string Email { get; set; }
 
-        public string Username { get; set; }
-
         public string Telefon { get; set; }
-
-        public DateOnly DatumRodjenja { get; set; }
-
- 
-    }
+   }
 }

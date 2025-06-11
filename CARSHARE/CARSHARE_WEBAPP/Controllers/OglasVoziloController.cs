@@ -18,6 +18,53 @@ namespace CARSHARE_WEBAPP.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> ReservationDetails(int id)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var response = await _httpClient.GetAsync($"OglasVozilo/DetaljiOglasaVozila/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return NotFound();
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var oglas = JsonConvert.DeserializeObject<OglasVoziloVM>(json);
+
+            var reservedDatesResponse = await _httpClient.GetAsync($"OglasVozilo/GetReservedDates?id={id}&userId={userId.Value}");
+            if (!reservedDatesResponse.IsSuccessStatusCode)
+            {
+                ModelState.AddModelError("", "Failed to load reserved dates.");
+                return View(new VehicleReservationVM
+                {
+                    OglasVoziloId = oglas.Idoglasvozilo,
+                    DozvoljeniPocetak = oglas.DatumPocetkaRezervacije,
+                    DozvoljeniKraj = oglas.DatumZavrsetkaRezervacije,
+                    ReservedDates = new List<DateTime>()
+                });
+            }
+
+            var reservedDatesJson = await reservedDatesResponse.Content.ReadAsStringAsync();
+
+            var reservedDates = JsonConvert.DeserializeObject<List<string>>(reservedDatesJson)
+                ?.ConvertAll(dateStr => DateTime.Parse(dateStr)) ?? new List<DateTime>();
+
+            var model = new VehicleReservationVM
+            {
+                OglasVoziloId = oglas.Idoglasvozilo,
+                DozvoljeniPocetak = oglas.DatumPocetkaRezervacije,
+                DozvoljeniKraj = oglas.DatumZavrsetkaRezervacije,
+                ReservedDates = reservedDates
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> ReserveVehicle(int id)
         {
             var response = await _httpClient.GetAsync($"OglasVozilo/DetaljiOglasaVozila/{id}");
@@ -160,22 +207,22 @@ namespace CARSHARE_WEBAPP.Controllers
             }
 
             var json = await response.Content.ReadAsStringAsync();
-            var vozilo = JsonConvert.DeserializeObject<Vozilo>(json);
+            var vozilo = JsonConvert.DeserializeObject<VoziloVM>(json); 
 
-            if (vozilo == null || vozilo.Vozac == null)
-            {
+            if (vozilo == null) 
+            { 
                 Console.WriteLine("Vehicle or Driver data not found.");
                 return NotFound("Vehicle or Driver data not found.");
-            }
+            } 
 
-            Console.WriteLine($"Retrieved Vehicle: {vozilo.Marka} {vozilo.Model} with Driver: {vozilo.Vozac.Ime} {vozilo.Vozac.Prezime}");
+            Console.WriteLine($"Retrieved Vehicle: {vozilo.Marka} {vozilo.Model} with Driver: {vozilo.Ime} {vozilo.Prezime}");
 
             var model = new OglasVoziloVM
             {
                 VoziloId = vozilo.Idvozilo,
-                Username = vozilo.Vozac.Username,
-                Ime = vozilo.Vozac.Ime,
-                Prezime = vozilo.Vozac.Prezime,
+                Username = vozilo.Username,
+                Ime = vozilo.Ime,
+                Prezime = vozilo.Prezime,
                 Marka = vozilo.Marka,
                 Model = vozilo.Model,
                 Registracija = vozilo.Registracija

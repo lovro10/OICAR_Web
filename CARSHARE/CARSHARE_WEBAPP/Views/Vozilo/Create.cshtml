@@ -4,49 +4,122 @@
     ViewData["Title"] = "Create Vehicle";
 }
 
-<h2>Kreiraj novo vozilo</h2>
+<style>
+    .form-container {
+        max-width: 500px;
+        margin: 40px auto;
+        padding: 20px 30px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
 
-<form asp-action="Create" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label asp-for="Naziv"></label>
-        <input asp-for="Naziv" class="form-control" />
-        <span asp-validation-for="Naziv" class="text-danger"></span>
-    </div>
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
 
-    <div class="form-group">
-        <label asp-for="Marka"></label>
-        <input asp-for="Marka" class="form-control" />
-        <span asp-validation-for="Marka" class="text-danger"></span>
-    </div>
+    label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
 
-    <div class="form-group">
-        <label asp-for="Model"></label>
-        <input asp-for="Model" class="form-control" />
-        <span asp-validation-for="Model" class="text-danger"></span>
-    </div>
+    input.form-control, select.form-control {
+        width: 100%;
+        padding: 8px 12px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+    }
 
-    <div class="form-group">
-        <label asp-for="Registracija"></label>
-        <input asp-for="Registracija" class="form-control" />
-        <span asp-validation-for="Registracija" class="text-danger"></span>
-    </div>
+    input.form-control:focus, select.form-control:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 4px rgba(0,123,255,0.25);
+    }
 
-    <div class="form-group">
-        <label for="FrontImage">Upload Front Image</label>
-        <input type="file" name="FrontImage" class="form-control" accept="image/*" />
-        <span asp-validation-for="FrontImage" class="text-danger"></span>
-    </div>
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
 
-    <div class="form-group">
-        <label for="BackImage">Upload Back Image</label>
-        <input type="file" name="BackImage" class="form-control" accept="image/*" />
-        <span asp-validation-for="BackImage" class="text-danger"></span>
-    </div>
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
 
-    <button type="submit" class="btn btn-primary">Create</button>
-</form>
+    .text-danger {
+        font-size: 0.9rem;
+        color: #dc3545;
+    }
 
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger mt-3">@ViewBag.Error</div>
-}
+    .alert {
+        max-width: 500px;
+        margin: 20px auto 0;
+        padding: 10px 15px;
+        border-radius: 4px;
+    }
+</style>
+
+<div class="form-container">
+    <h2>Kreiraj novo vozilo</h2>
+
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="Naziv"></label>
+            <input asp-for="Naziv" class="form-control" />
+            <span asp-validation-for="Naziv" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Marka"></label>
+            <select asp-for="Marka" class="form-control">
+                <option value="">-- Select a car --</option>
+                @foreach (var car in ViewBag.Cars as List<string>)
+                {
+                    <option value="@car">@car</option>
+                }
+            </select>
+            <span asp-validation-for="Marka" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Model"></label>
+            <input asp-for="Model" class="form-control" />
+            <span asp-validation-for="Model" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Registracija"></label>
+            <input asp-for="Registracija" class="form-control" />
+            <span asp-validation-for="Registracija" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="FrontImage">Upload Front Image</label>
+            <input type="file" name="FrontImage" class="form-control" accept="image/*" />
+            <span asp-validation-for="FrontImage" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="BackImage">Upload Back Image</label>
+            <input type="file" name="BackImage" class="form-control" accept="image/*" />
+            <span asp-validation-for="BackImage" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Create</button>
+    </form>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger mt-3">@ViewBag.Error</div>
+    }
+</div>

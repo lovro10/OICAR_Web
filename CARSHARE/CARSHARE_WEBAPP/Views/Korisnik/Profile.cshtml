@@ -1,0 +1,87 @@
+﻿@model CARSHARE_WEBAPP.ViewModels.KorisnikVM 
+
+@{
+    ViewData["Title"] = "Profil korisnika";
+} 
+
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 25px 30px;
+        background-color: #f5f7fa;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #444;
+    }
+
+    .btn-primary {
+        min-width: 130px;
+        padding: 8px 20px;
+    }
+
+    .btn-danger {
+        min-width: 130px;
+        padding: 8px 20px;
+    }
+</style>
+
+<div class="form-container">
+    <h2 class="mb-4">User profile</h2>
+
+    <form method="post">
+        <div class="form-group mb-3">
+            <label for="Username" class="form-label">Username:</label>
+            <input type="text" class="form-control" value="@Model.Username" readonly />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Ime" class="form-label">Ime:</label>
+            <input type="text" class="form-control" value="@Model.Ime" readonly />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Prezime" class="form-label">Prezime:</label>
+            <input type="text" class="form-control" value="@Model.Prezime" readonly />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Email" class="form-label">Email:</label>
+            <input type="text" class="form-control" value="@Model.Email" readonly />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Telefon" class="form-label">Telefon:</label>
+            <input type="text" class="form-control" value="@Model.Telefon" readonly />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Uloga" class="form-label">Datum:</label>
+            <input type="text" class="form-control" value="@Model.DatumRodjenja" readonly />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Uloga" class="form-label">Uloga:</label>
+            <input type="text" class="form-control" value="@Model.Uloga.Naziv" readonly />
+        </div>
+
+        <input type="hidden" asp-for="IDKorisnik" />
+
+        <a asp-action="Update" asp-route-id="@Model.IDKorisnik" class="btn btn-primary">Update</a>
+        <a asp-action="ClearDataRequestPage" asp-route-id="@Model.IDKorisnik" class="btn btn-danger">Clear</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

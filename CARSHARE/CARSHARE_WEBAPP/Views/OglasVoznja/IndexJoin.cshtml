@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Ride list";
-    var userID = Context.Session.GetInt32("UserId");
 }
 
 <h2 class="text-center my-4">Ride list</h2>
@@ -50,14 +49,10 @@
                     </div>
 
                     <div class="d-flex justify-content-end mt-auto">
-                        <a asp-action="JoinRide" asp-route-id="@oglas.IdOglasVoznja" class="btn btn-outline-success btn-sm">Join</a>
+                        <a asp-controller="PorukaVoznja" asp-action="Join" asp-route-korisnikVoznjaId="@oglas.KorisnikVoznjaId" class="btn btn-success btn-sm">Chat</a>
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
-
-@section Scripts
-{ 
-} 

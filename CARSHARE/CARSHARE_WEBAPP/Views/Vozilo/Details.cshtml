@@ -1,44 +1,38 @@
-﻿@model CARSHARE_WEBAPP.ViewModels.VoziloVM
+﻿@model CARSHARE_WEBAPP.ViewModels.VoziloDetailsVM   
 
-<h2>Vehicle Details</h2>
+<h2>Detalji vozila</h2>
 
-@if (Model == null)
+@if (Model.Vozilo != null)
 {
-    <p>Vehicle data not available.</p>
-}
-else
-{
-    <p><strong>Make:</strong> @Model.Marka</p>
-    <p><strong>Model:</strong> @Model.Model</p>
-    <p><strong>Registration:</strong> @Model.Registracija</p>
+    <div>
+        <p><strong>Marka:</strong> @Model.Vozilo.Marka</p>
+        <p><strong>Model:</strong> @Model.Vozilo.Model</p>
+        <p><strong>Registracija:</strong> @Model.Vozilo.Registracija</p>
 
-    @if (Model.Vozac != null)
+        <h4>Vozač</h4>
+        <p>@Model.Vozilo.Vozac.Ime @Model.Vozilo.Vozac.Prezime (@Model.Vozilo.Vozac.Username)</p>
+    </div>
+
+    @if (Model.IdentificationImages != null && Model.IdentificationImages.Any())
     {
-        <p><strong>Driver:</strong> @Model.Vozac.Ime @Model.Vozac.Prezime</p>
-
-        @if (Model.Vozac.Images != null && Model.Vozac.Images.Any())
+        <h4>Prometne slike</h4>
+        @foreach (var img in Model.IdentificationImages)
         {
-            <h4>Driver Images</h4>
-            <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-                @{
-                    var count = 1;
-                }
-                @foreach (var img in Model.Vozac.Images)
+            <div>
+                <p><strong>@img.Name</strong></p>
+                @if (!string.IsNullOrWhiteSpace(img.ContentBase64))
                 {
-                    if (!string.IsNullOrEmpty(img.ContentBase64))
-                    {
-                        <div style="text-align: center;">
-                            <p><strong>Picture @count</strong></p>
-                            <img src="data:image/jpeg;base64,@img.ContentBase64"
-                                 alt="@img.Name"
-                                 style="max-width: 200px; max-height: 200px; cursor: zoom-in; transition: transform 0.3s;"
-                                 onmouseover="this.style.transform='scale(1.5)'"
-                                 onmouseout="this.style.transform='scale(1)'" />
-                        </div>
-                        count++;
-                    }
+                    <img src="data:image/jpeg;base64,@img.ContentBase64" alt="@img.Name" width="300" />
+                }
+                else
+                {
+                    <p style="color:red;">Slika nije dostupna.</p>
                 }
             </div>
         }
     }
+}
+else
+{
+    <p style="color:red;">Greška pri dohvaćanju detalja vozila.</p>
 }

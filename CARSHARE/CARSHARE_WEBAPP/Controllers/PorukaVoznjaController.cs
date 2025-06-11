@@ -37,6 +37,28 @@ namespace CARSHARE_WEBAPP.Controllers
             return View(vm);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Join(int korisnikVoznjaId, int? korisnikId)
+        { 
+            var response = await _httpClient.GetAsync($"Poruka/GetMessagesForRide?korisnikVoznjaId={korisnikVoznjaId}");
+
+            var messages = new List<PorukaVoznjaGetVM>();
+            if (response.IsSuccessStatusCode)
+            {
+                messages = await response.Content.ReadFromJsonAsync<List<PorukaVoznjaGetVM>>();
+            }
+
+            var vm = new PorukaVoznjaSendVM
+            {
+                Korisnikvoznjaid = korisnikVoznjaId,
+                PutnikId = korisnikId,
+                VozacId = null,
+                Messages = messages!
+            };
+
+            return View(vm);
+        }
+
         [HttpPost]
         public async Task<IActionResult> SendMessage(PorukaVoznjaSendVM porukaVM)
         {
@@ -51,16 +73,13 @@ namespace CARSHARE_WEBAPP.Controllers
                 });
             }
 
-            var userIdClaim = User.FindFirst("sub");
-            var roleClaim = User.FindFirst("role");
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+                return RedirectToAction("Login", "Auth");
 
-            if (userIdClaim == null || roleClaim == null)
-            {
-                return Unauthorized();
-            }
-
-            int userId = int.Parse(userIdClaim.Value);
-            string role = roleClaim.Value.ToUpper();
+            string? role = HttpContext.Session.GetString("Role");
+            if (role == null)
+                return RedirectToAction("Login", "Auth");
 
             int? putnikId = null;
             int? vozacId = null;

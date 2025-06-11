@@ -8,10 +8,6 @@ namespace CARSHARE_WEBAPP.ViewModels
 
         public int? OglasVoznjaId { get; set; }
 
-        public string? LokacijaPutnik { get; set; }
-
-        public string? LokacijaVozac { get; set; }
-
         [JsonIgnore]
         public string? Username { get; set; }
 

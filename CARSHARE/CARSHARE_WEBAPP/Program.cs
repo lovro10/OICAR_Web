@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IKorisnikService, KorisnikService>();
@@ -17,9 +16,7 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-
 app.UseSession();
-
 
 app.Use(async (context, next) =>
 {
@@ -34,7 +31,6 @@ app.Use(async (context, next) =>
     await next.Invoke();
 });
 
-
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -43,10 +39,8 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseRouting();
 
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 
 app.MapControllerRoute(
     name: "default",
