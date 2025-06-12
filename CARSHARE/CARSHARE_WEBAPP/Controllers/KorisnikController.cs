@@ -12,6 +12,7 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
 using CARSHARE_WEBAPP.Security;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace CARSHARE_WEBAPP.Controllers
 {
@@ -144,25 +145,7 @@ namespace CARSHARE_WEBAPP.Controllers
 
         public async Task<IActionResult> Login(LoginVM loginVM)
         {
-            var korisnici = await _korisnikService.GetKorisniciAsync();
-
-            var user = korisnici.FirstOrDefault(x => x.Username == loginVM.UserName);
-            if (user == null)
-            {
-                ModelState.AddModelError("", "Incorrect username or password");
-                return View(loginVM);
-            }
-
-            var b64hash = PasswordHashProvider.GetHash(loginVM.Password, user.PwdSalt);
-            if (b64hash != user.PwdHash)
-            {
-                ModelState.AddModelError("", "Invalid username or password");
-
-                return View();
-            }
-
             using var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:5194/api/Korisnik/Login");
             var loginPayload = new
             {
                 Username = loginVM.UserName,
@@ -176,6 +159,14 @@ namespace CARSHARE_WEBAPP.Controllers
                 var token = await response.Content.ReadAsStringAsync();
                 var cleanToken = token.Replace("\"", "");
 
+                var handler = new JwtSecurityTokenHandler();
+                var jwt = handler.ReadJwtToken(cleanToken);
+
+                var username = jwt.Claims.FirstOrDefault(c => c.Type == "unique_name")?.Value;
+                var userId = jwt.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+                var role = jwt.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+
+
                 Response.Cookies.Append("JWToken", cleanToken, new CookieOptions
                 {
                     HttpOnly = true,
@@ -184,7 +175,7 @@ namespace CARSHARE_WEBAPP.Controllers
                     SameSite = SameSiteMode.Strict
                 });
 
-                Response.Cookies.Append("Username", loginVM.UserName, new CookieOptions
+                Response.Cookies.Append("Username", username, new CookieOptions
                 {
                     HttpOnly = true,
                     Secure = true,
@@ -192,7 +183,7 @@ namespace CARSHARE_WEBAPP.Controllers
                     SameSite = SameSiteMode.Strict
                 });
 
-                Response.Cookies.Append("UserId", user.IDKorisnik.ToString(), new CookieOptions
+                Response.Cookies.Append("UserId", userId ?? "", new CookieOptions
                 {
                     HttpOnly = true,
                     Secure = true,
@@ -200,7 +191,7 @@ namespace CARSHARE_WEBAPP.Controllers
                     SameSite = SameSiteMode.Strict
                 });
 
-                Response.Cookies.Append("Role", user.Uloga.Naziv, new CookieOptions
+                Response.Cookies.Append("Role", role ?? "", new CookieOptions
                 {
                     HttpOnly = true,
                     Secure = true,
@@ -214,7 +205,7 @@ namespace CARSHARE_WEBAPP.Controllers
             else
             {
                 ModelState.AddModelError("", "Neispravno korisničko ime ili lozinka.");
-                return View();
+                return View(loginVM);
             }
 
         }
