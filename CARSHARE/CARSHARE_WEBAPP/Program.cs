@@ -1,19 +1,36 @@
 using CARSHARE_WEBAPP.Services;
 using CARSHARE_WEBAPP.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using CARSHARE_WEBAPP.Models;      
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IKorisnikService, KorisnikService>();
-builder.Services.AddAuthorization();
+builder.Services.AddDbContext<CarshareContext>(opts =>
+    opts.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    )
+);
+
+builder.Services
+    .AddHttpClient<IKorisnikService, KorisnikService>(client =>
+    {
+        client.BaseAddress = new Uri("http://localhost:5194/api/Korisnik/");
+    }); builder.Services.AddAuthorization();
+
 builder.Services.AddHttpClient<KorisnikService>();
 builder.Services.AddHttpClient<ImageService>();    
 
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
-
+builder.Services
+       .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+       .AddCookie(options =>
+       {
+           options.LoginPath = "/Korisnik/Login";
+       });
 var app = builder.Build();
 
 app.UseSession();

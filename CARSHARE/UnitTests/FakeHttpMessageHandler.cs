@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CARSHARE_WEBAPP.UnitTests.Helpers
+namespace UnitTests
 {
 
     public class FakeHttpMessageHandler : HttpMessageHandler
