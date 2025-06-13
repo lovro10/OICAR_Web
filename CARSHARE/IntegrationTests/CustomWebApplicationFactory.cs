@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using CARSHARE_WEBAPP.Services;
+using CARSHARE_WEBAPP.ViewModels;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
