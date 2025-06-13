@@ -10,5 +10,7 @@ namespace CARSHARE_WEBAPP.Services.Interfaces
         Task<List<KorisnikVM>> GetKorisniciAsync();
         Task<HttpResponseMessage> UpdateKorisnikAsync(EditKorisnikVM model);
         Task<List<ImageVM>> GetImagesAsync(string jwt);
+        Task<HttpResponseMessage> LoginAsync(LoginVM model);
+
     }
 }

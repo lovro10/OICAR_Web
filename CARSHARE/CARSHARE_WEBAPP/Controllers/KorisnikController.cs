@@ -13,15 +13,16 @@ using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
 using CARSHARE_WEBAPP.Security;
 using System.IdentityModel.Tokens.Jwt;
+using CARSHARE_WEBAPP.Services.Interfaces;
 
 namespace CARSHARE_WEBAPP.Controllers
 {
     public class KorisnikController : Controller
     {
-        private readonly KorisnikService _korisnikService;
+        private readonly IKorisnikService _korisnikService;
         private readonly HttpClient _httpClient;
 
-        public KorisnikController(KorisnikService korisnikService)
+        public KorisnikController(IKorisnikService korisnikService)
         {
             _korisnikService = korisnikService;
             _httpClient = new HttpClient
@@ -143,71 +144,57 @@ namespace CARSHARE_WEBAPP.Controllers
             return View(new LoginVM());
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginVM loginVM)
         {
-            using var client = new HttpClient();
-            var loginPayload = new
+            if (!ModelState.IsValid)
+                return View(loginVM);
+
+            var response = await _korisnikService.LoginAsync(loginVM);
+
+            if (!response.IsSuccessStatusCode)
             {
-                Username = loginVM.UserName,
-                Password = loginVM.Password
-            };
-
-            var response = await client.PostAsJsonAsync("http://localhost:5194/api/Korisnik/Login", loginPayload);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var token = await response.Content.ReadAsStringAsync();
-                var cleanToken = token.Replace("\"", "");
-
-                var handler = new JwtSecurityTokenHandler();
-                var jwt = handler.ReadJwtToken(cleanToken);
-
-                var username = jwt.Claims.FirstOrDefault(c => c.Type == "unique_name")?.Value;
-                var userId = jwt.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
-                var role = jwt.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+                ModelState.AddModelError(string.Empty, "Invalid login attempt");
 
 
-                Response.Cookies.Append("JWToken", cleanToken, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    Expires = DateTimeOffset.UtcNow.AddDays(7),
-                    SameSite = SameSiteMode.Strict
-                });
+                Response.Cookies.Append(
+                    "X-Login-Failed",
+                    "1",
+                    new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = true,
+                        SameSite = SameSiteMode.Strict,
+                        Expires = DateTimeOffset.UtcNow.AddMinutes(5)
+                    });
 
-                Response.Cookies.Append("Username", username, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    Expires = DateTimeOffset.UtcNow.AddDays(7),
-                    SameSite = SameSiteMode.Strict
-                });
-
-                Response.Cookies.Append("UserId", userId ?? "", new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    Expires = DateTimeOffset.UtcNow.AddDays(7),
-                    SameSite = SameSiteMode.Strict
-                });
-
-                Response.Cookies.Append("Role", role ?? "", new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    Expires = DateTimeOffset.UtcNow.AddDays(7),
-                    SameSite = SameSiteMode.Strict
-                });
-
-                Console.WriteLine("User logged in successfully");
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                ModelState.AddModelError("", "Neispravno korisničko ime ili lozinka.");
                 return View(loginVM);
             }
 
+            var raw = (await response.Content.ReadAsStringAsync()).Trim('"');
+            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(raw);
+
+            string Claim(string t) => jwt.Claims.First(c => c.Type == t).Value;
+            var username = Claim("unique_name");
+            var userId = Claim("sub");
+            var role = Claim("role");
+
+            void Set(string name, string val) =>
+                Response.Cookies.Append(name, val, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.UtcNow.AddDays(7)
+                });
+
+            Set("JWToken", raw);
+            Set("Username", username);
+            Set("UserId", userId);
+            Set("Role", role);
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]

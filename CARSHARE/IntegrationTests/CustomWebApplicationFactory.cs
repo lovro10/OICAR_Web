@@ -1,9 +1,11 @@
-﻿using CARSHARE_WEBAPP.Services;
+﻿using CARSHARE_WEBAPP.Models;
+using CARSHARE_WEBAPP.Services;
 using CARSHARE_WEBAPP.Services.Interfaces;
 using CARSHARE_WEBAPP.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -17,7 +19,7 @@ namespace IntegrationTests
 {
 
     public class CustomWebApplicationFactory
-        : WebApplicationFactory<Program>
+    : WebApplicationFactory<Program>
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -25,10 +27,20 @@ namespace IntegrationTests
               .UseEnvironment("Testing")
               .ConfigureTestServices(services =>
               {
+                  var descriptor = services
+                      .Single(d => d.ServiceType == typeof(DbContextOptions<CarshareContext>));
+                  services.Remove(descriptor);
+
+                  services.AddDbContext<CarshareContext>(opts =>
+                  {
+                      opts.UseInMemoryDatabase("TestingDb");
+                  });
+
                   var realKorisnik = services.Single(
                       d => d.ServiceType == typeof(IKorisnikService));
                   services.Remove(realKorisnik);
                   services.AddScoped<IKorisnikService, FakeKorisnikService>();
+
 
               });
         }
@@ -44,10 +56,14 @@ namespace IntegrationTests
         };
             return Task.FromResult(list);
         }
-
+        public Task<HttpResponseMessage> LoginAsync(LoginVM model)
+        {
+            var response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            return Task.FromResult(response);
+        }
         public Task<HttpResponseMessage> UpdateKorisnikAsync(EditKorisnikVM model)
         {
-            
+
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new StringContent($"{{\"success\":true,\"id\":{model.IDKorisnik}}}")
@@ -61,4 +77,5 @@ namespace IntegrationTests
             return Task.FromResult(new List<ImageVM>());
         }
     }
+
 }

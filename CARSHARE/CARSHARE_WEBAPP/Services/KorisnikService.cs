@@ -24,7 +24,10 @@ namespace CARSHARE_WEBAPP.Services
             _httpClient = httpClient;
             _httpContextAccessor = httpContextAccessor;
         }
-
+        public async Task<HttpResponseMessage> LoginAsync(LoginVM model)
+        {
+            return await _httpClient.PostAsJsonAsync("Login", model);
+        }
         public async Task<List<KorisnikVM>> GetKorisniciAsync()
         {
             List<KorisnikVM> korisnici = new List<KorisnikVM>();
