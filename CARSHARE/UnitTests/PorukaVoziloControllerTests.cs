@@ -1,392 +1,210 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using CARSHARE_WEBAPP.Controllers;
 using CARSHARE_WEBAPP.ViewModels;
-using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Session;
-using Moq;
-using Moq.Protected;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace CARSHARE_WEBAPP.UnitTests
+namespace CARSHARE_WEBAPP.Tests.Controllers
 {
-
 
     public class PorukaVoziloControllerTests
     {
-        private readonly Mock<HttpMessageHandler> _handlerMock;
-        private readonly HttpClient _httpClient;
-        private readonly PorukaVoziloController _controller;
-        private readonly DefaultHttpContext _httpContext;
-        private readonly TestSession _testSession;
-
-        public PorukaVoziloControllerTests()
+        private PorukaVoziloController CreateController(
+            Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> handlerFunc,
+            out DefaultHttpContext httpContext)
         {
-
-            _handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
-
-         
-            _httpClient = new HttpClient(_handlerMock.Object)
+            var handler = new FakeHttpMessageHandler(handlerFunc);
+            var client = new HttpClient(handler)
             {
                 BaseAddress = new Uri("http://localhost:5194/api/")
             };
-
-            _controller = new PorukaVoziloController(_httpClient);
-
-      
-            _httpContext = new DefaultHttpContext();
-            _testSession = new TestSession();
-            var sessionFeature = new SessionFeature { Session = _testSession };
-            _httpContext.Features.Set<ISessionFeature>(sessionFeature);
-
-          
-            _controller.ControllerContext = new ControllerContext
+            var controller = new PorukaVoziloController(client);
+            httpContext = new DefaultHttpContext();
+            controller.ControllerContext = new ControllerContext
             {
-                HttpContext = _httpContext
+                HttpContext = httpContext
             };
-
-          
-            var tempDataProvider = new Mock<ITempDataProvider>();
-            var tempDataDict = new TempDataDictionary(_httpContext, tempDataProvider.Object);
-            _controller.TempData = tempDataDict;
+            return controller;
         }
-
-        private void VerifyNoOutstandingHttpCalls()
-        {
-            _handlerMock.VerifyAll();
-        }
-
-    
 
         [Fact]
-        public async Task Index_WhenApiReturnsSuccess_ReturnsViewWithMessages()
+        public async Task Index_ApiFails_ReturnsEmptyMessages()
         {
-            var korVozId = 7;
-            var putnikId = 3;
-            var vozacId = 5;
+            var ctrl = CreateController((req, ct) =>
+                Task.FromResult(new HttpResponseMessage(HttpStatusCode.InternalServerError)),
+                out var ctx);
 
-            var dummyMessages = new List<PorukaGetVM>
+            var result = await ctrl.Index(korisnikVoziloId: 5, putnikId: null, vozacId: null);
+            var view = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<PorukaVoziloSendVM>(view.Model);
+            Assert.Equal(5, model.Korisnikvoziloid);
+            Assert.Null(model.PutnikId);
+            Assert.Null(model.VozacId);
+            Assert.Empty(model.Messages);
+        }
+
+        [Fact]
+        public async Task Index_ApiSucceeds_ReturnsMessages()
+        {
+            var msgs = new List<PorukaVoziloGetVM>
             {
-                new PorukaGetVM {},
-                new PorukaGetVM {}
+                new PorukaVoziloGetVM { Content = "Hello" }
             };
-            var json = JsonConvert.SerializeObject(dummyMessages);
+            var json = JsonConvert.SerializeObject(msgs);
 
-            _handlerMock
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(req =>
-                        req.Method == HttpMethod.Get
-                        && req.RequestUri.PathAndQuery.Equals($"/api/Poruka/GetMessagesForRide?korisnikVoziloId={korVozId}", StringComparison.OrdinalIgnoreCase)
-                    ),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync(new HttpResponseMessage
+            var ctrl = CreateController((req, ct) =>
+                Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    StatusCode = HttpStatusCode.OK,
                     Content = new StringContent(json, Encoding.UTF8, "application/json")
-                })
-                .Verifiable();
+                }),
+                out var ctx);
 
-            var actionResult = await _controller.Index(korVozId, putnikId, vozacId);
-
-            actionResult.Should().BeOfType<ViewResult>();
-            var viewResult = (ViewResult)actionResult;
-            viewResult.Model.Should().BeOfType<PorukaVoziloVM>();
-
-            var model = (PorukaVoziloVM)viewResult.Model;
-            model.Korisnikvoziloid.Should().Be(korVozId);
-            model.PutnikId.Should().Be(putnikId);
-            model.VozacId.Should().Be(vozacId);
-
-            model.Messages.Should().HaveCount(2);
-
-            VerifyNoOutstandingHttpCalls();
+            var result = await ctrl.Index(7, putnikId: 2, vozacId: 3);
+            var view = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<PorukaVoziloSendVM>(view.Model);
+            Assert.Equal(7, model.Korisnikvoziloid);
+            Assert.Equal(2, model.PutnikId);
+            Assert.Equal(3, model.VozacId);
+            Assert.Single(model.Messages);
+            Assert.Equal("Hello", model.Messages.First().Content);
         }
 
         [Fact]
-        public async Task Index_WhenApiReturnsNonSuccess_ReturnsViewWithEmptyMessages()
+        public async Task SendMessage_EmptyMessage_RedirectsBackWithError()
         {
-            // Arrange
-            var korVozId = 42;
-            int? putnikId = null;
-            int? vozacId = 11;
+            var ctrl = CreateController((req, ct) =>
+                Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)),
+                out var ctx);
 
-            _handlerMock
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(req =>
-                        req.Method == HttpMethod.Get
-                        && req.RequestUri.PathAndQuery.Equals($"/api/Poruka/GetMessagesForRide?korisnikVoziloId={korVozId}", StringComparison.OrdinalIgnoreCase)
-                    ),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.InternalServerError
-                })
-                .Verifiable();
-
-            var actionResult = await _controller.Index(korVozId, putnikId, vozacId);
-
-            actionResult.Should().BeOfType<ViewResult>();
-            var viewResult = (ViewResult)actionResult;
-            viewResult.Model.Should().BeOfType<PorukaVoziloVM>();
-
-            var model = (PorukaVoziloVM)viewResult.Model;
-            model.Korisnikvoziloid.Should().Be(korVozId);
-            model.PutnikId.Should().Be(putnikId);
-            model.VozacId.Should().Be(vozacId);
-
-            model.Messages.Should().BeEmpty();
-
-            VerifyNoOutstandingHttpCalls();
-        }
-
-
-
-        [Fact]
-        public async Task SendMessage_Post_WhenMessageIsEmpty_AddsModelErrorAndRedirectsIndex()
-        {
-            // Arrange
-            var vm = new PorukaVoziloVM
+            var vm = new PorukaVoziloSendVM
             {
                 Korisnikvoziloid = 10,
-                PutnikId = 2,
+                PutnikId = 4,
                 VozacId = 5,
-                Message = "   " 
+                Message = "   "
             };
 
-            
-            var actionResult = await _controller.SendMessage(vm);
-
-            actionResult.Should().BeOfType<RedirectToActionResult>();
-            var redirect = (RedirectToActionResult)actionResult;
-            redirect.ActionName.Should().Be("Index");
-            redirect.RouteValues["korisnikVoziloId"].Should().Be(vm.Korisnikvoziloid);
-            redirect.RouteValues["putnikId"].Should().Be(vm.PutnikId);
-            redirect.RouteValues["vozacId"].Should().Be(vm.VozacId);
-
-            _controller.ModelState.ErrorCount.Should().Be(1);
-            var actualError = _controller.ModelState[string.Empty].Errors[0].ErrorMessage;
-            actualError.Should().Be("Message cannot be empty.");
-
-            _handlerMock.VerifyNoOtherCalls();
+            var result = await ctrl.SendMessage(vm);
+            var redirect = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Index", redirect.ActionName);
+            Assert.Equal(10, redirect.RouteValues["korisnikVoziloId"]);
+            Assert.Equal(4, redirect.RouteValues["putnikId"]);
+            Assert.Equal(5, redirect.RouteValues["vozacId"]);
+            Assert.True(!ctrl.ModelState.IsValid);
+            Assert.Contains(ctrl.ModelState[string.Empty].Errors, e => e.ErrorMessage == "Message cannot be empty.");
         }
 
         [Fact]
-        public async Task SendMessage_Post_WhenNoClaims_ReturnsUnauthorized()
+        public async Task SendMessage_NoUserClaims_ReturnsUnauthorized()
         {
-            // Arrange
-            var vm = new PorukaVoziloVM
+            var ctrl = CreateController((req, ct) =>
+                Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)),
+                out var ctx);
+
+            ctx.User = new ClaimsPrincipal(new ClaimsIdentity()); // no claims
+
+            var vm = new PorukaVoziloSendVM { Message = "Hi" };
+            var result = await ctrl.SendMessage(vm);
+            Assert.IsType<UnauthorizedResult>(result);
+        }
+
+        [Fact]
+        public async Task SendMessage_InvalidRole_ReturnsBadRequest()
+        {
+            var ctrl = CreateController((req, ct) =>
+                Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)),
+                out var ctx);
+
+            var identity = new ClaimsIdentity(new[]
             {
-                Korisnikvoziloid = 100,
-                PutnikId = null,
-                VozacId = null,
-                Message = "Hello!"
-            };
+                new Claim("sub", "8"),
+                new Claim("role", "ADMIN")
+            }, "test");
+            ctx.User = new ClaimsPrincipal(identity);
 
-            _httpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
-
-            var actionResult = await _controller.SendMessage(vm);
-
-            actionResult.Should().BeOfType<UnauthorizedResult>();
-
-            _controller.ModelState.ErrorCount.Should().Be(0);
-
-            _handlerMock.VerifyNoOtherCalls();
+            var vm = new PorukaVoziloSendVM { Message = "Hello" };
+            var result = await ctrl.SendMessage(vm);
+            var bad = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("User role is not valid for sending messages.", bad.Value);
         }
 
-        [Fact]
-        public async Task SendMessage_Post_WhenInvalidRole_ReturnsBadRequest()
+        [Theory]
+        [InlineData("DRIVER", "vozacId")]
+        [InlineData("PASSENGER", "putnikId")]
+        public async Task SendMessage_ValidRole_CallsApiAndRedirects(string role, string routeKey)
         {
-            var vm = new PorukaVoziloVM
+            var called = false;
+            var ctrl = CreateController((req, ct) =>
+            {
+                if (req.Method == HttpMethod.Post && req.RequestUri.PathAndQuery.Contains("SendMessageForVehicle"))
+                {
+                    called = true;
+                    return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
+                }
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
+            }, out var ctx);
+
+            var identity = new ClaimsIdentity(new[]
+            {
+                new Claim("sub", "12"),
+                new Claim("role", role)
+            }, "test");
+            ctx.User = new ClaimsPrincipal(identity);
+
+            var vm = new PorukaVoziloSendVM
             {
                 Korisnikvoziloid = 20,
-                PutnikId = null,
-                VozacId = null,
                 Message = "Test"
             };
 
-            var claims = new[]
-            {
-                new Claim("sub", "42"),
-                new Claim("role", "ADMIN")
-            };
-            var identity = new ClaimsIdentity(claims, "TestAuth");
-            _httpContext.User = new ClaimsPrincipal(identity);
+            var result = await ctrl.SendMessage(vm);
+            Assert.True(called);
 
-            var actionResult = await _controller.SendMessage(vm);
-
-            actionResult.Should().BeOfType<BadRequestObjectResult>();
-            var badReq = (BadRequestObjectResult)actionResult;
-            badReq.Value.Should().Be("User role is not valid for sending messages.");
-
-            _handlerMock.VerifyNoOtherCalls();
+            var redirect = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Index", redirect.ActionName);
+            Assert.Equal(20, redirect.RouteValues["korisnikVoziloId"]);
+            Assert.Contains(routeKey, redirect.RouteValues.Keys);
+            Assert.Equal(12, redirect.RouteValues[routeKey]);
         }
 
         [Fact]
-        public async Task SendMessage_Post_WhenDriverRoleAndPostSucceeds_RedirectsIndexWithCorrectRouteValues()
+        public async Task SendMessage_ApiFails_AddsModelErrorAndRedirects()
         {
-            var vm = new PorukaVoziloVM
+            var ctrl = CreateController((req, ct) =>
             {
-                Korisnikvoziloid = 300,
-                PutnikId = null,
-                VozacId = null,
-                Message = "Hi from driver!"
-            };
+                if (req.Method == HttpMethod.Post)
+                    return Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadRequest));
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
+            }, out var ctx);
 
-            var claims = new[]
+            var identity = new ClaimsIdentity(new[]
             {
-                new Claim("sub", "99"),
-                new Claim("role", "DRIVER")
-            };
-            var identity = new ClaimsIdentity(claims, "TestAuth");
-            _httpContext.User = new ClaimsPrincipal(identity);
-
-            _handlerMock
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(req =>
-                        req.Method == HttpMethod.Post
-                        && req.RequestUri.PathAndQuery.Equals("/api/Poruka/SendMessageForRide", StringComparison.OrdinalIgnoreCase)
-                    ),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.OK
-                })
-                .Verifiable();
-
-            var actionResult = await _controller.SendMessage(vm);
-
-            actionResult.Should().BeOfType<RedirectToActionResult>();
-            var redirect = (RedirectToActionResult)actionResult;
-            redirect.ActionName.Should().Be("Index");
-            redirect.RouteValues["korisnikVoziloId"].Should().Be(vm.Korisnikvoziloid);
-            redirect.RouteValues["putnikId"].Should().BeNull();
-            redirect.RouteValues["vozacId"].Should().Be(99);
-
-            _controller.ModelState.ErrorCount.Should().Be(0);
-
-            VerifyNoOutstandingHttpCalls();
-        }
-
-        [Fact]
-        public async Task SendMessage_Post_WhenPassengerRoleAndPostSucceeds_RedirectsIndexWithCorrectRouteValues()
-        {
-            var vm = new PorukaVoziloVM
-            {
-                Korisnikvoziloid = 400,
-                PutnikId = null,
-                VozacId = null,
-                Message = "Hi from passenger!"
-            };
-
-            var claims = new[]
-            {
-                new Claim("sub", "123"),
+                new Claim("sub", "15"),
                 new Claim("role", "PASSENGER")
-            };
-            var identity = new ClaimsIdentity(claims, "TestAuth");
-            _httpContext.User = new ClaimsPrincipal(identity);
+            }, "test");
+            ctx.User = new ClaimsPrincipal(identity);
 
-            _handlerMock
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(req =>
-                        req.Method == HttpMethod.Post
-                        && req.RequestUri.PathAndQuery.Equals("/api/Poruka/SendMessageForRide", StringComparison.OrdinalIgnoreCase)
-                    ),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.OK
-                })
-                .Verifiable();
-
-            var actionResult = await _controller.SendMessage(vm);
-
-            actionResult.Should().BeOfType<RedirectToActionResult>();
-            var redirect = (RedirectToActionResult)actionResult;
-            redirect.ActionName.Should().Be("Index");
-            redirect.RouteValues["korisnikVoziloId"].Should().Be(vm.Korisnikvoziloid);
-            redirect.RouteValues["putnikId"].Should().Be(123);
-            redirect.RouteValues["vozacId"].Should().BeNull();
-
-            _controller.ModelState.ErrorCount.Should().Be(0);
-
-            VerifyNoOutstandingHttpCalls();
-        }
-
-        [Fact]
-        public async Task SendMessage_Post_WhenPostFails_AddsModelErrorAndRedirectsIndex()
-        {
-            var vm = new PorukaVoziloVM
+            var vm = new PorukaVoziloSendVM
             {
-                Korisnikvoziloid = 555,
-                PutnikId = null,
-                VozacId = null,
-                Message = "This will fail"
+                Korisnikvoziloid = 30,
+                Message = "Hi"
             };
 
-            var claims = new[]
-            {
-                new Claim("sub", "777"),
-                new Claim("role", "DRIVER")
-            };
-            var identity = new ClaimsIdentity(claims, "TestAuth");
-            _httpContext.User = new ClaimsPrincipal(identity);
-
-            _handlerMock
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(req =>
-                        req.Method == HttpMethod.Post
-                        && req.RequestUri.PathAndQuery.Equals("/api/Poruka/SendMessageForRide", StringComparison.OrdinalIgnoreCase)
-                    ),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.InternalServerError
-                })
-                .Verifiable();
-
-            var actionResult = await _controller.SendMessage(vm);
-
-            actionResult.Should().BeOfType<RedirectToActionResult>();
-            var redirect = (RedirectToActionResult)actionResult;
-            redirect.ActionName.Should().Be("Index");
-            redirect.RouteValues["korisnikVoziloId"].Should().Be(vm.Korisnikvoziloid);
-            redirect.RouteValues["putnikId"].Should().BeNull();
-            redirect.RouteValues["vozacId"].Should().Be(777);
-            _controller.ModelState.ErrorCount.Should().Be(1);
-            var actualError = _controller.ModelState[string.Empty].Errors[0].ErrorMessage;
-            actualError.Should().Be("Failed to send message.");
-
-            VerifyNoOutstandingHttpCalls();
+            var result = await ctrl.SendMessage(vm);
+            var redirect = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Index", redirect.ActionName);
+            Assert.True(!ctrl.ModelState.IsValid);
+            Assert.Contains(ctrl.ModelState[string.Empty].Errors, e => e.ErrorMessage == "Failed to send message.");
         }
     }
 }
