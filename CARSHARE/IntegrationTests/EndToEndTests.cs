@@ -1,25 +1,59 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using CARSHARE_WEBAPP.ViewModels;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Newtonsoft.Json;
+using ProtoBuf.Serializers;
 using Xunit;
+
+
+// za profesora radovana ako ce gledati-
+/*
+ * Should() dolazi od FluentAssertions, moze se zamijeniti sa Assert
+ * 
+ * StubHttpMessageHandler nije mock nego je stub
+ */
 
 namespace IntegrationTests
 {
     public class EndToEndTests : IClassFixture<CustomWebApplicationFactory>
     {
         private readonly HttpClient _client;
+        private readonly CustomWebApplicationFactory _factory;
 
         public EndToEndTests(CustomWebApplicationFactory factory)
         {
+            _factory = factory;
+
             var options = new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false
             };
             _client = factory.CreateClient(options);
         }
+
+ 
+
+        [Fact]
+        public async Task GET_Korisnik_Details_ValidId_ReturnsUserDetailsView()
+        {
+            var id = 1;
+
+            var response = await _client.GetAsync($"/Korisnik/Details?id={id}");
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.Content.Headers.ContentType?.MediaType.Should().Be("text/html");
+
+            var html = await response.Content.ReadAsStringAsync();
+            html.Should().Contain("Test")
+                .And.Contain("User")
+                .And.Contain("Username"); 
+        }
+
 
         [Fact]
         public async Task GET_Korisnik_GetKorisnici_ReturnsOkAndContainsPageHeader()
@@ -35,6 +69,8 @@ namespace IntegrationTests
             html.Should().Contain("id=\"usersTable\"");
 
             response.Headers.Contains("Set-Cookie").Should().BeFalse();
+
+           
         }
 
         [Fact]
@@ -75,10 +111,11 @@ namespace IntegrationTests
 
             var form = new FormUrlEncodedContent(new[]
                 {
-                new KeyValuePair<string,string>("UserName", "nosuchuser"),
-                new KeyValuePair<string,string>("Password", "wrongpass"),
+                new KeyValuePair<string,string>("UserName", "lul"),
+                new KeyValuePair<string,string>("Password", "lelul"),
                 new KeyValuePair<string,string>("__RequestVerificationToken", token),
                 });
+
             var post = await _client.PostAsync("/Korisnik/Login", form);
 
             post.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -129,6 +166,8 @@ namespace IntegrationTests
             response.Headers.Contains("Set-Cookie").Should().BeFalse();
         }
 
+ 
+
         [Fact]
         public async Task POST_Vozilo_Create_WithoutAuth_RedirectsToLogin()
         {
@@ -138,6 +177,7 @@ namespace IntegrationTests
             });
 
             var response = await _client.PostAsync("/Vozilo/Create", form);
+
             response.StatusCode.Should().Be(HttpStatusCode.Redirect);
 
             response.Headers.Location!.ToString()
@@ -147,5 +187,7 @@ namespace IntegrationTests
 
             response.Headers.Contains("Set-Cookie").Should().BeFalse();
         }
+
+        
     }
 }

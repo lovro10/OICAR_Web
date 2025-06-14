@@ -111,7 +111,7 @@ namespace CARSHARE_WEBAPP.Tests.Controllers
                 Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)),
                 out var ctx);
 
-            ctx.User = new ClaimsPrincipal(new ClaimsIdentity()); // no claims
+            ctx.User = new ClaimsPrincipal(new ClaimsIdentity()); 
 
             var vm = new PorukaVoziloSendVM { Message = "Hi" };
             var result = await ctrl.SendMessage(vm);
