@@ -4,17 +4,60 @@
     ViewData["Title"] = "Poruke za vožnju";
 }
 
-<h2>Poruke za vožnju #@Model.Korisnikvoznjaid</h2>
+<style>
+    .chat-container {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 16px;
+        background-color: #f8f9fa;
+        max-height: 400px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+    }
+
+    .chat-message {
+        margin-bottom: 15px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        background-color: #ffffff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+        .chat-message strong {
+            display: block;
+            color: #0d6efd;
+            margin-bottom: 4px;
+        }
+
+    .chat-form {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 16px;
+        background-color: #ffffff;
+    }
+
+        .chat-form label {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .chat-form textarea {
+            resize: none;
+        }
+</style>
+
+<h2 class="mb-4 text-primary">Poruke za ovu vožnju</h2>
 
 <div>
     <h4>Poruke</h4>
-    <div style="border: 1px solid #ccc; padding: 10px; max-height: 400px; overflow-y: scroll;">
+    <div class="chat-container">
         @if (Model.Messages != null && Model.Messages.Any())
         {
             foreach (var msg in Model.Messages)
             {
-                <div style="margin-bottom: 10px;">
-                    <strong>@msg.SenderName:</strong> @msg.Content
+                <div class="chat-message">
+                    <strong>@msg.SenderName</strong>
+                    @msg.Content
                 </div>
             }
         }
@@ -25,24 +68,22 @@
     </div>
 </div>
 
-<hr />
-
 <div>
     <h4>Pošalji novu poruku</h4>
-    <form asp-action="SendMessage" asp-controller="PorukaVoznja" method="post">
+    <form asp-action="SendMessage" asp-controller="PorukaVoznja" method="post" class="chat-form">
         @Html.AntiForgeryToken()
 
-        <input type="hidden" asp-for="Korisnikvoznjaid" />
+        <input type="hidden" asp-for="Oglasvoznjaid" />
         <input type="hidden" asp-for="PutnikId" />
         <input type="hidden" asp-for="VozacId" />
 
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label asp-for="Message">Poruka</label>
-            <textarea class="form-control" asp-for="Message" rows="3"></textarea>
+            <textarea class="form-control" asp-for="Message" rows="3" placeholder="Unesite poruku..."></textarea>
             <span asp-validation-for="Message" class="text-danger"></span>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-2">Pošalji</button>
+        <button type="submit" class="btn btn-primary">Pošalji</button>
     </form>
 </div>
 

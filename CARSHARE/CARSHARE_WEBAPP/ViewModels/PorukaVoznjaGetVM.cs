@@ -6,7 +6,7 @@
 
         public string? Content { get; set; }
 
-        public int KorisnikVoznjaId { get; set; }
+        public int OglasVoznjaId { get; set; }
 
         public int? PutnikId { get; set; }
 

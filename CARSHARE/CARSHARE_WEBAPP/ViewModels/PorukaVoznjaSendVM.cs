@@ -2,7 +2,7 @@
 {
     public class PorukaVoznjaSendVM
     {
-        public int Korisnikvoznjaid { get; set; }
+        public int Oglasvoznjaid { get; set; }
 
         public int? PutnikId { get; set; }
 

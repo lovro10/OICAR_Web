@@ -1,9 +1,11 @@
 ﻿@model List<CARSHARE_WEBAPP.ViewModels.OglasVoznjaVM>
 
-@{
-    ViewData["Title"] = "Ride list";
+@{ 
+    ViewData["Title"] = "Ride list"; 
     var userID = Context.Session.GetInt32("UserId");
-}
+    var role = Context.Session.GetString("Role"); 
+    var username = Context.Session.GetString("Username");  
+} 
 
 <h2 class="text-center my-4">Ride list</h2>
 
@@ -49,8 +51,18 @@
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-end mt-auto">
-                        <a asp-action="JoinRide" asp-route-id="@oglas.IdOglasVoznja" class="btn btn-outline-success btn-sm">Join</a>
+                    <div class="d-flex justify-content-end mt-auto gap-2">
+                        @if (username != oglas.Username)
+                        {
+                            <a asp-action="JoinRide" asp-route-id="@oglas.IdOglasVoznja" class="btn btn-outline-success btn-sm">Join</a>
+                        } 
+
+                        @if (role == "ADMIN")
+                        {
+                            <form asp-action="DeleteRide" asp-route-id="@oglas.IdOglasVoznja" method="post" onsubmit="return confirm('Are you sure you want to delete this ride?');">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                            </form>
+                        }
                     </div>
                 </div>
             </div>

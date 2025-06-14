@@ -1,21 +1,45 @@
 ﻿@model CARSHARE_WEBAPP.ViewModels.VoziloVM
 
 @{
-    ViewData["Title"] = "Delete Vehicle";
+    ViewData["Title"] = "Brisanje Vozila";
 }
 
-<h2>Delete Vehicle</h2>
+<section class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-warning text-dark">
+            <h4 class="mb-0">⚠️ Potvrda brisanja vozila</h4>
+        </div>
 
-<div class="alert alert-warning">
-    <h4>Are you sure you want to delete this vehicle?</h4>
-    <p><strong>Vehicle Name:</strong> @Model.Naziv</p>
-    <p><strong>Brand:</strong> @Model.Marka</p>
-    <p><strong>Model:</strong> @Model.Model</p>
-    <p><strong>Registration:</strong> @Model.Registracija</p>
-</div>
+        <div class="card-body">
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="Idvozilo" />
 
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="Idvozilo" />
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
+                <div class="mb-3">
+                    <label class="form-label">Naziv vozila</label>
+                    <input type="text" class="form-control" value="@Model.Naziv" readonly />
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Marka</label>
+                        <input type="text" class="form-control" value="@Model.Marka" readonly />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Model</label>
+                        <input type="text" class="form-control" value="@Model.Model" readonly />
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Registracija</label>
+                    <input type="text" class="form-control" value="@Model.Registracija" readonly />
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-danger">🗑️ Izbriši</button>
+                    <a asp-action="Index" class="btn btn-secondary">⬅️ Odustani</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

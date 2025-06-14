@@ -87,7 +87,7 @@ namespace CARSHARE_WEBAPP.Controllers
             }
 
             var korisnici = await _korisnikService.GetKorisniciAsync();
-            return RedirectToAction("GetKorisnici", "Korisnik");
+            return RedirectToAction("GetKorisniciForClear", "Korisnik");
         }
 
         [HttpGet]
@@ -135,7 +135,7 @@ namespace CARSHARE_WEBAPP.Controllers
                 TempData["Error"] = $"Failed to clear user data with ID {model.IDKorisnik}."; 
             } 
 
-            return RedirectToAction("Profile", "Korisnik");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]

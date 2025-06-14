@@ -16,48 +16,48 @@ namespace CARSHARE_WEBAPP.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int korisnikVoznjaId, int? korisnikId)
+        public async Task<IActionResult> Index(int oglasVoznjaId, int? korisnikId)
         {
-            var response = await _httpClient.GetAsync($"Poruka/GetMessagesForRide?korisnikVoznjaId={korisnikVoznjaId}");
+            var response = await _httpClient.GetAsync($"Poruka/GetMessagesForRide?oglasVoznjaId={oglasVoznjaId}"); 
 
-            var messages = new List<PorukaVoznjaGetVM>();
-            if (response.IsSuccessStatusCode)
+            var messages = new List<PorukaVoznjaGetVM>(); 
+            if (response.IsSuccessStatusCode) 
             {
                 messages = await response.Content.ReadFromJsonAsync<List<PorukaVoznjaGetVM>>();
-            }
+            } 
 
             var vm = new PorukaVoznjaSendVM
-            {
-                Korisnikvoznjaid = korisnikVoznjaId,
+            { 
+                Oglasvoznjaid = oglasVoznjaId,
                 PutnikId = null,
                 VozacId = korisnikId,
                 Messages = messages!
-            };
+            }; 
 
             return View(vm);
-        }
+        } 
 
         [HttpGet]
-        public async Task<IActionResult> Join(int korisnikVoznjaId, int? korisnikId)
+        public async Task<IActionResult> Join(int oglasVoznjaId, int? korisnikId)
         { 
-            var response = await _httpClient.GetAsync($"Poruka/GetMessagesForRide?korisnikVoznjaId={korisnikVoznjaId}");
+            var response = await _httpClient.GetAsync($"Poruka/GetMessagesForRide?oglasVoznjaId={oglasVoznjaId}");
 
-            var messages = new List<PorukaVoznjaGetVM>();
-            if (response.IsSuccessStatusCode)
-            {
+            var messages = new List<PorukaVoznjaGetVM>(); 
+            if (response.IsSuccessStatusCode) 
+            { 
                 messages = await response.Content.ReadFromJsonAsync<List<PorukaVoznjaGetVM>>();
-            }
+            } 
 
             var vm = new PorukaVoznjaSendVM
             {
-                Korisnikvoznjaid = korisnikVoznjaId,
+                Oglasvoznjaid = oglasVoznjaId,
                 PutnikId = korisnikId,
                 VozacId = null,
                 Messages = messages!
-            };
+            }; 
 
             return View(vm);
-        }
+        } 
 
         [HttpPost]
         public async Task<IActionResult> SendMessage(PorukaVoznjaSendVM porukaVM)
@@ -67,7 +67,7 @@ namespace CARSHARE_WEBAPP.Controllers
                 ModelState.AddModelError("", "Message cannot be empty.");
                 return RedirectToAction("Index", new
                 {
-                    KorisnikVoznjaId = porukaVM.Korisnikvoznjaid,
+                    OglasVoznjaId = porukaVM.Oglasvoznjaid,
                     PutnikId = porukaVM.PutnikId,
                     VozacId = porukaVM.VozacId
                 });
@@ -99,7 +99,7 @@ namespace CARSHARE_WEBAPP.Controllers
 
             var sendPayload = new
             {
-                KorisnikVoznjaId = porukaVM.Korisnikvoznjaid,
+                OglasVoznjaId = porukaVM.Oglasvoznjaid,
                 Content = porukaVM.Message,
                 PutnikId = putnikId,
                 VozacId = vozacId
@@ -114,7 +114,7 @@ namespace CARSHARE_WEBAPP.Controllers
 
             return RedirectToAction("Index", new
             {
-                KorisnikVoznjaId = porukaVM.Korisnikvoznjaid,
+                OglasVoznjaId = porukaVM.Oglasvoznjaid,
                 PutnikId = putnikId,
                 VozacId = vozacId
             });

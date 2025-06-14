@@ -1,7 +1,8 @@
 ﻿@model List<CARSHARE_WEBAPP.ViewModels.OglasVoziloVM>
 
-@{
+@{ 
     ViewData["Title"] = "Car rent";
+    var username = Context.Session.GetString("Username");
 }
 
 <h2>Car rent</h2>
@@ -32,7 +33,12 @@
 
                     <div class="d-flex justify-content-end gap-2">
                         <a asp-action="Details" asp-route-id="@oglas.Idoglasvozilo" class="btn btn-info btn-sm">Details</a>
-                        <a asp-action="ReserveVehicle" asp-route-id="@oglas.Idoglasvozilo" class="btn btn-success btn-sm">Reserve</a>
+
+                        @if (username != oglas.Username)
+                        {
+                            <a asp-action="ReserveVehicle" asp-route-id="@oglas.Idoglasvozilo" class="btn btn-success btn-sm">Reserve</a>
+                        }
+
                     </div>
                 </div>
             </div>

@@ -8,50 +8,63 @@
     <h2 class="page-title">Lista Korisnika</h2>
 
     <div class="table-responsive">
-        <table id="usersTable" class="table table-striped table-hover" style="width:100%">
-        <thead>
-            <tr>
-                <th>Broj</th>
-                <th>Korisnicko ime</th>
-                <th>Ime</th>
-                <th>Prezime</th>
-                <th>Email</th>
-                <th>Telefon</th>
-                <th>Datum rodenja</th>
-                <th>Uloga</th>
-                <th>Confirmed?</th>
-                <th>Akcija</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var k in Model)
-            {
+        <table id="usersTable" class="table table-striped table-hover w-100" style="table-layout: fixed;">
+            <thead>
                 <tr>
-                    <th>@k.IDKorisnik</th>
-                    <td>@k.Username</td>
-                    <td>@k.Ime</td>
-                    <td>@k.Prezime</td>
-                    <td>@k.Email</td>
-                    <td>@k.Telefon</td>
-                    <td>@k.DatumRodjenja</td>
-                    <td>@(k.Uloga?.Naziv ?? "N/A")</td>
-                    <td>@(k.IsConfirmed ?? false ? "✔️" : "❌")</td>
-                    <td>
-                        <button onclick="toggleConfirmation(@k.IDKorisnik, true)" class="btn btn-success mt-2">Confirm</button>
-                        <button onclick="toggleConfirmation(@k.IDKorisnik, false)" class="btn btn-danger mt-2">Reject</button>
-                        <a asp-controller="Korisnik" asp-action="Details" asp-route-id="@k.IDKorisnik" class="btn btn-info mt-2">
-                            Details 
-                        </a> 
-                    </td>
+                    <th>Broj</th>
+                    <th>Korisnicko ime</th>
+                    <th>Ime</th>
+                    <th>Prezime</th>
+                    <th>Email</th>
+                    <th>Telefon</th>
+                    <th>Datum rodenja</th>
+                    <th>Uloga</th>
+                    <th>Confirmed?</th>
+                    <th>Akcija</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var k in Model)
+                {
+                    <tr>
+                        <th>@k.IDKorisnik</th>
+                        <td><span title="@k.Username">@k.Username</span></td>
+                        <td><span title="@k.Ime">@k.Ime</span></td>
+                        <td><span title="@k.Prezime">@k.Prezime</span></td>
+                        <td><span title="@k.Email">@k.Email</span></td>
+                        <td>@k.Telefon</td>
+                        <td>@k.DatumRodjenja.ToString("dd.MM.yyyy")</td>
+                        <td>@(k.Uloga?.Naziv ?? "N/A")</td>
+                        <td>@(k.IsConfirmed ?? false ? "✔️" : "❌")</td>
+                        <td class="d-flex flex-wrap gap-1">
+                            <button onclick="toggleConfirmation(@k.IDKorisnik, true)" class="btn btn-success btn-sm">Confirm</button>
+                            <button onclick="toggleConfirmation(@k.IDKorisnik, false)" class="btn btn-danger btn-sm">Reject</button>
+                            <a asp-controller="Korisnik" asp-action="Details" asp-route-id="@k.IDKorisnik" class="btn btn-info btn-sm">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </section>
 
 @section Styles {
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
+    <style>
+        .table td, .table th {
+            word-wrap: break-word;
+            word-break: break-word;
+            white-space: normal;
+            vertical-align: middle;
+        }
+
+            .table td:nth-child(2),
+            .table td:nth-child(3),
+            .table td:nth-child(4),
+            .table td:nth-child(5) {
+                max-width: 160px;
+            }
+    </style>
 }
 
 @section Scripts {
@@ -93,15 +106,15 @@
                 },
                 body: JSON.stringify(payload)
             })
-            .then(response => {
-                if (response.ok) {
-                    alert(isConfirmed ? 'Korisnik potvrđen!' : 'Korisnik odbijen!');
-                    location.reload();
-                } else {
-                    alert('Neuspješna akcija! Provjerite backend logove.');
-                }
-            })
-            .catch(error => console.error('Greška:', error));
+                .then(response => {
+                    if (response.ok) {
+                        alert(isConfirmed ? 'Korisnik potvrđen!' : 'Korisnik odbijen!');
+                        location.reload();
+                    } else {
+                        alert('Neuspješna akcija! Provjerite backend logove.');
+                    }
+                })
+                .catch(error => console.error('Greška:', error));
         }
 
         function getCookie(name) {

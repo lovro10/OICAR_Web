@@ -39,9 +39,13 @@
                         <a asp-controller="Korisnik" asp-action="Details" asp-route-id="@k.IDKorisnik" class="btn btn-info mt-2">
                             Details
                         </a>
-                        <a asp-controller="Korisnik" asp-action="ConfirmationPageDetails" asp-route-id="@k.IDKorisnik" class="btn btn-danger mt-2">
-                            Clear
-                        </a>
+
+                        @if (k.Uloga?.Naziv != "IZBRISANO")
+                        {
+                            <a asp-controller="Korisnik" asp-action="ConfirmationPageDetails" asp-route-id="@k.IDKorisnik" class="btn btn-danger mt-2">
+                                Clear
+                            </a>
+                        } 
                     </td>
                 </tr>
             }

@@ -45,15 +45,6 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="OglasVozilo" asp-action="Index">Car rent</a> 
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Korisnik" asp-action="GetKorisnici">Korisnici</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Korisnik" asp-action="GetKorisniciForClear">Clear</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Vozilo" asp-action="DetailsAdmin">Vozila</a>
-                        </li>
                     </ul>
                         <ul class="navbar-nav">
                             @if (!string.IsNullOrEmpty(username))
@@ -65,7 +56,7 @@
                                     <a class="nav-link" asp-controller="OglasVoznja" asp-action="IndexJoin">Joined rides</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="OglasVozilo" asp-action="IndexUser">My rents</a>
+                                    <a class="nav-link" asp-controller="OglasVozilo" asp-action="IndexUser">My ads</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="OglasVozilo" asp-action="IndexRent">Rented cars</a>
