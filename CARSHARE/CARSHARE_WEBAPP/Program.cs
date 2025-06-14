@@ -21,8 +21,11 @@ builder.Services
     }); builder.Services.AddAuthorization();
 
 builder.Services.AddHttpClient<KorisnikService>();
-builder.Services.AddHttpClient<ImageService>();    
-
+builder.Services.AddHttpClient<ImageService>();
+builder.Services.AddHttpClient("KorisnikClient", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5194/api/Korisnik/");
+});
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
 builder.Services

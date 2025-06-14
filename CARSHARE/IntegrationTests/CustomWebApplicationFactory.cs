@@ -8,12 +8,15 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 
 namespace IntegrationTests
 {
@@ -41,10 +44,14 @@ namespace IntegrationTests
                   services.Remove(realKorisnik);
                   services.AddScoped<IKorisnikService, FakeKorisnikService>();
 
+                  services.AddHttpClient("KorisnikClient")
+                    .ConfigurePrimaryHttpMessageHandler(() => new StubHttpMessageHandler());
+                  
 
               });
         }
     }
+
 
     public class FakeKorisnikService : IKorisnikService
     {
@@ -77,5 +84,32 @@ namespace IntegrationTests
             return Task.FromResult(new List<ImageVM>());
         }
     }
+    public class StubHttpMessageHandler : HttpMessageHandler
+    {
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            if (request.RequestUri!.ToString().Contains("Details?id=1"))
+            {
+                var korisnik = new KorisnikVM
+                {
+                    IDKorisnik = 1,
+                    Ime = "Test",
+                    Prezime = "User",
+                    Username = "Username"
+                };
 
+                var json = JsonConvert.SerializeObject(korisnik);
+
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
+            });
+        }
+    }
 }

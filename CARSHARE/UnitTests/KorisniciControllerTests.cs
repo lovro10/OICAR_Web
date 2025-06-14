@@ -26,20 +26,19 @@ namespace CARSHARE_WEBAPP.Tests.Controllers
             handler.When(HttpMethod.Get, "*").Respond("application/json", usersJson);
             handler.When(HttpMethod.Put, "*").Respond(updateStatus);
 
-            var httpClient = new HttpClient(handler) { BaseAddress = new Uri("http://localhost") };
+            var httpClient = new HttpClient(handler) { BaseAddress = new Uri("http://localhost:5194/api/Korisnik/") };
+
+            // MOCK IHttpClientFactory
+            var httpClientFactory = new Moq.Mock<IHttpClientFactory>();
+            httpClientFactory.Setup(f => f.CreateClient("KorisnikClient")).Returns(httpClient);
+
             var accessor = new HttpContextAccessor { HttpContext = new DefaultHttpContext() };
             var service = new KorisnikService(httpClient, accessor);
 
-            var ctrl = new KorisnikController(service)
+            var ctrl = new KorisnikController(service, httpClientFactory.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = accessor.HttpContext }
             };
-
-            typeof(KorisnikController)
-                .GetField("_httpClient",
-                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-                .SetValue(ctrl,
-                    new HttpClient(handler) { BaseAddress = new Uri("http://localhost:5194/api/Korisnik/") });
 
             return ctrl;
         }

@@ -22,13 +22,10 @@ namespace CARSHARE_WEBAPP.Controllers
         private readonly IKorisnikService _korisnikService;
         private readonly HttpClient _httpClient;
 
-        public KorisnikController(IKorisnikService korisnikService)
+        public KorisnikController(IKorisnikService korisnikService, IHttpClientFactory httpClientFactory)
         {
             _korisnikService = korisnikService;
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("http://localhost:5194/api/Korisnik/")
-            };
+            _httpClient = httpClientFactory.CreateClient("KorisnikClient");
         }
 
         public async Task<IActionResult> GetKorisnici()
@@ -212,19 +209,39 @@ namespace CARSHARE_WEBAPP.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var response = await _httpClient.GetAsync($"Details?id={id}");
-
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                ModelState.AddModelError("", "Failed to load user details.");
+                var response = await _httpClient.GetAsync($"Details?id={id}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    ModelState.AddModelError("", "Failed to load user details.");
+                    return View();
+                }
+
+                var jsonData = await response.Content.ReadAsStringAsync();
+
+                if (string.IsNullOrWhiteSpace(jsonData))
+                {
+                    ModelState.AddModelError("", "Failed to load user details.");
+                    return View();
+                }
+
+                var korisnikVM = JsonConvert.DeserializeObject<KorisnikVM>(jsonData);
+
+                if (korisnikVM == null)
+                {
+                    ModelState.AddModelError("", "Failed to load user details.");
+                    return View();
+                }
+
+                return View(korisnikVM);
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Unexpected error occurred.");
                 return View();
             }
-
-            var jsonData = await response.Content.ReadAsStringAsync();
-
-            var korisnikVM = JsonConvert.DeserializeObject<KorisnikVM>(jsonData);
-
-            return View(korisnikVM);
         }
 
         public async Task<IActionResult> Profile(int id)
